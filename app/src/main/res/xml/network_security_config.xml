@@ -1,0 +1,6 @@
+<network-security-config>
+    <!-- Android 9.0 上部分域名时使用 http -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">secure.example.com</domain>
+    </domain-config>
+</network-security-config>

@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="transparent">#00000000</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <!-- 主题色 -->
+    <color name="app_theme">#3C3F41</color>
+    <color name="app_theme_dark">#27292B</color>
+    <color name="app_accent">#499C54</color>
+    <color name="app_warn">#ce3d3a</color>
+    <!-- 窗口背景色 -->
+    <color name="window_content">#FFFFFF</color>
+    <color name="window_empty">#EDF0F2</color>
+    <color name="window_black">#000000</color>
+    <!-- 分割线色 -->
+    <color name="divider_normal">#cdcdcd</color>
+    <!-- 文字色 -->
+    <color name="text_title">#222222</color>
+    <color name="text_title_sub">#333333</color>
+    <color name="text_content">#555555</color>
+    <color name="text_content_sub">#888888</color>
+    <color name="text_hint">#B3B3B3</color>
+    <color name="text_link">#477aac</color>
+    <color name="text_white">#ffffff</color>
+    <color name="text_warn">#ce3d3a</color>
+    <color name="text_accent">#499C54</color>
+    <!-- 按钮色 -->
+    <color name="btn_theme">#3C3F41</color>
+    <color name="btn_theme_pressed">#4D3C3F41</color>
+    <color name="btn_theme_unable">#B3B3B3</color>
+    <color name="btn_white">#FFFFFF</color>
+    <color name="btn_white_pressed">#4DFFFFFF</color>
+    <color name="btn_white_unable">#B3B3B3</color>
+    <color name="btn_accent">#499C54</color>
+    <color name="btn_accent_pressed">#4D499C54</color>
+    <color name="btn_accent_selected">#4D499C54</color>
+    <color name="btn_accent_unable">#B3B3B3</color>
 </resources>

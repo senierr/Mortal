@@ -16,15 +16,14 @@ import java.io.File
  */
 class DownloadViewModel : ViewModel() {
 
-    val downloadProgress = Repository.getProgressBus().downloadProgress
     val downloadResult = StatefulLiveData<File>()
 
     private val commonService = Repository.getService<ICommonService>()
 
-    fun download(url: String, destName: String) {
+    fun download(tag: String, url: String, destName: String) {
         viewModelScope.launch {
             try {
-                val destFile = commonService.downloadFile(url, url, destName)
+                val destFile = commonService.downloadFile(tag, url, destName)
                 downloadResult.setValue(destFile)
             } catch (e: Exception) {
                 downloadResult.setException(e)

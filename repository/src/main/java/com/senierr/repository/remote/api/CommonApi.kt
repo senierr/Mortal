@@ -1,5 +1,6 @@
 package com.senierr.repository.remote.api
 
+import com.senierr.repository.remote.interceptor.ProgressInterceptor
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
@@ -22,5 +23,8 @@ interface CommonApi {
      */
     @Streaming
     @GET
-    fun downloadFile(@Url url: String?, @Header("download_tag") tag: String): Call<ResponseBody?>
+    fun downloadFile(
+        @Url url: String?,
+        @Header(ProgressInterceptor.HEADER_TAG_DOWNLOAD) tag: String
+    ): Call<ResponseBody?>
 }

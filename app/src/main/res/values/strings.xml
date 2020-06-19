@@ -28,4 +28,10 @@
     <string name="register">注册</string>
 
     <string name="search">搜索</string>
+
+    <string name="format_index_normal">%1$d/%2$d</string>
+    <string name="save">保存</string>
+    <string name="saving">正在保存&#8230;</string>
+    <string name="format_download_success">保存到：%1$s</string>
+    <string name="format_download_failure">下载失败：%1$s</string>
 </resources>

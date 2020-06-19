@@ -24,7 +24,7 @@ fun ImageView.show(url: String?,
                    cookies: MutableMap<String, String>? = null
 ) {
     if (url.isNullOrBlank()) {
-        // 加载占位图
+        // TODO 加载占位图
         return
     }
     // 处理Gif

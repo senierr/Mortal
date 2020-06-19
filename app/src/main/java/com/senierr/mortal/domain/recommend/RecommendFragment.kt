@@ -52,7 +52,11 @@ class RecommendFragment : BaseFragment(R.layout.fragment_recommend) {
         // 列表
         recommendWrapper.setOnItemClickListener { _, _, item ->
             context?.let {
-                ImagePreviewActivity.start(it, item.images)
+                val imageItems = mutableListOf<ImagePreviewActivity.ImageItem>()
+                item.images.forEach { url ->
+                    imageItems.add(ImagePreviewActivity.ImageItem(url = url))
+                }
+                ImagePreviewActivity.start(it, imageItems)
             }
         }
         multiTypeAdapter.register(recommendWrapper)

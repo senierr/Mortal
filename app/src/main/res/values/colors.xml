@@ -32,6 +32,8 @@
     <color name="btn_white">#FFFFFF</color>
     <color name="btn_white_pressed">#4DFFFFFF</color>
     <color name="btn_white_unable">#B3B3B3</color>
+    <color name="btn_transparent">#00000000</color>
+    <color name="btn_transparent_pressed">#4D000000</color>
     <color name="btn_accent">#499C54</color>
     <color name="btn_accent_pressed">#4D499C54</color>
     <color name="btn_accent_selected">#4D499C54</color>

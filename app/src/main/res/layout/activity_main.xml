@@ -18,6 +18,7 @@
         app:menu="@menu/bottom_navigation_tab"
         app:itemIconTint="@color/color_navigation_icon"
         app:itemTextColor="@color/color_navigation_text"
+        app:labelVisibilityMode="unlabeled"
         android:background="@color/window_content"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"

@@ -40,7 +40,7 @@
         <activity android:name=".domain.common.WebViewActivity" />
 
         <activity
-            android:theme="@style/AppTheme.FullScreenTheme.Black"
+            android:theme="@style/AppTheme.ImagePreviewTheme"
             android:name=".domain.common.ImagePreviewActivity" />
 
         <provider

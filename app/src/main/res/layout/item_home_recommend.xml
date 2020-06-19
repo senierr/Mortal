@@ -9,4 +9,36 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_240"
         android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:background="@color/window_layer_black"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/dp_8"
+        android:paddingEnd="@dimen/dp_8"
+        android:paddingTop="@dimen/dp_4"
+        android:paddingBottom="@dimen/dp_4"
+        android:layout_gravity="bottom"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:textColor="@color/text_white"
+            android:textSize="@dimen/sp_12"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tv_view"
+            android:textColor="@color/text_white"
+            android:textSize="@dimen/sp_12"
+            android:drawableStart="@drawable/ic_visibility"
+            android:drawableTint="@color/white"
+            android:drawablePadding="@dimen/dp_4"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

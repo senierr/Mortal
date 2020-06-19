@@ -5,7 +5,7 @@
     android:id="@+id/msv_state"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:msv_loadingView="@layout/layout_status_loading"
+    app:msv_loadingView="@layout/layout_status_loading_simple"
     app:msv_errorView="@layout/layout_status_error"
     app:msv_emptyView="@layout/layout_status_empty">
 

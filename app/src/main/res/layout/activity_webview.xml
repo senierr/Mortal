@@ -7,10 +7,8 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tb_top"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:navigationIcon="@drawable/ic_close"
-        app:title="@string/app_name" />
+        style="@style/Toolbar"
+        app:navigationIcon="@drawable/ic_close" />
 
     <WebView
         android:id="@+id/wv_web"

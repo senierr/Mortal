@@ -28,9 +28,9 @@ class ImagePreviewActivity : BaseActivity(R.layout.activity_image_preview) {
     companion object {
         private const val KEY_IMAGES = "images"
 
-        fun start(context: Context, images: ArrayList<String>) {
+        fun start(context: Context, images: MutableList<String>) {
             val intent = Intent(context, ImagePreviewActivity::class.java)
-            intent.putStringArrayListExtra(KEY_IMAGES, images)
+            intent.putStringArrayListExtra(KEY_IMAGES, arrayListOf(*images.toTypedArray()))
             context.startActivity(intent)
         }
     }
@@ -46,9 +46,6 @@ class ImagePreviewActivity : BaseActivity(R.layout.activity_image_preview) {
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val holder = ViewHolder.create(container, R.layout.item_image_preview)
             val pvPreview = holder.findView<PhotoView>(R.id.pv_preview)
-            pvPreview?.click {
-                downloadViewModel.download(images[position], "${System.currentTimeMillis()}.jpg")
-            }
 
             pvPreview?.enable()
             pvPreview?.show(images[position])
@@ -75,6 +72,7 @@ class ImagePreviewActivity : BaseActivity(R.layout.activity_image_preview) {
     }
 
     private fun initView() {
+        btn_close?.click { finish() }
         vp_preview?.adapter = imagePreviewAdapter
     }
 

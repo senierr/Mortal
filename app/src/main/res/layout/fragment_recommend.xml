@@ -5,14 +5,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tl_tab"
-        app:tabMode="scrollable"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb_top"
+        style="@style/Toolbar"
+        app:title="@string/recommend" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vp_page"
+    <com.senierr.mortal.widget.MultiStateView
+        android:id="@+id/msv_state"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:msv_loadingView="@layout/layout_status_loading"
+        app:msv_errorView="@layout/layout_status_error"
+        app:msv_emptyView="@layout/layout_status_empty">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/srl_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </com.senierr.mortal.widget.MultiStateView>
 </LinearLayout>
+
+
+

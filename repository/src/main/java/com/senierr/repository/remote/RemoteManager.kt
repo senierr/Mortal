@@ -3,6 +3,7 @@ package com.senierr.repository.remote
 import android.content.Context
 import com.senierr.repository.remote.interceptor.BmobParamsInterceptor
 import com.senierr.repository.remote.interceptor.LoggingInterceptor
+import com.senierr.repository.remote.interceptor.ProgressInterceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -35,6 +36,7 @@ object RemoteManager {
                     if (isDebug) {
                         addInterceptor(LoggingInterceptor())
                     }
+                    addNetworkInterceptor(ProgressInterceptor())
                     connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
                     readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
                     writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)

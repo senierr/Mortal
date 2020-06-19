@@ -1,12 +1,17 @@
 package com.senierr.mortal.domain.common
 
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.database.Cursor
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.work.WorkManager
 import com.bm.library.PhotoView
 import com.senierr.adapter.internal.ViewHolder
 import com.senierr.base.support.ext.click
@@ -15,6 +20,7 @@ import com.senierr.base.support.utils.LogUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.domain.common.vm.DownloadViewModel
 import com.senierr.mortal.ext.show
+import com.senierr.mortal.worker.DownloadWorker
 import kotlinx.android.synthetic.main.activity_image_preview.*
 
 /**
@@ -47,6 +53,20 @@ class ImagePreviewActivity : BaseActivity(R.layout.activity_image_preview) {
             val holder = ViewHolder.create(container, R.layout.item_image_preview)
             val pvPreview = holder.findView<PhotoView>(R.id.pv_preview)
 
+            pvPreview?.click {
+//                downloadViewModel.download(images[position], "adasdadas.jpg")
+                val request = DownloadWorker.start(this@ImagePreviewActivity, images[position], "adasdadas.jpg")
+                WorkManager.getInstance(this).getWorkInfoByIdLiveData(request.getId())
+                    .observe(this, object : Observer<WorkInfo>{
+                        override fun onChanged(@Nullable workInfo: WorkInfo?) {
+                            if (workInfo != null && workInfo.state == WorkInfo.State.SUCCEEDED) {
+                                //获取成功返回的结果
+                                Log.e("TAG",workInfo.outputData.getString(DATA_KEY))
+                            }
+                        }
+                    })
+            }
+
             pvPreview?.enable()
             pvPreview?.show(images[position])
 
@@ -59,11 +79,52 @@ class ImagePreviewActivity : BaseActivity(R.layout.activity_image_preview) {
         }
     }
 
+    //广播监听下载的各个状态
+    private val receiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent?) {
+            val query = DownloadManager.Query()
+            //通过下载的id查找
+            query.setFilterById(id)
+            val downloadManager = applicationContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager?
+            val cursor: Cursor = downloadManager?.query(query)
+            if (cursor.moveToFirst()) {
+                val status: Int = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
+                when (status) {
+                    DownloadManager.STATUS_PAUSED -> {
+
+                    }
+                    DownloadManager.STATUS_PENDING -> {
+
+                    }
+                    DownloadManager.STATUS_RUNNING -> {
+
+                    }
+                    DownloadManager.STATUS_SUCCESSFUL -> {
+                        cursor.close()
+                        context.unregisterReceiver(this)
+                    }
+                    DownloadManager.STATUS_FAILED -> {
+                        cursor.close()
+                        context.unregisterReceiver(this)
+                    }
+                }
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initParams()
         initView()
         initViewModel()
+
+        //注册广播接收者，监听下载状态
+        registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(receiver)
+        super.onDestroy()
     }
 
     private fun initParams() {
@@ -81,10 +142,9 @@ class ImagePreviewActivity : BaseActivity(R.layout.activity_image_preview) {
         downloadViewModel.downloadProgress.observe(this, Observer {
             LogUtil.logE("progress: ${it.percent}")
         })
-        downloadViewModel.downloadSuccess.observe(this, Observer {
+        downloadViewModel.downloadResult.observe(this, {
             LogUtil.logE("success: ${it.absolutePath}")
-        })
-        downloadViewModel.downloadFailure.observe(this, Observer {
+        }, {
             LogUtil.logE("failure: ${it.message}")
         })
     }

@@ -1,5 +1,6 @@
 package com.senierr.mortal.domain.user
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,7 +20,7 @@ class MeFragment : BaseFragment(R.layout.fragment_me) {
 
     private lateinit var userInfoViewModel: UserInfoViewModel
 
-    override fun onLazyCreate() {
+    override fun onLazyCreate(context: Context) {
         initView()
         initViewModel()
 

@@ -1,11 +1,14 @@
 package com.senierr.mortal.domain.home
 
+import android.content.Context
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
 import com.senierr.base.support.ui.BaseFragment
+import com.senierr.base.support.ui.recyclerview.LinearItemDecoration
 import com.senierr.base.support.utils.LogUtil
+import com.senierr.base.support.utils.ScreenUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.domain.common.WebViewActivity
 import com.senierr.mortal.domain.common.wrapper.LoadMoreWrapper
@@ -49,10 +52,9 @@ class GanHuoFragment : BaseFragment(R.layout.fragment_home_ganhuo) {
     private var page = 1
     private val pageSize = 10
 
-    override fun onLazyCreate() {
-        LogUtil.logE("onLazyCreate")
+    override fun onLazyCreate(context: Context) {
         initParam()
-        initView()
+        initView(context)
         initViewModel()
         msv_state?.showLoadingView()
         doRefresh()
@@ -63,14 +65,13 @@ class GanHuoFragment : BaseFragment(R.layout.fragment_home_ganhuo) {
         type = bundle?.getString(TYPE)?: ""
     }
 
-    private fun initView() {
+    private fun initView(context: Context) {
         srl_refresh?.setOnRefreshListener { doRefresh() }
         rv_list?.layoutManager = LinearLayoutManager(context)
+        rv_list?.addItemDecoration(LinearItemDecoration(dividerSize = ScreenUtil.dp2px(context, 4F)))
         // 列表
         ganHuoWrapper.setOnItemClickListener { _, _, item ->
-            context?.let {
-                WebViewActivity.start(it, item.url, item.title)
-            }
+            WebViewActivity.start(context, item.url, item.title)
         }
         multiTypeAdapter.register(ganHuoWrapper)
         // 加载更多

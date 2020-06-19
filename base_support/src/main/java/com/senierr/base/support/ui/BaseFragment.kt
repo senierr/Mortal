@@ -1,5 +1,6 @@
 package com.senierr.base.support.ui
 
+import android.content.Context
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 
@@ -15,8 +16,9 @@ open class BaseFragment(@LayoutRes contentLayoutId: Int = 0) : Fragment(contentL
 
     override fun onResume() {
         super.onResume()
-        if (!lazyCreated) {
-            onLazyCreate()
+        val context = activity
+        if (!lazyCreated && context != null) {
+            onLazyCreate(context)
             lazyCreated = true
         }
     }
@@ -26,5 +28,5 @@ open class BaseFragment(@LayoutRes contentLayoutId: Int = 0) : Fragment(contentL
      *
      * 当页面用户可见可操作（onResume）时，才启动，且仅启动一次
      */
-    open fun onLazyCreate() {}
+    open fun onLazyCreate(context: Context) {}
 }

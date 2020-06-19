@@ -14,7 +14,7 @@ import com.senierr.repository.entity.dto.gank.Girl
  * @author zhouchunjie
  * @date 2020/5/10
  */
-class RecommendWrapper : ViewHolderWrapper<Girl>(R.layout.item_home_recommend) {
+class RecommendWrapper : ViewHolderWrapper<Girl>(R.layout.item_recommend) {
 
     override fun onBindViewHolder(holder: ViewHolder, item: Girl) {
         val ivImage = holder.findView<ImageView>(R.id.iv_image)

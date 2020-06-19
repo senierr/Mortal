@@ -1,11 +1,14 @@
 package com.senierr.mortal.domain.recommend
 
+import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
 import com.senierr.base.support.ui.BaseFragment
+import com.senierr.base.support.ui.recyclerview.GridItemDecoration
 import com.senierr.base.support.utils.LogUtil
+import com.senierr.base.support.utils.ScreenUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.domain.common.ImagePreviewActivity
 import com.senierr.mortal.domain.common.wrapper.LoadMoreWrapper
@@ -39,16 +42,17 @@ class RecommendFragment : BaseFragment(R.layout.fragment_recommend) {
     private var page = 1
     private val pageSize = 10
 
-    override fun onLazyCreate() {
-        initView()
+    override fun onLazyCreate(context: Context) {
+        initView(context)
         initViewModel()
         msv_state?.showLoadingView()
         doRefresh()
     }
 
-    private fun initView() {
+    private fun initView(context: Context) {
         srl_refresh?.setOnRefreshListener { doRefresh() }
         rv_list?.layoutManager = GridLayoutManager(context, 2)
+        rv_list?.addItemDecoration(GridItemDecoration(ScreenUtil.dp2px(context, 2F), true))
         // 列表
         recommendWrapper.setOnItemClickListener { _, _, item ->
             context?.let {

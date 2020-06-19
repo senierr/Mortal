@@ -2,29 +2,24 @@ package com.senierr.mortal.domain.common
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bm.library.PhotoView
 import com.senierr.adapter.internal.ViewHolder
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ext.setGone
 import com.senierr.base.support.ui.BaseActivity
-import com.senierr.base.support.utils.LogUtil
 import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.domain.common.vm.DownloadViewModel
 import com.senierr.mortal.ext.show
-import com.senierr.repository.Repository
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.activity_image_preview.*
 import java.io.File
-import java.net.URL
 
 /**
  * 图片预览页面

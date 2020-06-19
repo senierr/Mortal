@@ -1,5 +1,6 @@
 package com.senierr.mortal.domain.home
 
+import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -21,7 +22,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     private lateinit var homeViewModel: HomeViewModel
 
-    override fun onLazyCreate() {
+    override fun onLazyCreate(context: Context) {
         initViewModel()
 
         homeViewModel.fetchCategories()

@@ -10,18 +10,16 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tb_top"
-            style="@style/Toolbar"
+            style="@style/BaseToolbar"
+            android:elevation="@dimen/dp_0"
             app:layout_scrollFlags="scroll|enterAlways"
             app:title="@string/home" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tl_tab"
-            app:tabMode="scrollable"
             style="@style/BaseTabLayout"
-            app:tabTextAppearance="@style/BaseTabTextAppearance"
-            android:elevation="@dimen/dp_2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="@dimen/dp_40"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager2.widget.ViewPager2

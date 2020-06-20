@@ -3,19 +3,23 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/app_theme</item>
         <item name="colorPrimaryDark">@color/app_theme</item>
-        <item name="colorAccent">@color/app_accent</item>
+        <item name="colorAccent">@color/app_theme</item>
         <!-- 光标颜色 -->
         <item name="android:textCursorDrawable">@drawable/shape_cursor</item>
         <!-- 默认灰色背景 -->
         <item name="android:windowBackground">@color/window_empty</item>
+        <!-- 状态栏 -->
+        <item name="android:statusBarColor">@color/window_content</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <!-- ToolBar菜单样式 -->
-    <style name="Toolbar">
+    <style name="BaseToolbar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/dp_48</item>
-        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:background">@color/window_content</item>
         <item name="android:minHeight">@dimen/dp_48</item>
+        <item name="android:elevation">@dimen/dp_1</item>
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="theme">@style/ToolbarTheme</item>
         <item name="contentInsetStartWithNavigation">@dimen/dp_0</item>
@@ -25,41 +29,45 @@
 
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <!-- 菜单选项文字颜色 -->
-        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="actionMenuTextColor">@color/text_content</item>
         <!-- 菜单选项文字尺寸 -->
         <item name="android:textSize">@dimen/sp_14</item>
         <!-- 标题颜色-->
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:textColorPrimary">@color/text_title</item>
+        <item name="android:textColorSecondary">@color/text_title_sub</item>
     </style>
 
     <!-- ToolBar标题文字样式 -->
     <style name="ToolbarTitleTextAppearance" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">@dimen/sp_18</item>
+        <item name="android:textColor">@color/text_title</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/sp_16</item>
         <item name="android:ellipsize">middle</item>
         <item name="android:singleLine">true</item>
     </style>
 
     <!-- ToolBar附标题文字样式 -->
     <style name="ToolbarSubTitleTextAppearance" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@color/text_title_sub</item>
         <item name="android:textSize">@dimen/sp_12</item>
     </style>
 
     <!--Tab样式-->
     <style name="BaseTabLayout" parent="Widget.MaterialComponents.TabLayout">
-        <item name="tabBackground">@color/white</item>
-        <item name="tabIndicatorColor">@color/app_accent</item>
+        <item name="tabMode">scrollable</item>
+        <item name="tabBackground">@color/window_content</item>
+        <item name="tabIndicatorColor">@color/app_theme</item>
         <item name="tabIndicatorHeight">@dimen/dp_2</item>
-        <item name="tabSelectedTextColor">@color/app_accent</item>
+        <item name="tabTextAppearance">@style/BaseTabTextAppearance</item>
+        <item name="tabTextColor">@color/text_title</item>
+        <item name="tabSelectedTextColor">@color/app_theme</item>
     </style>
 
     <!--Tab字体样式-->
-    <style name="BaseTabTextAppearance" parent="TextAppearance.MaterialComponents.Button">
+    <style name="BaseTabTextAppearance" parent="TextAppearance.AppCompat.Button">
         <item name="android:textSize">@dimen/sp_14</item>
+        <!--这里设置无效-->
         <item name="android:textColor">@color/text_title</item>
-        <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
@@ -123,6 +131,7 @@
     <!-- 图片预览页主题 -->
     <style name="AppTheme.ImagePreviewTheme">
         <item name="android:windowBackground">@color/window_black</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 </resources>

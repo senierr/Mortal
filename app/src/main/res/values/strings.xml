@@ -13,6 +13,8 @@
     <string name="recommend">精选</string>
     <string name="me">我</string>
 
+    <string name="format_author">作者：%1$s</string>
+
     <string name="format_date_recent">刚刚</string>
     <string name="format_date_minute_ago">%1$d分钟前</string>
     <string name="format_date_hour_ago">%1$d小时前</string>

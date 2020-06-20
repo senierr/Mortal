@@ -4,9 +4,8 @@
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
     <!-- 主题色 -->
-    <color name="app_theme">#3C3F41</color>
-    <color name="app_theme_dark">#27292B</color>
-    <color name="app_accent">#499C54</color>
+    <color name="app_theme">#3694F6</color>
+    <color name="app_theme_dark">#296BB1</color>
     <color name="app_warn">#ce3d3a</color>
     <!-- 窗口背景色 -->
     <color name="window_content">#FFFFFF</color>
@@ -22,20 +21,16 @@
     <color name="text_content_sub">#888888</color>
     <color name="text_hint">#B3B3B3</color>
     <color name="text_link">#477aac</color>
-    <color name="text_white">#ffffff</color>
-    <color name="text_warn">#ce3d3a</color>
-    <color name="text_accent">#499C54</color>
+    <color name="text_white">@color/white</color>
+    <color name="text_warn">@color/app_warn</color>
+    <color name="text_theme">@color/app_theme</color>
     <!-- 按钮色 -->
-    <color name="btn_theme">#3C3F41</color>
-    <color name="btn_theme_pressed">#4D3C3F41</color>
-    <color name="btn_theme_unable">#B3B3B3</color>
-    <color name="btn_white">#FFFFFF</color>
-    <color name="btn_white_pressed">#4DFFFFFF</color>
-    <color name="btn_white_unable">#B3B3B3</color>
-    <color name="btn_transparent">#00000000</color>
-    <color name="btn_transparent_pressed">#4D000000</color>
-    <color name="btn_accent">#499C54</color>
-    <color name="btn_accent_pressed">#4D499C54</color>
-    <color name="btn_accent_selected">#4D499C54</color>
-    <color name="btn_accent_unable">#B3B3B3</color>
+    <color name="btn_theme">@color/app_theme</color>
+    <color name="btn_black">#222222</color>
+    <color name="btn_white">@color/white</color>
+    <color name="btn_transparent">@color/transparent</color>
+    <!-- 水波纹色 -->
+    <color name="ripple_theme">@color/app_theme_dark</color>
+    <color name="ripple_white">#B4B4B4</color>
+    <color name="ripple_transparent">#B4B4B4</color>
 </resources>

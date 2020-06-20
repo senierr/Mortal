@@ -3,15 +3,15 @@
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<item android:id="@android:id/background">
 		<shape>
-			<corners android:radius="1dp" />
-			<solid android:color="@color/white" />
+			<corners android:radius="@dimen/dp_1" />
+			<solid android:color="@color/window_empty" />
 		</shape>
 	</item>
 	<item android:id="@android:id/progress">
 		<clip>
 			<shape>
-				<corners android:radius="1dp" />
-				<solid android:color="@color/app_accent" />
+				<corners android:radius="@dimen/dp_1" />
+				<solid android:color="@color/app_theme" />
 			</shape>
 		</clip>
 	</item>

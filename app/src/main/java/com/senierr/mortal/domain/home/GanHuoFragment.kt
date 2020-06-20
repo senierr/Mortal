@@ -7,13 +7,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.ui.recyclerview.LinearItemDecoration
-import com.senierr.base.support.utils.LogUtil
 import com.senierr.base.support.utils.ScreenUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.domain.common.WebViewActivity
 import com.senierr.mortal.domain.common.wrapper.LoadMoreWrapper
 import com.senierr.mortal.domain.home.vm.GanHuoViewModel
-import com.senierr.mortal.domain.home.wrapper.GanHuoWrapper
+import com.senierr.mortal.domain.home.wrapper.GanHuoMoreImageWrapper
+import com.senierr.mortal.domain.home.wrapper.GanHuoNoImageWrapper
+import com.senierr.mortal.domain.home.wrapper.GanHuoOneImageWrapper
 import com.senierr.mortal.ext.showContentView
 import com.senierr.mortal.ext.showEmptyView
 import com.senierr.mortal.ext.showLoadingView
@@ -44,7 +45,9 @@ class GanHuoFragment : BaseFragment(R.layout.fragment_home_ganhuo) {
     private lateinit var type: String
 
     private val multiTypeAdapter = MultiTypeAdapter()
-    private val ganHuoWrapper = GanHuoWrapper()
+    private val moreImageWrapper = GanHuoMoreImageWrapper()
+    private val oneImageWrapper = GanHuoOneImageWrapper()
+    private val noImageWrapper = GanHuoNoImageWrapper()
     private val loadMoreWrapper = LoadMoreWrapper()
 
     private lateinit var ganHuoViewModel: GanHuoViewModel
@@ -70,10 +73,22 @@ class GanHuoFragment : BaseFragment(R.layout.fragment_home_ganhuo) {
         rv_list?.layoutManager = LinearLayoutManager(context)
         rv_list?.addItemDecoration(LinearItemDecoration(dividerSize = ScreenUtil.dp2px(context, 4F)))
         // 列表
-        ganHuoWrapper.setOnItemClickListener { _, _, item ->
+        moreImageWrapper.setOnItemClickListener { _, _, item ->
             WebViewActivity.start(context, item.url, item.title)
         }
-        multiTypeAdapter.register(ganHuoWrapper)
+        oneImageWrapper.setOnItemClickListener { _, _, item ->
+            WebViewActivity.start(context, item.url, item.title)
+        }
+        noImageWrapper.setOnItemClickListener { _, _, item ->
+            WebViewActivity.start(context, item.url, item.title)
+        }
+        multiTypeAdapter.register(moreImageWrapper, oneImageWrapper, noImageWrapper) { item ->
+            return@register when (item.images.size) {
+                0 -> GanHuoNoImageWrapper::class.java
+                1 -> GanHuoOneImageWrapper::class.java
+                else -> GanHuoMoreImageWrapper::class.java
+            }
+        }
         // 加载更多
         loadMoreWrapper.onLoadMoreListener = { doLoadMore() }
         multiTypeAdapter.register(loadMoreWrapper)

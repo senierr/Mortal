@@ -101,6 +101,7 @@ class WebViewActivity : BaseActivity(R.layout.activity_webview) {
 
     private fun initView() {
         setSupportActionBar(tb_top)
+        tb_top?.navigationIcon?.setTint(getColor(R.color.btn_black))
         tb_top?.setNavigationOnClickListener { finish() }
         // 设置标题
         title?.let { tb_top?.title = it }

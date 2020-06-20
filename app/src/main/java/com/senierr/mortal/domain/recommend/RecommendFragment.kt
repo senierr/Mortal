@@ -3,25 +3,19 @@ package com.senierr.mortal.domain.recommend
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.ui.recyclerview.GridItemDecoration
-import com.senierr.base.support.utils.LogUtil
 import com.senierr.base.support.utils.ScreenUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.domain.common.ImagePreviewActivity
 import com.senierr.mortal.domain.common.wrapper.LoadMoreWrapper
-import com.senierr.mortal.domain.home.GanHuoFragment
-import com.senierr.mortal.domain.home.vm.GanHuoViewModel
-import com.senierr.mortal.domain.home.wrapper.GanHuoWrapper
 import com.senierr.mortal.domain.recommend.vm.RecommendViewModel
 import com.senierr.mortal.domain.recommend.wrapper.RecommendWrapper
 import com.senierr.mortal.ext.showContentView
 import com.senierr.mortal.ext.showEmptyView
 import com.senierr.mortal.ext.showLoadingView
 import com.senierr.mortal.ext.showNetworkErrorView
-import com.senierr.repository.entity.dto.gank.GanHuo
 import com.senierr.repository.entity.dto.gank.Girl
 import kotlinx.android.synthetic.main.fragment_home_ganhuo.*
 

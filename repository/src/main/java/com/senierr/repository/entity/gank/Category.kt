@@ -1,4 +1,4 @@
-package com.senierr.repository.entity.dto.gank
+package com.senierr.repository.entity.gank
 
 import com.google.gson.annotations.SerializedName
 

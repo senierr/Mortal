@@ -1,4 +1,4 @@
-package com.senierr.repository.entity.dto
+package com.senierr.repository.entity.bmob
 
 /**
  * 版本信息

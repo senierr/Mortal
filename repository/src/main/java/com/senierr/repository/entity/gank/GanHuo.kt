@@ -1,14 +1,14 @@
-package com.senierr.repository.entity.dto.gank
+package com.senierr.repository.entity.gank
 
 import com.google.gson.annotations.SerializedName
 
 /**
- * 妹纸实体
+ * 干货实体
  *
  * @author zhouchunjie
  * @date 2020/6/18
  */
-data class Girl(
+data class GanHuo(
     @SerializedName("_id")
     val id: String = "",
     val author: String = "",

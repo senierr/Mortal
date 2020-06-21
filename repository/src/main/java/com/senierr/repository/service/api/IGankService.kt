@@ -1,9 +1,9 @@
 package com.senierr.repository.service.api
 
-import com.senierr.repository.entity.dto.gank.Banner
-import com.senierr.repository.entity.dto.gank.Category
-import com.senierr.repository.entity.dto.gank.GanHuo
-import com.senierr.repository.entity.dto.gank.Girl
+import com.senierr.repository.entity.gank.Banner
+import com.senierr.repository.entity.gank.Category
+import com.senierr.repository.entity.gank.GanHuo
+import com.senierr.repository.entity.gank.Girl
 
 /**
  * 文章服务

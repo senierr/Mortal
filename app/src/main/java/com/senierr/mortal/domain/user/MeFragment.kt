@@ -8,7 +8,7 @@ import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.utils.LogUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
-import com.senierr.repository.entity.dto.UserInfo
+import com.senierr.repository.entity.bmob.UserInfo
 
 /**
  * 我的页面

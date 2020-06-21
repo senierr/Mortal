@@ -1,8 +1,11 @@
 package com.senierr.repository.remote.interceptor
 
+import com.google.gson.Gson
 import com.senierr.base.support.utils.EncryptUtil
+import com.senierr.repository.entity.bmob.BmobException
 import okhttp3.Interceptor
 import okhttp3.Response
+import java.io.IOException
 import java.security.SecureRandom
 
 /**
@@ -11,7 +14,7 @@ import java.security.SecureRandom
  * @author zhouchunjie
  * @date 2020/6/11
  */
-class BmobParamsInterceptor : Interceptor {
+class BmobInterceptor : Interceptor {
 
     companion object {
         private const val APPLICATION_ID = "834b0ae723e4d0a8554694939e659165"
@@ -22,23 +25,38 @@ class BmobParamsInterceptor : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val original = chain.request()
+        // 注入参数
         val url = original.url().newBuilder().build()
-
         val timeStamp = System.currentTimeMillis().toString()
         val noncestrKey = createNoncestrKey()
         val rawRequest = original.newBuilder()
-            .addHeader("Content-Type", "application/json")
-            .addHeader("X-Bmob-Application-Id", APPLICATION_ID)
-            .addHeader("X-Bmob-REST-API-Key", REST_API_KEY)
+//            .addHeader("Content-Type", "application/json")
+//            .addHeader("X-Bmob-Application-Id", APPLICATION_ID)
+//            .addHeader("X-Bmob-REST-API-Key", REST_API_KEY)
             .addHeader("X-Bmob-SDK-Type", "API")
             .addHeader("X-Bmob-Safe-Timestamp", timeStamp)
             .addHeader("X-Bmob-Noncestr-Key", noncestrKey)
             .addHeader("X-Bmob-Secret-Key", SECRET_KEY)
-            .addHeader("X-Bmob-Safe-Sign", createSafeSign(url.host(), timeStamp, SAFE_TOKEN, noncestrKey))
+            .addHeader("X-Bmob-Safe-Sign", createSafeSign(url.encodedPath(), timeStamp, SAFE_TOKEN, noncestrKey))
             .method(original.method(), original.body())
             .url(url)
             .build()
-        return chain.proceed(rawRequest)
+
+        // 解析错误
+        val originalResponse = chain.proceed(rawRequest)
+        if (originalResponse.code() >= 400) {
+            val originalResponseBody = originalResponse.body()
+            if (originalResponseBody != null) {
+                val bmobException = try {
+                    Gson().fromJson(originalResponseBody.string(), BmobException::class.java)
+                } catch (e: Exception) {
+                    // intercept中只能抛出IOException
+                    throw IOException(e.cause)
+                }
+                throw bmobException
+            }
+        }
+        return originalResponse
     }
 
     /**
@@ -66,6 +84,7 @@ class BmobParamsInterceptor : Interceptor {
         safeToken: String,
         noncestrKey: String
     ): String {
-        return EncryptUtil.encryptMD5ToString(url + timeStamp + safeToken + noncestrKey) ?: ""
+        val safeSign = EncryptUtil.encryptMD5ToString(url + timeStamp + safeToken + noncestrKey) ?: ""
+        return safeSign.toLowerCase()
     }
 }

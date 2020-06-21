@@ -1,4 +1,4 @@
-package com.senierr.repository.entity.dto.gank
+package com.senierr.repository.entity.gank
 
 import java.io.IOException
 

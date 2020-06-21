@@ -1,4 +1,4 @@
-package com.senierr.repository.entity.po
+package com.senierr.repository.entity
 
 import androidx.room.Entity
 import androidx.room.Ignore

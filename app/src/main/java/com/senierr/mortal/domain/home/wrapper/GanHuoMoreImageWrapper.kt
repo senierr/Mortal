@@ -10,7 +10,7 @@ import com.senierr.adapter.internal.ViewHolderWrapper
 import com.senierr.mortal.R
 import com.senierr.mortal.ext.show
 import com.senierr.mortal.utils.DateFormatUtil
-import com.senierr.repository.entity.dto.gank.GanHuo
+import com.senierr.repository.entity.gank.GanHuo
 
 /**
  * 首页热门干货适配器

@@ -16,7 +16,7 @@ import com.senierr.mortal.ext.showContentView
 import com.senierr.mortal.ext.showEmptyView
 import com.senierr.mortal.ext.showLoadingView
 import com.senierr.mortal.ext.showNetworkErrorView
-import com.senierr.repository.entity.dto.gank.Girl
+import com.senierr.repository.entity.gank.Girl
 import kotlinx.android.synthetic.main.fragment_home_ganhuo.*
 
 /**

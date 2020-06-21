@@ -1,11 +1,8 @@
 package com.senierr.repository.remote.api
 
-import com.senierr.repository.entity.dto.HttpResponse
-import com.senierr.repository.entity.dto.UserInfo
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import com.senierr.repository.entity.bmob.BmobResponse
+import com.senierr.repository.entity.bmob.UserInfo
+import retrofit2.http.*
 
 /**
  * 用户模块API
@@ -16,19 +13,6 @@ import retrofit2.http.POST
 interface UserApi {
 
     /**
-     * 登录
-     *
-     * @param username 用户名
-     * @param password 密码
-     */
-    @FormUrlEncoded
-    @POST("user/login")
-    suspend fun login(
-        @Field("username") username: String,
-        @Field("password") password: String
-    ): HttpResponse<UserInfo>
-
-    /**
      * 注册
      *
      * @param username 用户名
@@ -36,16 +20,57 @@ interface UserApi {
      * @param repassword 确认密码
      */
     @FormUrlEncoded
-    @POST("user/register")
+    @POST("users")
     suspend fun register(
         @Field("username") username: String,
-        @Field("password") password: String,
-        @Field("repassword") repassword: String
-    ): HttpResponse<UserInfo>
+        @Field("password") password: String
+    ): UserInfo
 
     /**
-     * 登出
+     * 登录
+     *
+     * @param username 用户名
+     * @param password 密码
      */
-    @GET("user/logout/json")
-    suspend fun logout(): HttpResponse<UserInfo>
+    @GET("1/login")
+    suspend fun login(
+        @Query("username") username: String,
+        @Query("password") password: String
+    ): UserInfo
+
+    /**
+     * 获取用户信息
+     */
+    @GET("1/users/{objectId}")
+    suspend fun getUserInfo(@Path("objectId") objectId: String): UserInfo
+
+    /**
+     * 检查用户的登录是否过期
+     */
+    @GET("1/checkSession/{objectId}")
+    suspend fun checkSession(
+        @Header("X-Bmob-Session-Token") sessionToken: String,
+        @Path("objectId") objectId: String
+    ): BmobResponse
+
+    /**
+     * 更新用户邮箱
+     */
+    @PUT("1/users/{objectId}")
+    suspend fun updateEmail(
+        @Header("X-Bmob-Session-Token") sessionToken: String,
+        @Path("objectId") objectId: String,
+        @Body email: String
+    ): BmobResponse
+
+    /**
+     * 重置密码
+     */
+    @PUT("1/updateUserPassword/{objectId}")
+    suspend fun resetPassword(
+        @Header("X-Bmob-Session-Token") sessionToken: String,
+        @Path("objectId") objectId: String,
+        @Body oldPassword: String,
+        @Body newPassword: String
+    ): BmobResponse
 }

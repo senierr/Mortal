@@ -1,6 +1,6 @@
 package com.senierr.repository.remote.api
 
-import com.senierr.repository.entity.dto.gank.*
+import com.senierr.repository.entity.gank.*
 import retrofit2.http.GET
 import retrofit2.http.Path
 

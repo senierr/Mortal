@@ -4,9 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.senierr.mortal.domain.common.vm.StatefulLiveData
 import com.senierr.repository.Repository
-import com.senierr.repository.entity.dto.gank.Category
-import com.senierr.repository.entity.dto.gank.GanHuo
-import com.senierr.repository.entity.dto.gank.Girl
+import com.senierr.repository.entity.gank.Girl
 import com.senierr.repository.service.api.IGankService
 import kotlinx.coroutines.launch
 

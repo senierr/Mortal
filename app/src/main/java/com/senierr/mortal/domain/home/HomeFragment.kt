@@ -9,7 +9,7 @@ import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.domain.home.vm.HomeViewModel
-import com.senierr.repository.entity.dto.gank.Category
+import com.senierr.repository.entity.gank.Category
 import kotlinx.android.synthetic.main.fragment_home.*
 
 /**

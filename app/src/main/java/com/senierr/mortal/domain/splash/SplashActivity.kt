@@ -6,6 +6,7 @@ import com.senierr.base.support.ui.BaseActivity
 import com.senierr.mortal.R
 import com.senierr.mortal.domain.main.MainActivity
 import com.senierr.mortal.domain.splash.vm.SplashViewModel
+import com.senierr.mortal.domain.user.LoginActivity
 
 /**
  * 引导页面
@@ -21,7 +22,7 @@ class SplashActivity : BaseActivity(R.layout.activity_splash) {
         super.onCreate(savedInstanceState)
         initViewModel()
 //        splashViewModel.autoLogin()
-        MainActivity.start(this)
+        LoginActivity.start(this)
         finish()
     }
 

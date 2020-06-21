@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.senierr.repository.entity.po.DBCache
+import com.senierr.repository.entity.DBCache
 
 /**
  * 数据库缓存接口

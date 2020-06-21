@@ -1,11 +1,9 @@
 package com.senierr.mortal.domain.splash.vm
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.senierr.mortal.domain.common.vm.StatefulLiveData
-import com.senierr.repository.Repository
-import com.senierr.repository.entity.dto.UserInfo
+import com.senierr.repository.entity.bmob.UserInfo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

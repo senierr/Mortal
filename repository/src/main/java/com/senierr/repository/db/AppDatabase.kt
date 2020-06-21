@@ -3,7 +3,7 @@ package com.senierr.repository.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.senierr.repository.db.dao.DBCacheDao
-import com.senierr.repository.entity.po.DBCache
+import com.senierr.repository.entity.DBCache
 
 /**
  * 数据库入口

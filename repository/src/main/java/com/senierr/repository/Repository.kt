@@ -32,6 +32,7 @@ object Repository {
      */
     inline fun <reified T> getService(): T = when (T::class.java) {
         IGankService::class.java -> GankService() as T
+        IUserService::class.java -> UserService() as T
         ICommonService::class.java -> CommonService() as T
         else -> throw IllegalArgumentException("Can not find ${T::class.java.simpleName}!")
     }

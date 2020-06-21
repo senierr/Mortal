@@ -1,8 +1,6 @@
 package com.senierr.repository.remote.api
 
-import com.senierr.repository.entity.dto.HttpResponse
-import com.senierr.repository.entity.dto.VersionInfo
-import retrofit2.http.FormUrlEncoded
+import com.senierr.repository.entity.bmob.VersionInfo
 import retrofit2.http.POST
 
 /**
@@ -17,5 +15,5 @@ interface SettingApi {
      * 检测新版本
      */
     @POST("user/login")
-    suspend fun checkNewVersion(): HttpResponse<VersionInfo>
+    suspend fun checkNewVersion(): VersionInfo
 }

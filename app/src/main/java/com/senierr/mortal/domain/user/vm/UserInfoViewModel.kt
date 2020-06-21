@@ -3,8 +3,7 @@ package com.senierr.mortal.domain.user.vm
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.senierr.repository.Repository
-import com.senierr.repository.entity.dto.UserInfo
+import com.senierr.repository.entity.bmob.UserInfo
 import kotlinx.coroutines.launch
 
 /**

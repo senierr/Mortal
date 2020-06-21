@@ -1,9 +1,9 @@
 package com.senierr.repository.service.impl
 
-import com.senierr.repository.entity.dto.gank.Banner
-import com.senierr.repository.entity.dto.gank.Category
-import com.senierr.repository.entity.dto.gank.GanHuo
-import com.senierr.repository.entity.dto.gank.Girl
+import com.senierr.repository.entity.gank.Banner
+import com.senierr.repository.entity.gank.Category
+import com.senierr.repository.entity.gank.GanHuo
+import com.senierr.repository.entity.gank.Girl
 import com.senierr.repository.remote.RemoteManager
 import com.senierr.repository.remote.api.GankApi
 import com.senierr.repository.service.api.IGankService

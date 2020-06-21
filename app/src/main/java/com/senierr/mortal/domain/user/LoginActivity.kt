@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.senierr.base.support.ext.click
@@ -15,7 +14,7 @@ import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.domain.user.vm.LoginViewModel
 import com.senierr.mortal.widget.CircularAnim
-import com.senierr.repository.entity.dto.HttpException
+import com.senierr.repository.entity.bmob.BmobException
 import kotlinx.android.synthetic.main.activity_login.*
 import java.lang.Exception
 
@@ -139,8 +138,8 @@ class LoginActivity : BaseActivity(R.layout.activity_login) {
      */
     private fun showLoginFailure(exception: Exception) {
         loadingDialog.dismiss()
-        if (exception is HttpException) {
-            ToastUtil.showLong(this, exception.errorMsg)
+        if (exception is BmobException) {
+            ToastUtil.showLong(this, exception.error)
         } else {
             ToastUtil.showLong(this, R.string.network_error)
         }

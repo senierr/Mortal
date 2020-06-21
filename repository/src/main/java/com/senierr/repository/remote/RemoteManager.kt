@@ -1,7 +1,7 @@
 package com.senierr.repository.remote
 
 import android.content.Context
-import com.senierr.repository.remote.interceptor.BmobParamsInterceptor
+import com.senierr.repository.remote.interceptor.BmobInterceptor
 import com.senierr.repository.remote.interceptor.LoggingInterceptor
 import com.senierr.repository.remote.interceptor.ProgressInterceptor
 import okhttp3.OkHttpClient
@@ -49,7 +49,7 @@ object RemoteManager {
             .addConverterFactory(GsonConverterFactory.create())
             .client(
                 OkHttpClient.Builder().apply {
-                    addInterceptor(BmobParamsInterceptor())
+                    addInterceptor(BmobInterceptor())
                     if (isDebug) {
                         addInterceptor(LoggingInterceptor())
                     }

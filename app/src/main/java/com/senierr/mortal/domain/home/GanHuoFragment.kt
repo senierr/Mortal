@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.ui.recyclerview.LinearItemDecoration
+import com.senierr.base.support.utils.LogUtil
 import com.senierr.base.support.utils.ScreenUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.domain.common.WebViewActivity
@@ -21,6 +22,9 @@ import com.senierr.mortal.ext.showLoadingView
 import com.senierr.mortal.ext.showNetworkErrorView
 import com.senierr.repository.entity.gank.GanHuo
 import kotlinx.android.synthetic.main.fragment_home_ganhuo.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * 干货列表页
@@ -28,6 +32,7 @@ import kotlinx.android.synthetic.main.fragment_home_ganhuo.*
  * @author zhouchunjie
  * @date 2019/7/8 21:21
  */
+@ExperimentalCoroutinesApi
 class GanHuoFragment : BaseFragment(R.layout.fragment_home_ganhuo) {
 
     companion object {
@@ -59,8 +64,11 @@ class GanHuoFragment : BaseFragment(R.layout.fragment_home_ganhuo) {
         initParam()
         initView(context)
         initViewModel()
-        msv_state?.showLoadingView()
-        doRefresh()
+        launch {
+            msv_state?.showLoadingView()
+            delay(200)
+            doRefresh()
+        }
     }
 
     private fun initParam() {

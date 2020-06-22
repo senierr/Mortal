@@ -1,14 +1,17 @@
 package com.senierr.mortal.domain.user
 
 import android.content.Context
-import android.util.Log
-import androidx.lifecycle.Observer
+import android.content.Intent
 import androidx.lifecycle.ViewModelProvider
+import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseFragment
-import com.senierr.base.support.utils.LogUtil
+import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.repository.entity.bmob.UserInfo
+import com.senierr.repository.exception.NotLoggedException
+import kotlinx.android.synthetic.main.fragment_me.*
+import kotlinx.coroutines.*
 
 /**
  * 我的页面
@@ -16,53 +19,72 @@ import com.senierr.repository.entity.bmob.UserInfo
  * @author zhouchunjie
  * @date 2019/7/8 21:21
  */
+@ExperimentalCoroutinesApi
 class MeFragment : BaseFragment(R.layout.fragment_me) {
+
+    companion object {
+        const val REQUEST_CODE_LOGIN = 100
+    }
 
     private lateinit var userInfoViewModel: UserInfoViewModel
 
     override fun onLazyCreate(context: Context) {
         initView()
-        initViewModel()
+        initViewModel(context)
 
-        userInfoViewModel.fetchUserInfo()
+        doRefresh()
     }
 
     private fun initView() {
-
+        ll_user?.isClickable = false
     }
 
-    private fun initViewModel() {
+    private fun initViewModel(context: Context) {
         userInfoViewModel = ViewModelProvider(this).get(UserInfoViewModel::class.java)
-        userInfoViewModel.fetchUserInfoSuccess.observe(this, Observer {
-            renderView(it)
+        userInfoViewModel.fetchUserInfoResult.observe(this, {
+            renderLogged(it)
+        }, {
+            if (it is NotLoggedException) {
+                renderNotLogged()
+            } else {
+                ToastUtil.showShort(context, it.message)
+            }
         })
-        userInfoViewModel.fetchUserInfoFailure.observe(this, Observer {
-            LogUtil.logE(Log.getStackTraceString(it))
-//            if (it is HttpException) {
-//                ToastUtil.showShort(context, it.message)
-//            } else {
-//                ToastUtil.showShort(context, R.string.network_error)
-//            }
-        })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_LOGIN && resultCode == LoginActivity.LOGIN_SUCCESS) {
+            doRefresh()
+        }
     }
 
     /**
-     * 渲染视图
+     * 刷新页面
      */
-    private fun renderView(userInfo: UserInfo) {
-//        // 头像
-//        Glide.with(this).load(userInfo.avatarUrl).into(iv_avatar)
-//        // 昵称
-//        tv_name?.text = userInfo.name
-//        // 关注者
-//        tv_followers?.text = userInfo.followers.toString()
-//        // 关注的人
-//        tv_following?.text = userInfo.following.toString()
-//        // 邮箱
-//        tv_email?.text = userInfo.email
-//        // 博客
-//        tv_blog?.text = userInfo.blog
-//        // 自我介绍
-//        tv_bio?.text = userInfo.bio
+    private fun doRefresh() {
+        userInfoViewModel.fetchUserInfo()
+    }
+
+    /**
+     * 渲染登录状态
+     */
+    private fun renderLogged(userInfo: UserInfo) {
+        ll_user?.click {
+            // 用户详情
+        }
+        // 头像
+//        iv_avatar?.show(userInfo.)
+        // 昵称
+        tv_nickname?.text = userInfo.username
+    }
+
+    /**
+     * 渲染未登录状态
+     */
+    private fun renderNotLogged() {
+        ll_user?.click {
+            LoginActivity.startForResult(this, REQUEST_CODE_LOGIN)
+        }
     }
 }

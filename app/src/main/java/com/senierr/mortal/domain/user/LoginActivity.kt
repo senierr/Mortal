@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -27,7 +28,7 @@ import java.lang.Exception
 class LoginActivity : BaseActivity(R.layout.activity_login) {
 
     companion object {
-        const val EXTRA_TARGET_INTENT = "target_intent"
+        private const val EXTRA_TARGET_INTENT = "target_intent"
         const val LOGIN_SUCCESS = 1001
         const val LOGIN_FAILURE = 1002
 
@@ -39,9 +40,14 @@ class LoginActivity : BaseActivity(R.layout.activity_login) {
             context.startActivity(intent)
         }
 
-        fun startForResult(context: FragmentActivity, requestCode: Int) {
-            val intent = Intent(context, LoginActivity::class.java)
-            context.startActivityForResult(intent, requestCode)
+        fun startForResult(activity: FragmentActivity, requestCode: Int) {
+            val intent = Intent(activity, LoginActivity::class.java)
+            activity.startActivityForResult(intent, requestCode)
+        }
+
+        fun startForResult(fragment: Fragment, requestCode: Int) {
+            val intent = Intent(fragment.context, LoginActivity::class.java)
+            fragment.startActivityForResult(intent, requestCode)
         }
     }
 

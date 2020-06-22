@@ -36,4 +36,7 @@
     <string name="saving">正在保存&#8230;</string>
     <string name="format_download_success">保存到：%1$s</string>
     <string name="format_download_failure">下载失败：%1$s</string>
+
+    <string name="login_or_register">登录/注册</string>
+    <string name="setting">设置</string>
 </resources>

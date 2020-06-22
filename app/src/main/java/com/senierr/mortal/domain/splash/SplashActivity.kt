@@ -22,7 +22,7 @@ class SplashActivity : BaseActivity(R.layout.activity_splash) {
         super.onCreate(savedInstanceState)
         initViewModel()
 //        splashViewModel.autoLogin()
-        LoginActivity.start(this)
+        MainActivity.start(this)
         finish()
     }
 

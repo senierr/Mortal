@@ -3,6 +3,10 @@ package com.senierr.base.support.ui
 import android.content.Context
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
 
 /**
  * Fragment基类
@@ -10,7 +14,10 @@ import androidx.fragment.app.Fragment
  * @author zhouchunjie
  * @date 2018/5/28
  */
-open class BaseFragment(@LayoutRes contentLayoutId: Int = 0) : Fragment(contentLayoutId) {
+@ExperimentalCoroutinesApi
+open class BaseFragment(
+    @LayoutRes contentLayoutId: Int = 0
+) : Fragment(contentLayoutId), CoroutineScope by MainScope() {
 
     private var lazyCreated = false
 
@@ -21,6 +28,11 @@ open class BaseFragment(@LayoutRes contentLayoutId: Int = 0) : Fragment(contentL
             onLazyCreate(context)
             lazyCreated = true
         }
+    }
+
+    override fun onDestroy() {
+        cancel()
+        super.onDestroy()
     }
 
     /**

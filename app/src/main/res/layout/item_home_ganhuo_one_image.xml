@@ -4,8 +4,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/ripple_btn_white"
-    android:focusable="true"
-    android:clickable="true"
     android:padding="@dimen/dp_8">
 
     <TextView

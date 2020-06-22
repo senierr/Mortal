@@ -11,6 +11,8 @@
 		app:title="@string/me" />
 
 	<LinearLayout
+		android:id="@+id/ll_user"
+		android:background="@drawable/ripple_btn_white"
 		android:orientation="horizontal"
 		android:gravity="center_vertical"
 		android:paddingStart="@dimen/dp_16"
@@ -28,6 +30,9 @@
 
 		<TextView
 			android:id="@+id/tv_nickname"
+			android:text="@string/login_or_register"
+			android:textSize="@dimen/sp_16"
+			android:textColor="@color/text_title"
 			android:layout_marginStart="@dimen/dp_8"
 			android:layout_marginEnd="@dimen/dp_8"
 			android:layout_width="0dp"
@@ -40,32 +45,29 @@
 			android:layout_height="wrap_content"/>
 	</LinearLayout>
 
+	<LinearLayout
+		android:background="@drawable/ripple_btn_white"
+		android:orientation="horizontal"
+		android:gravity="center_vertical"
+		android:paddingStart="@dimen/dp_16"
+		android:paddingEnd="@dimen/dp_16"
+		android:paddingTop="@dimen/dp_8"
+		android:paddingBottom="@dimen/dp_8"
+		android:layout_marginTop="@dimen/dp_8"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
 
+		<ImageView
+			android:src="@drawable/ic_settings"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
 
-
-
-	<TextView
-		android:id="@+id/tv_followers"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
-
-	<TextView
-		android:id="@+id/tv_following"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
-
-	<TextView
-		android:id="@+id/tv_email"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
-
-	<TextView
-		android:id="@+id/tv_blog"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
-
-	<TextView
-		android:id="@+id/tv_bio"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"/>
+		<TextView
+			android:text="@string/setting"
+			android:layout_marginStart="@dimen/dp_8"
+			android:layout_marginEnd="@dimen/dp_8"
+			android:layout_width="0dp"
+			android:layout_weight="1"
+			android:layout_height="wrap_content"/>
+	</LinearLayout>
 </LinearLayout>

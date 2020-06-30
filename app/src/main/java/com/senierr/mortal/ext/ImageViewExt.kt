@@ -5,6 +5,8 @@ import androidx.annotation.DrawableRes
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.senierr.mortal.R
 import java.io.File
 
 /**
@@ -17,16 +19,13 @@ import java.io.File
 /**
  * 加载网络图片
  */
-fun ImageView.show(url: String?,
-                   @DrawableRes placeholderRes: Int? = null,
-                   @DrawableRes errorRes: Int? = null,
+fun ImageView.show(url: String,
+                   @DrawableRes placeholderRes: Int? = R.drawable.ic_photo,
+                   @DrawableRes errorRes: Int? = R.drawable.ic_photo,
                    isGif: Boolean = false,
+                   isCircle: Boolean = false,
                    cookies: MutableMap<String, String>? = null
 ) {
-    if (url.isNullOrBlank()) {
-        // TODO 加载占位图
-        return
-    }
     // 处理Gif
     val requestBuilder = if (isGif) {
         Glide.with(this).asGif()
@@ -50,6 +49,10 @@ fun ImageView.show(url: String?,
             if (placeholderRes != null) placeholder(placeholderRes)
         }
         .apply {
+            // 圆形
+            if (isCircle) transform(CircleCrop())
+        }
+        .apply {
             // 加载失败图
             if (errorRes != null) error(errorRes)
         }
@@ -60,8 +63,8 @@ fun ImageView.show(url: String?,
  * 加载本地文件图片
  */
 fun ImageView.show(file: File?,
-                   @DrawableRes placeholderRes: Int? = null,
-                   @DrawableRes errorRes: Int? = null,
+                   @DrawableRes placeholderRes: Int? = R.drawable.ic_photo,
+                   @DrawableRes errorRes: Int? = R.drawable.ic_photo,
                    isGif: Boolean = false
 ) {
     // 处理Gif
@@ -87,8 +90,8 @@ fun ImageView.show(file: File?,
  * 加载资源文件图片
  */
 fun ImageView.show(@DrawableRes resId: Int?,
-                   @DrawableRes placeholderRes: Int? = null,
-                   @DrawableRes errorRes: Int? = null,
+                   @DrawableRes placeholderRes: Int? = R.drawable.ic_photo,
+                   @DrawableRes errorRes: Int? = R.drawable.ic_photo,
                    isGif: Boolean = false
 ) {
     // 处理Gif

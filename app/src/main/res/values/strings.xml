@@ -13,6 +13,12 @@
     <string name="recommend">精选</string>
     <string name="me">我</string>
 
+    <string name="user_info">用户详情</string>
+    <string name="avatar">头像</string>
+    <string name="nickname">昵称</string>
+    <string name="email">邮箱</string>
+    <string name="none">无</string>
+
     <string name="format_author">作者：%1$s</string>
 
     <string name="format_date_recent">刚刚</string>

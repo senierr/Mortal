@@ -19,7 +19,7 @@
         <item name="android:layout_height">@dimen/dp_48</item>
         <item name="android:background">@color/window_content</item>
         <item name="android:minHeight">@dimen/dp_48</item>
-        <item name="android:elevation">@dimen/dp_1</item>
+        <item name="android:elevation">@dimen/dp_0</item>
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="theme">@style/ToolbarTheme</item>
         <item name="contentInsetStartWithNavigation">@dimen/dp_0</item>
@@ -113,12 +113,6 @@
     <style name="AppTheme.FullScreenTheme.Black">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@color/black</item>
-    </style>
-
-    <!-- 引导页主题 -->
-    <style name="AppTheme.SplashTheme">
-        <item name="android:windowBackground">@drawable/shape_splash</item>
-        <item name="android:windowFullscreen">true</item>
     </style>
 
     <!-- 登录页主题 -->

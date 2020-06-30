@@ -68,6 +68,9 @@ class MeFragment : BaseFragment(R.layout.fragment_me) {
     private fun renderLogged(userInfo: UserInfo) {
         ll_user?.click {
             // 用户详情
+            activity?.let { context ->
+                UserInfoActivity.start(context)
+            }
         }
         // 头像
 //        iv_avatar?.show(userInfo.)

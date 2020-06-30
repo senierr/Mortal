@@ -33,9 +33,9 @@ class GanHuoMoreImageWrapper : ViewHolderWrapper<GanHuo>(R.layout.item_home_ganh
 
         item.images.forEachIndexed { index, s ->
             when (index) {
-                0 -> ivImage1?.show(s)
-                1 -> ivImage2?.show(s)
-                2 -> ivImage3?.show(s)
+                0 -> s?.let { ivImage1?.show(it) }
+                1 -> s?.let { ivImage2?.show(it) }
+                2 -> s?.let { ivImage3?.show(it) }
             }
         }
         tvTitle?.text = item.title

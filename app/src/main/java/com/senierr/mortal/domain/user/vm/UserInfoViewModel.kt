@@ -25,12 +25,10 @@ class UserInfoViewModel : ViewModel() {
             try {
                 // 先获取缓存数据
                 val cacheUserInfo = userService.getCacheUserInfo()
-                if (cacheUserInfo != null) {
-                    fetchUserInfoResult.setValue(cacheUserInfo)
-                    // 再获取最新数据
-                    val userInfo = userService.getUserInfo(cacheUserInfo.objectId)
-                    fetchUserInfoResult.setValue(userInfo)
-                }
+                fetchUserInfoResult.setValue(cacheUserInfo)
+                // 再获取最新数据
+                val userInfo = userService.getUserInfo(cacheUserInfo.objectId)
+                fetchUserInfoResult.setValue(userInfo)
             } catch (e: Exception) {
                 fetchUserInfoResult.setException(e)
             }

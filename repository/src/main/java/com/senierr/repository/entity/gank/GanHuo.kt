@@ -15,7 +15,7 @@ data class GanHuo(
     val category: String = "",
     val createdAt: String = "",
     val desc: String = "",
-    val images: MutableList<String> = mutableListOf(),
+    val images: MutableList<String?> = mutableListOf(),
     val likeCounts: Int = 0,
     val publishedAt: String = "",
     val stars: Int = 0,

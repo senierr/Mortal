@@ -13,6 +13,9 @@ data class UserInfo(
     var username: String = "",
     var password: String = "",
     var sessionToken: String = "",
+    var nickname: String = "",
+    var avatar: String = "",
+    var email: String = "",
     var createdAt: String = "",
     var updatedAt: String = ""
 )

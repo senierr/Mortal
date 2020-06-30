@@ -16,6 +16,7 @@ import com.senierr.base.support.utils.LogUtil
 import com.senierr.base.support.utils.NetworkUtil
 import com.senierr.mortal.R
 import kotlinx.android.synthetic.main.activity_webview.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
  * WebView容器
@@ -23,6 +24,7 @@ import kotlinx.android.synthetic.main.activity_webview.*
  * @author zhouchunjie
  * @date 2019/6/12 11:38
  */
+@ExperimentalCoroutinesApi
 class WebViewActivity : BaseActivity(R.layout.activity_webview) {
 
     companion object {

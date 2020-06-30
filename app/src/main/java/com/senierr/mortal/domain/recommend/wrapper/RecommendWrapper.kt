@@ -21,7 +21,7 @@ class RecommendWrapper : ViewHolderWrapper<Girl>(R.layout.item_recommend) {
         val tvTitle = holder.findView<TextView>(R.id.tv_title)
         val tvView = holder.findView<TextView>(R.id.tv_view)
 
-        ivImage?.show(item.images.firstOrNull())
+        ivImage?.show(item.images.firstOrNull()?: "")
         tvTitle?.text = item.title
         tvView?.text = item.views.toString()
     }

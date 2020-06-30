@@ -35,4 +35,6 @@ dependencies {
     // 数据库
     implementation "androidx.room:room-runtime:$rootProject.ext.room"
     kapt "androidx.room:room-compiler:$rootProject.ext.room"
+    // 数据库调试
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 }

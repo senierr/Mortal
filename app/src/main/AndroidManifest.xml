@@ -20,7 +20,7 @@
 
         <activity
             android:name=".domain.splash.SplashActivity"
-            android:theme="@style/AppTheme.SplashTheme">
+            android:theme="@style/AppTheme.FullScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -42,6 +42,8 @@
         <activity
             android:theme="@style/AppTheme.ImagePreviewTheme"
             android:name=".domain.common.ImagePreviewActivity" />
+
+        <activity android:name=".domain.user.UserInfoActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

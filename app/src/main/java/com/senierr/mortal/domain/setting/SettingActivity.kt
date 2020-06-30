@@ -1,4 +1,4 @@
-package com.senierr.mortal.domain.user
+package com.senierr.mortal.domain.setting
 
 import android.content.Context
 import android.content.Intent
@@ -17,7 +17,6 @@ import com.senierr.mortal.domain.user.vm.LoginViewModel
 import com.senierr.mortal.widget.CircularAnim
 import com.senierr.repository.entity.bmob.BmobException
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.lang.Exception
 
 /**
@@ -26,8 +25,7 @@ import java.lang.Exception
  * @author zhouchunjie
  * @date 2019/7/6
  */
-@ExperimentalCoroutinesApi
-class LoginActivity : BaseActivity(R.layout.activity_login) {
+class SettingActivity : BaseActivity(R.layout.activity_login) {
 
     companion object {
         private const val EXTRA_TARGET_INTENT = "target_intent"
@@ -35,7 +33,7 @@ class LoginActivity : BaseActivity(R.layout.activity_login) {
         const val LOGIN_FAILURE = 1002
 
         fun start(context: Context, targetIntent: Intent? = null) {
-            val intent = Intent(context, LoginActivity::class.java)
+            val intent = Intent(context, SettingActivity::class.java)
             targetIntent?.let {
                 intent.putExtra(EXTRA_TARGET_INTENT, it)
             }
@@ -43,12 +41,12 @@ class LoginActivity : BaseActivity(R.layout.activity_login) {
         }
 
         fun startForResult(activity: FragmentActivity, requestCode: Int) {
-            val intent = Intent(activity, LoginActivity::class.java)
+            val intent = Intent(activity, SettingActivity::class.java)
             activity.startActivityForResult(intent, requestCode)
         }
 
         fun startForResult(fragment: Fragment, requestCode: Int) {
-            val intent = Intent(fragment.context, LoginActivity::class.java)
+            val intent = Intent(fragment.context, SettingActivity::class.java)
             fragment.startActivityForResult(intent, requestCode)
         }
     }

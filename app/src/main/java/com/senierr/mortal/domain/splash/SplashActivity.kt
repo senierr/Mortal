@@ -30,7 +30,8 @@ class SplashActivity : BaseActivity(R.layout.activity_splash) {
         initView()
         initViewModel()
 
-        splashViewModel.asyncStart()
+        splashViewModel.fetchAdvert()
+        delayStart()
     }
 
     private fun initView() {
@@ -41,19 +42,19 @@ class SplashActivity : BaseActivity(R.layout.activity_splash) {
 
     private fun initViewModel() {
         splashViewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
-
         splashViewModel.fetchAdvertResult.observe(this, {
             iv_splash?.show(it.image)
         })
-        splashViewModel.asyncStartResult.observe(this, {
-            launch {
-                for (i in 5 downTo 0) {
-                    btn_timer?.text = getString(R.string.format_skip, i)
-                    delay(1000)
-                }
-                startToMain()
+    }
+
+    private fun delayStart() {
+        launch {
+            for (i in 5 downTo 0) {
+                btn_timer?.text = getString(R.string.format_skip, i)
+                delay(1000)
             }
-        })
+            startToMain()
+        }
     }
 
     private fun startToMain() {

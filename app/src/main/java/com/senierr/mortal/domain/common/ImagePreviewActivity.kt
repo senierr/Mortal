@@ -19,6 +19,7 @@ import com.senierr.mortal.domain.common.vm.DownloadViewModel
 import com.senierr.mortal.ext.show
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.activity_image_preview.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.io.File
 
 /**
@@ -27,6 +28,7 @@ import java.io.File
  * @author zhouchunjie
  * @date 2019/5/30 10:03
  */
+@ExperimentalCoroutinesApi
 class ImagePreviewActivity : BaseActivity(R.layout.activity_image_preview) {
 
     @Parcelize
@@ -72,7 +74,7 @@ class ImagePreviewActivity : BaseActivity(R.layout.activity_image_preview) {
             if (resId != null) {
                 pvPreview?.show(resId)
             }else if (url != null) {
-                pvPreview?.show(imageItems[position].url)
+                pvPreview?.show(url)
                 btn_save?.setGone(false)
                 btn_save?.click {
                     ToastUtil.showShort(this@ImagePreviewActivity, R.string.saving)

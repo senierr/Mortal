@@ -5,13 +5,13 @@
     android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
+        app:elevation="@dimen/dp_0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tb_top"
             style="@style/BaseToolbar"
-            android:elevation="@dimen/dp_0"
             app:layout_scrollFlags="scroll|enterAlways"
             app:title="@string/home" />
 

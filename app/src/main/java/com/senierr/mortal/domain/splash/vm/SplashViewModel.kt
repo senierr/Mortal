@@ -1,10 +1,15 @@
 package com.senierr.mortal.domain.splash.vm
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.senierr.base.support.utils.LogUtil
 import com.senierr.mortal.domain.common.vm.StatefulLiveData
-import com.senierr.repository.entity.bmob.UserInfo
-import kotlinx.coroutines.delay
+import com.senierr.repository.Repository
+import com.senierr.repository.entity.bmob.Advert
+import com.senierr.repository.service.api.IAdvertService
+import com.senierr.repository.service.api.IUserService
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 /**
@@ -15,19 +20,44 @@ import kotlinx.coroutines.launch
  */
 class SplashViewModel : ViewModel() {
 
-    val autoLoginResult = StatefulLiveData<UserInfo>()
+    val fetchAdvertResult = StatefulLiveData<Advert>()
+    val asyncStartResult = StatefulLiveData<Unit>()
 
-//    private val userService = Repository.getService<IUserService>()
+    private val advertService = Repository.getService<IAdvertService>()
+    private val userService = Repository.getService<IUserService>()
 
-    fun autoLogin() {
+    fun asyncStart() {
         viewModelScope.launch {
-            try {
-//                val response = userService.autoLogin()
-                delay(2 * 1000)
-//                autoLoginSuccess.value = response
-            } catch (e: Exception) {
-//                autoLoginFailure.value = e
+            val fetchAdvert = async { fetchAdvert() }
+            val checkSession = async { checkSession() }
+            fetchAdvert.await()
+            checkSession.await()
+            asyncStartResult.setValue(Unit)
+        }
+    }
+
+    private suspend fun fetchAdvert() {
+        try {
+            val adverts = advertService.getSplash()
+            if (adverts.isNotEmpty()) {
+                fetchAdvertResult.setValue(adverts.first())
             }
+        } catch (e: Exception) {
+            fetchAdvertResult.setException(e)
+        }
+    }
+
+    private suspend fun checkSession() {
+        try {
+            val cacheUserInfo = userService.getCacheUserInfo()
+            if (cacheUserInfo != null) {
+                val response = userService.checkSession(cacheUserInfo.objectId, cacheUserInfo.sessionToken)
+                if (!response.isSuccessful()) {
+                    userService.clearCacheUserInfo(cacheUserInfo.objectId)
+                }
+            }
+        } catch (e: Exception) {
+            LogUtil.logW(Log.getStackTraceString(e))
         }
     }
 }

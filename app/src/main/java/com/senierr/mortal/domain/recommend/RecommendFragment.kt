@@ -1,6 +1,7 @@
 package com.senierr.mortal.domain.recommend
 
 import android.content.Context
+import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
@@ -18,6 +19,7 @@ import com.senierr.mortal.ext.showLoadingView
 import com.senierr.mortal.ext.showNetworkErrorView
 import com.senierr.repository.entity.gank.Girl
 import kotlinx.android.synthetic.main.fragment_home_ganhuo.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
  * 精选页面
@@ -25,6 +27,7 @@ import kotlinx.android.synthetic.main.fragment_home_ganhuo.*
  * @author zhouchunjie
  * @date 2019/7/8 21:21
  */
+@ExperimentalCoroutinesApi
 class RecommendFragment : BaseFragment(R.layout.fragment_recommend) {
 
     private val multiTypeAdapter = MultiTypeAdapter()
@@ -49,13 +52,11 @@ class RecommendFragment : BaseFragment(R.layout.fragment_recommend) {
         rv_list?.addItemDecoration(GridItemDecoration(ScreenUtil.dp2px(context, 2F), true))
         // 列表
         recommendWrapper.setOnItemClickListener { _, _, item ->
-            context?.let {
-                val imageItems = mutableListOf<ImagePreviewActivity.ImageItem>()
-                item.images.forEach { url ->
-                    imageItems.add(ImagePreviewActivity.ImageItem(url = url))
-                }
-                ImagePreviewActivity.start(it, imageItems)
+            val imageItems = mutableListOf<ImagePreviewActivity.ImageItem>()
+            item.images.forEach { url ->
+                imageItems.add(ImagePreviewActivity.ImageItem(url = url))
             }
+            ImagePreviewActivity.start(context, imageItems)
         }
         multiTypeAdapter.register(recommendWrapper)
         // 加载更多

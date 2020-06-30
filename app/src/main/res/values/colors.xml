@@ -11,7 +11,7 @@
     <color name="window_content">#FFFFFF</color>
     <color name="window_empty">#EDF0F2</color>
     <color name="window_black">#000000</color>
-    <color name="window_layer_black">#88000000</color>
+    <color name="window_layer_black">#33000000</color>
     <!-- 分割线色 -->
     <color name="divider_normal">#cdcdcd</color>
     <!-- 文字色 -->

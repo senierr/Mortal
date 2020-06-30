@@ -3,7 +3,6 @@ package com.senierr.repository.service.impl
 import com.senierr.repository.db.DatabaseManager
 import com.senierr.repository.entity.bmob.BmobResponse
 import com.senierr.repository.entity.bmob.UserInfo
-import com.senierr.repository.exception.NotLoggedException
 import com.senierr.repository.remote.RemoteManager
 import com.senierr.repository.remote.api.UserApi
 import com.senierr.repository.service.api.IUserService
@@ -36,35 +35,43 @@ class UserService : IUserService {
         }
     }
 
-    override suspend fun getCacheUserInfo(): UserInfo {
+    override suspend fun getCacheUserInfo(): UserInfo? {
         return withContext(Dispatchers.IO) {
-            return@withContext userInfoDao.getAll().firstOrNull()?: throw NotLoggedException()
+            // TODO 多用户需要处理
+            return@withContext userInfoDao.getAll().firstOrNull()
         }
     }
 
-    override suspend fun checkSession(objectId: String): BmobResponse {
+    override suspend fun clearCacheUserInfo(objectId: String) {
         return withContext(Dispatchers.IO) {
-            val userInfo = userInfoDao.getAll().firstOrNull()?: throw NotLoggedException()
-            return@withContext userApi.checkSession(userInfo.sessionToken, objectId)
+            return@withContext userInfoDao.deleteById(objectId)
         }
     }
 
-    override suspend fun updateEmail(objectId: String, email: String): BmobResponse {
+    override suspend fun checkSession(objectId: String, sessionToken: String): BmobResponse {
         return withContext(Dispatchers.IO) {
-            val userInfo = userInfoDao.getAll().firstOrNull()?: throw NotLoggedException()
-            return@withContext userApi.updateEmail(userInfo.sessionToken, objectId, email)
+            return@withContext userApi.checkSession(sessionToken, objectId)
+        }
+    }
+
+    override suspend fun updateEmail(
+        objectId: String,
+        sessionToken: String,
+        email: String): BmobResponse {
+        return withContext(Dispatchers.IO) {
+            return@withContext userApi.updateEmail(sessionToken, objectId, email)
         }
     }
 
     override suspend fun resetPassword(
         objectId: String,
+        sessionToken: String,
         oldPassword: String,
         newPassword: String
     ): BmobResponse {
         return withContext(Dispatchers.IO) {
-            val userInfo = userInfoDao.getAll().firstOrNull()?: throw NotLoggedException()
             return@withContext userApi.resetPassword(
-                userInfo.sessionToken,
+                sessionToken,
                 objectId,
                 oldPassword,
                 newPassword

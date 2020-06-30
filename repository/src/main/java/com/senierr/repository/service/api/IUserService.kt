@@ -3,8 +3,6 @@ package com.senierr.repository.service.api
 import com.senierr.repository.entity.bmob.BmobException
 import com.senierr.repository.entity.bmob.BmobResponse
 import com.senierr.repository.entity.bmob.UserInfo
-import com.senierr.repository.exception.NotLoggedException
-import retrofit2.http.*
 
 /**
  * 用户服务
@@ -33,35 +31,36 @@ interface IUserService {
 
     /**
      * 获取缓存用户信息
-     *
-     * @throws NotLoggedException 未登录异常
      */
-    suspend fun getCacheUserInfo(): UserInfo
+    suspend fun getCacheUserInfo(): UserInfo?
+
+    /**
+     * 删除缓存用户信息
+     */
+    suspend fun clearCacheUserInfo(objectId: String)
 
     /**
      * 检查用户的登录是否过期
      *
-     * @throws NotLoggedException 未登录异常
      * @throws BmobException 网络请求异常
      */
-    suspend fun checkSession(objectId: String): BmobResponse
+    suspend fun checkSession(objectId: String, sessionToken: String): BmobResponse
 
     /**
      * 更新用户邮箱
      *
-     * @throws NotLoggedException 未登录异常
      * @throws BmobException 网络请求异常
      */
-    suspend fun updateEmail(objectId: String, email: String): BmobResponse
+    suspend fun updateEmail(objectId: String, sessionToken: String, email: String): BmobResponse
 
     /**
      * 重置密码
      *
-     * @throws NotLoggedException 未登录异常
      * @throws BmobException 网络请求异常
      */
     suspend fun resetPassword(
         objectId: String,
+        sessionToken: String,
         oldPassword: String,
         newPassword: String
     ): BmobResponse

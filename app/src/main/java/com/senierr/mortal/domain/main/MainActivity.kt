@@ -14,6 +14,7 @@ import com.senierr.mortal.domain.home.HomeFragment
 import com.senierr.mortal.domain.recommend.RecommendFragment
 import com.senierr.mortal.domain.user.MeFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
  * 主页面
@@ -21,6 +22,7 @@ import kotlinx.android.synthetic.main.activity_main.*
  * @author zhouchunjie
  * @date 2019/7/6
  */
+@ExperimentalCoroutinesApi
 class MainActivity : BaseActivity(R.layout.activity_main) {
 
     companion object {

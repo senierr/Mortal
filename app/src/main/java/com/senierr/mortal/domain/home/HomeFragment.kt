@@ -11,6 +11,7 @@ import com.senierr.mortal.R
 import com.senierr.mortal.domain.home.vm.HomeViewModel
 import com.senierr.repository.entity.gank.Category
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
  * 首页
@@ -18,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
  * @author zhouchunjie
  * @date 2019/7/8 21:21
  */
+@ExperimentalCoroutinesApi
 class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     private lateinit var homeViewModel: HomeViewModel

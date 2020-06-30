@@ -35,6 +35,4 @@ dependencies {
     // 数据库
     implementation "androidx.room:room-runtime:$rootProject.ext.room"
     kapt "androidx.room:room-compiler:$rootProject.ext.room"
-    // 日志打印
-    debugImplementation 'com.itkacher.okhttpprofiler:okhttpprofiler:1.0.2'
 }

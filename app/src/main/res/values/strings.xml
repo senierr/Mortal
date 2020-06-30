@@ -29,6 +29,8 @@
     <string name="logging">登录中&#8230;</string>
     <string name="register">注册</string>
 
+    <string name="format_skip">跳过%1$d</string>
+
     <string name="search">搜索</string>
 
     <string name="format_index_normal">%1$d/%2$d</string>

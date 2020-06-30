@@ -9,7 +9,6 @@ import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.repository.entity.bmob.UserInfo
-import com.senierr.repository.exception.NotLoggedException
 import kotlinx.android.synthetic.main.fragment_me.*
 import kotlinx.coroutines.*
 
@@ -44,11 +43,8 @@ class MeFragment : BaseFragment(R.layout.fragment_me) {
         userInfoViewModel.fetchUserInfoResult.observe(this, {
             renderLogged(it)
         }, {
-            if (it is NotLoggedException) {
-                renderNotLogged()
-            } else {
-                ToastUtil.showShort(context, it.message)
-            }
+            ToastUtil.showShort(context, it.message)
+            renderNotLogged()
         })
     }
 

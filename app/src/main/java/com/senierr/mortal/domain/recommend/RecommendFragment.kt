@@ -2,13 +2,16 @@ package com.senierr.mortal.domain.recommend
 
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.ui.recyclerview.GridItemDecoration
 import com.senierr.base.support.utils.ScreenUtil
-import com.senierr.mortal.R
+import com.senierr.mortal.databinding.FragmentRecommendBinding
 import com.senierr.mortal.domain.common.ImagePreviewActivity
 import com.senierr.mortal.domain.common.wrapper.LoadMoreWrapper
 import com.senierr.mortal.domain.recommend.vm.RecommendViewModel
@@ -18,8 +21,6 @@ import com.senierr.mortal.ext.showEmptyView
 import com.senierr.mortal.ext.showLoadingView
 import com.senierr.mortal.ext.showNetworkErrorView
 import com.senierr.repository.entity.gank.Girl
-import kotlinx.android.synthetic.main.fragment_home_ganhuo.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
  * 精选页面
@@ -27,29 +28,39 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
  * @author zhouchunjie
  * @date 2019/7/8 21:21
  */
-@ExperimentalCoroutinesApi
-class RecommendFragment : BaseFragment(R.layout.fragment_recommend) {
+class RecommendFragment : BaseFragment() {
 
     private val multiTypeAdapter = MultiTypeAdapter()
     private val recommendWrapper = RecommendWrapper()
     private val loadMoreWrapper = LoadMoreWrapper()
 
+    private var binding: FragmentRecommendBinding? = null
     private lateinit var recommendViewModel: RecommendViewModel
 
     private var page = 1
     private val pageSize = 10
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentRecommendBinding.inflate(inflater, container, false)
+        return binding?.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
     override fun onLazyCreate(context: Context) {
         initView(context)
-        initViewModel()
-        msv_state?.showLoadingView()
+        initViewModel(context)
+        binding?.msvState?.showLoadingView()
         doRefresh()
     }
 
     private fun initView(context: Context) {
-        srl_refresh?.setOnRefreshListener { doRefresh() }
-        rv_list?.layoutManager = GridLayoutManager(context, 2)
-        rv_list?.addItemDecoration(GridItemDecoration(ScreenUtil.dp2px(context, 2F), true))
+        binding?.srlRefresh?.setOnRefreshListener { doRefresh() }
+        binding?.rvList?.layoutManager = GridLayoutManager(context, 2)
+        binding?.rvList?.addItemDecoration(GridItemDecoration(ScreenUtil.dp2px(context, 2F), true))
         // 列表
         recommendWrapper.setOnItemClickListener { _, _, item ->
             val imageItems = mutableListOf<ImagePreviewActivity.ImageItem>()
@@ -62,10 +73,10 @@ class RecommendFragment : BaseFragment(R.layout.fragment_recommend) {
         // 加载更多
         loadMoreWrapper.onLoadMoreListener = { doLoadMore() }
         multiTypeAdapter.register(loadMoreWrapper)
-        rv_list?.adapter = multiTypeAdapter
+        binding?.rvList?.adapter = multiTypeAdapter
     }
 
-    private fun initViewModel() {
+    private fun initViewModel(context: Context) {
         recommendViewModel = ViewModelProvider(this).get(RecommendViewModel::class.java)
 
         recommendViewModel.fetchGirlsResult.observe(this, {
@@ -76,8 +87,8 @@ class RecommendFragment : BaseFragment(R.layout.fragment_recommend) {
             }
         }, {
             if (page == 1) {
-                msv_state?.showNetworkErrorView {
-                    msv_state?.showLoadingView()
+                binding?.msvState?.showNetworkErrorView {
+                    binding?.msvState?.showLoadingView()
                     doRefresh()
                 }
             } else {
@@ -105,11 +116,11 @@ class RecommendFragment : BaseFragment(R.layout.fragment_recommend) {
      * 渲染刷新
      */
     private fun renderRefresh(girls: MutableList<Girl>) {
-        srl_refresh?.isRefreshing = false
+        binding?.srlRefresh?.isRefreshing = false
         if (girls.isEmpty()) {
-            msv_state?.showEmptyView()
+            binding?.msvState?.showEmptyView()
         } else {
-            msv_state?.showContentView()
+            binding?.msvState?.showContentView()
             multiTypeAdapter.data.clear()
             multiTypeAdapter.data.addAll(girls)
             multiTypeAdapter.data.add(loadMoreWrapper.loadMoreBean)

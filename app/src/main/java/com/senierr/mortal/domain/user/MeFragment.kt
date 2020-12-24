@@ -2,15 +2,17 @@ package com.senierr.mortal.domain.user
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.utils.ToastUtil
-import com.senierr.mortal.R
+import com.senierr.mortal.databinding.FragmentMeBinding
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.repository.entity.bmob.UserInfo
-import kotlinx.android.synthetic.main.fragment_me.*
-import kotlinx.coroutines.*
 
 /**
  * 我的页面
@@ -18,24 +20,34 @@ import kotlinx.coroutines.*
  * @author zhouchunjie
  * @date 2019/7/8 21:21
  */
-@ExperimentalCoroutinesApi
-class MeFragment : BaseFragment(R.layout.fragment_me) {
+class MeFragment : BaseFragment() {
 
     companion object {
         const val REQUEST_CODE_LOGIN = 100
     }
 
+    private var binding: FragmentMeBinding? = null
     private lateinit var userInfoViewModel: UserInfoViewModel
 
-    override fun onLazyCreate(context: Context) {
-        initView()
-        initViewModel(context)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentMeBinding.inflate(inflater, container, false)
+        return binding?.root
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
+    override fun onLazyCreate(context: Context) {
+        super.onLazyCreate(context)
+        initView(context)
+        initViewModel(context)
         doRefresh()
     }
 
-    private fun initView() {
-        ll_user?.isClickable = false
+    private fun initView(context: Context) {
+        binding?.llUser?.isClickable = false
     }
 
     private fun initViewModel(context: Context) {
@@ -66,7 +78,7 @@ class MeFragment : BaseFragment(R.layout.fragment_me) {
      * 渲染登录状态
      */
     private fun renderLogged(userInfo: UserInfo) {
-        ll_user?.click {
+        binding?.llUser?.click {
             // 用户详情
             activity?.let { context ->
                 UserInfoActivity.start(context)
@@ -75,14 +87,14 @@ class MeFragment : BaseFragment(R.layout.fragment_me) {
         // 头像
 //        iv_avatar?.show(userInfo.)
         // 昵称
-        tv_nickname?.text = userInfo.username
+        binding?.tvNickname?.text = userInfo.username
     }
 
     /**
      * 渲染未登录状态
      */
     private fun renderNotLogged() {
-        ll_user?.click {
+        binding?.llUser?.click {
             LoginActivity.startForResult(this, REQUEST_CODE_LOGIN)
         }
     }

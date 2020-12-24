@@ -3,23 +3,14 @@ package com.senierr.mortal.domain.user
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
+import com.senierr.mortal.databinding.ActivityUserInfoBinding
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.show
 import com.senierr.repository.entity.bmob.UserInfo
-import kotlinx.android.synthetic.main.activity_user_info.*
-import kotlinx.android.synthetic.main.activity_webview.*
-import kotlinx.android.synthetic.main.activity_webview.tb_top
-import kotlinx.android.synthetic.main.fragment_me.*
-import kotlinx.android.synthetic.main.fragment_me.iv_avatar
-import kotlinx.android.synthetic.main.fragment_me.tv_nickname
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
  * 用户详情页面
@@ -27,8 +18,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
  * @author zhouchunjie
  * @date 2019/7/6
  */
-@ExperimentalCoroutinesApi
-class UserInfoActivity : BaseActivity(R.layout.activity_user_info) {
+class UserInfoActivity : BaseActivity() {
 
     companion object {
         fun start(context: Context) {
@@ -37,20 +27,23 @@ class UserInfoActivity : BaseActivity(R.layout.activity_user_info) {
         }
     }
 
+    private lateinit var binding: ActivityUserInfoBinding
     private lateinit var userInfoViewModel: UserInfoViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityUserInfoBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         initView()
         initViewModel()
-
         userInfoViewModel.fetchUserInfo()
     }
 
     private fun initView() {
-        setSupportActionBar(tb_top)
-        tb_top?.navigationIcon?.setTint(getColor(R.color.btn_black))
-        tb_top?.setNavigationOnClickListener { finish() }
+        setSupportActionBar(binding.tbTop)
+        binding.tbTop.navigationIcon?.setTint(getColor(R.color.btn_black))
+        binding.tbTop.setNavigationOnClickListener { finish() }
     }
 
     private fun initViewModel() {
@@ -67,14 +60,14 @@ class UserInfoActivity : BaseActivity(R.layout.activity_user_info) {
      */
     private fun renderLogged(userInfo: UserInfo) {
         // 头像
-        iv_avatar?.show(userInfo.avatar, isCircle = true)
+        binding.ivAvatar.show(userInfo.avatar, isCircle = true)
         // 昵称
         userInfo.username.let {
-            tv_nickname?.text = if (it.isNotBlank()) it else getString(R.string.none)
+            binding.tvNickname.text = if (it.isNotBlank()) it else getString(R.string.none)
         }
         // 邮箱
         userInfo.email.let {
-            tv_email?.text = if (it.isNotBlank()) it else getString(R.string.none)
+            binding.tvEmail.text = if (it.isNotBlank()) it else getString(R.string.none)
         }
     }
 }

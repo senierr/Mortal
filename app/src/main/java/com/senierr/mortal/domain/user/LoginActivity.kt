@@ -13,11 +13,10 @@ import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.KeyboardUtil
 import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
+import com.senierr.mortal.databinding.ActivityLoginBinding
 import com.senierr.mortal.domain.user.vm.LoginViewModel
 import com.senierr.mortal.widget.CircularAnim
 import com.senierr.repository.entity.bmob.BmobException
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.lang.Exception
 
 /**
@@ -26,8 +25,7 @@ import java.lang.Exception
  * @author zhouchunjie
  * @date 2019/7/6
  */
-@ExperimentalCoroutinesApi
-class LoginActivity : BaseActivity(R.layout.activity_login) {
+class LoginActivity : BaseActivity() {
 
     companion object {
         private const val EXTRA_TARGET_INTENT = "target_intent"
@@ -53,12 +51,16 @@ class LoginActivity : BaseActivity(R.layout.activity_login) {
         }
     }
 
+    private lateinit var binding: ActivityLoginBinding
     private lateinit var loadingDialog: AlertDialog
 
     private lateinit var loginViewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         initView()
         initViewModel()
     }
@@ -68,8 +70,8 @@ class LoginActivity : BaseActivity(R.layout.activity_login) {
     }
 
     private fun initView() {
-        btn_close?.click { onBackPressed() }
-        btn_login?.click { doLogin() }
+        binding.btnClose.click { onBackPressed() }
+        binding.btnLogin.click { doLogin() }
 
         loadingDialog = MaterialAlertDialogBuilder(this)
             .setView(R.layout.layout_status_loading)
@@ -89,11 +91,11 @@ class LoginActivity : BaseActivity(R.layout.activity_login) {
      */
     private fun verifyAccount(account: String?): Boolean {
         if (account.isNullOrBlank()) {
-            til_account?.isErrorEnabled = true
-            til_account?.error = getString(R.string.account_empty)
+            binding.tilAccount.isErrorEnabled = true
+            binding.tilAccount.error = getString(R.string.account_empty)
             return false
         }
-        til_account?.isErrorEnabled = false
+        binding.tilAccount.isErrorEnabled = false
         return true
     }
 
@@ -102,11 +104,11 @@ class LoginActivity : BaseActivity(R.layout.activity_login) {
      */
     private fun verifyPassword(password: String?): Boolean {
         if (password.isNullOrBlank()) {
-            til_password?.isErrorEnabled = true
-            til_password?.error = getString(R.string.password_empty)
+            binding.tilPassword.isErrorEnabled = true
+            binding.tilPassword.error = getString(R.string.password_empty)
             return false
         }
-        til_password?.isErrorEnabled = false
+        binding.tilPassword.isErrorEnabled = false
         return true
     }
 
@@ -116,8 +118,8 @@ class LoginActivity : BaseActivity(R.layout.activity_login) {
     private fun doLogin() {
         KeyboardUtil.hideSoftInput(this)
 
-        val account = et_account?.text?.toString()
-        val password = et_password?.text?.toString()
+        val account = binding.etAccount.text?.toString()
+        val password = binding.etPassword.text?.toString()
 
         if (verifyAccount(account) && verifyPassword(password)) {
             if (account != null && password != null) {
@@ -132,7 +134,7 @@ class LoginActivity : BaseActivity(R.layout.activity_login) {
      */
     private fun showLoginSuccess() {
         loadingDialog.dismiss()
-        CircularAnim().fullActivity(this, btn_login)
+        CircularAnim().fullActivity(this, binding.btnLogin)
             .colorOrImageRes(R.color.app_theme)
             .go(object : CircularAnim.OnAnimationEndListener {
                 override fun onAnimationEnd() {

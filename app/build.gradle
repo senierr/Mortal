@@ -20,6 +20,14 @@ android {
         targetCompatibility rootProject.ext.javaVersion
     }
 
+    kotlinOptions{
+        jvmTarget = "1.8"
+    }
+
+    viewBinding {
+        enabled = true
+    }
+
     signingConfigs {
         release {
             storeFile file("../keystore/keystore.jks")
@@ -62,19 +70,20 @@ dependencies {
     // android
     implementation "androidx.multidex:multidex:$rootProject.ext.multidex"
     implementation "androidx.appcompat:appcompat:$rootProject.ext.appcompat"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.ext.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$rootProject.ext.lifecycle"
     implementation "com.google.android.material:material:$rootProject.ext.material"
-    // 权限
-    implementation "com.senierr.permission:library:$rootProject.ext.permission"
-    // 视图
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.ext.constraintlayout"
-    implementation "com.github.bumptech.glide:glide:$rootProject.ext.glide"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:$rootProject.ext.swiperefreshlayout"
     implementation "androidx.viewpager2:viewpager2:$rootProject.ext.viewpager2"
     implementation "androidx.recyclerview:recyclerview:$rootProject.ext.recyclerview"
-    implementation "com.senierr.adapter:multitype:$rootProject.ext.multitype"
     implementation "androidx.cardview:cardview:$rootProject.ext.cardview"
+    // KTX
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.ext.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$rootProject.ext.lifecycle"
+    // 权限
+    implementation "com.senierr.permission:library:$rootProject.ext.permission"
+    // 视图
+    implementation "com.github.bumptech.glide:glide:$rootProject.ext.glide"
+    implementation "com.senierr.adapter:multitype:$rootProject.ext.multitype"
     implementation "com.youth.banner:banner:$rootProject.ext.banner"
     implementation "com.nex3z:flow-layout:$rootProject.ext.flow_layout"
     implementation "com.airbnb.android:lottie:$rootProject.ext.lottie"

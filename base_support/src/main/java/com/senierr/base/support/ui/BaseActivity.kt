@@ -1,11 +1,6 @@
 package com.senierr.base.support.ui
 
-import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
 
 /**
  * Activity基类
@@ -13,4 +8,4 @@ import kotlinx.coroutines.cancel
  * @author zhouchunjie
  * @date 2018/5/28
  */
-open class BaseActivity(@LayoutRes contentLayoutId: Int = 0) : AppCompatActivity(contentLayoutId)
+open class BaseActivity : AppCompatActivity()

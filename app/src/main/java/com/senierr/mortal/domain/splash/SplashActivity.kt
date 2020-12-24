@@ -5,12 +5,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
-import com.senierr.base.support.utils.LogUtil
 import com.senierr.mortal.R
+import com.senierr.mortal.databinding.ActivitySplashBinding
 import com.senierr.mortal.domain.main.MainActivity
 import com.senierr.mortal.domain.splash.vm.SplashViewModel
 import com.senierr.mortal.ext.show
-import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -20,21 +19,24 @@ import kotlinx.coroutines.launch
  * @author zhouchunjie
  * @date 2019/7/6
  */
-class SplashActivity : BaseActivity(R.layout.activity_splash) {
+class SplashActivity : BaseActivity() {
 
+    private lateinit var binding: ActivitySplashBinding
     private lateinit var splashViewModel: SplashViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivitySplashBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         initView()
         initViewModel()
-
         splashViewModel.fetchAdvert()
         delayStart()
     }
 
     private fun initView() {
-        btn_timer?.click {
+        binding.btnTimer.click {
             startToMain()
         }
     }
@@ -42,16 +44,15 @@ class SplashActivity : BaseActivity(R.layout.activity_splash) {
     private fun initViewModel() {
         splashViewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
         splashViewModel.fetchAdvertResult.observe(this) {
-            iv_splash?.show(it.image)
+            binding.ivSplash.show(it.image)
         }
     }
 
     private fun delayStart() {
         lifecycleScope.launch {
             for (i in 5 downTo 0) {
-                btn_timer?.text = getString(R.string.format_skip, i)
+                binding.btnTimer.text = getString(R.string.format_skip, i)
                 delay(1000)
-                LogUtil.logE("11111111111")
             }
             startToMain()
         }

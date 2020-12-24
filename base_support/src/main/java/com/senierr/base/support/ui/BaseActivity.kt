@@ -13,13 +13,4 @@ import kotlinx.coroutines.cancel
  * @author zhouchunjie
  * @date 2018/5/28
  */
-@ExperimentalCoroutinesApi
-open class BaseActivity(
-    @LayoutRes contentLayoutId: Int = 0
-) : AppCompatActivity(contentLayoutId), CoroutineScope by MainScope() {
-
-    override fun onDestroy() {
-        cancel()
-        super.onDestroy()
-    }
-}
+open class BaseActivity(@LayoutRes contentLayoutId: Int = 0) : AppCompatActivity(contentLayoutId)

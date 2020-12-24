@@ -1,7 +1,10 @@
 package com.senierr.repository.remote.api
 
+import com.senierr.repository.entity.bmob.BmobArray
 import com.senierr.repository.entity.bmob.VersionInfo
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 /**
  * 设置模块API
@@ -14,6 +17,6 @@ interface SettingApi {
     /**
      * 检测新版本
      */
-    @POST("user/login")
-    suspend fun checkNewVersion(): VersionInfo
+    @GET("1/classes/version_info")
+    suspend fun checkNewVersion(@Query("where") where: String): BmobArray<VersionInfo>
 }

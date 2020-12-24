@@ -63,6 +63,7 @@ dependencies {
     implementation "androidx.multidex:multidex:$rootProject.ext.multidex"
     implementation "androidx.appcompat:appcompat:$rootProject.ext.appcompat"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.ext.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$rootProject.ext.lifecycle"
     implementation "com.google.android.material:material:$rootProject.ext.material"
     // 权限
     implementation "com.senierr.permission:library:$rootProject.ext.permission"

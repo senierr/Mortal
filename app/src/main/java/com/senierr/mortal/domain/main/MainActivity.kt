@@ -1,19 +1,27 @@
 package com.senierr.mortal.domain.main
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.senierr.base.support.ui.BaseActivity
+import com.senierr.base.support.utils.AppUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.domain.home.HomeFragment
+import com.senierr.mortal.domain.main.vm.MainViewModel
 import com.senierr.mortal.domain.recommend.RecommendFragment
 import com.senierr.mortal.domain.user.MeFragment
+import com.senierr.mortal.ext.show
+import com.senierr.repository.entity.bmob.VersionInfo
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
@@ -22,7 +30,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
  * @author zhouchunjie
  * @date 2019/7/6
  */
-@ExperimentalCoroutinesApi
 class MainActivity : BaseActivity(R.layout.activity_main) {
 
     companion object {
@@ -31,9 +38,17 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
     }
 
+    private lateinit var mainViewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
+        initViewModel()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mainViewModel.checkNewVersion()
     }
 
     private fun initView() {
@@ -66,6 +81,34 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         badgeDrawable?.backgroundColor = ContextCompat.getColor(this, R.color.app_warn)
         badgeDrawable?.maxCharacterCount = 2
         badgeDrawable?.number = 999
+    }
+
+    private fun initViewModel() {
+        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        mainViewModel.newVersionResult.observe(this) {
+            showNewVersionDialog(it)
+        }
+        mainViewModel.apkDownloadResult.observe(this) {
+            AppUtil.installApk(this, "", it)
+        }
+    }
+
+    /**
+     * 显示新版本提示
+     */
+    private fun showNewVersionDialog(versionInfo: VersionInfo) {
+        val newVersionDialog = AlertDialog.Builder(this)
+            .setTitle("发现新版本")
+            .setMessage(versionInfo.changeLog)
+            .setPositiveButton("立即更新") { dialog, _ ->
+                mainViewModel.downloadApk(versionInfo)
+                dialog.dismiss()
+            }
+            .setNegativeButton("取消") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+        newVersionDialog.show()
     }
 
     private inner class MainPageAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {

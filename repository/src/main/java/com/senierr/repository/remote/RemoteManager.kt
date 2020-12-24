@@ -31,32 +31,26 @@ object RemoteManager {
         retrofitGank = Retrofit.Builder()
             .baseUrl(BASE_URL_GANK)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(
-                OkHttpClient.Builder().apply {
-                    if (isDebug) {
-                        addInterceptor(LoggingInterceptor())
-                    }
-                    addNetworkInterceptor(ProgressInterceptor())
-                    connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
-                    readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
-                    writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
-                }.build()
+            .client(OkHttpClient.Builder()
+                    .addInterceptor(ProgressInterceptor())
+                    .apply { if (isDebug) addInterceptor(LoggingInterceptor()) }
+                    .connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                    .readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                    .writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                    .build()
             )
             .build()
 
         retrofitBmob = Retrofit.Builder()
             .baseUrl(BASE_URL_BMOB)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(
-                OkHttpClient.Builder().apply {
-                    addInterceptor(BmobInterceptor())
-                    if (isDebug) {
-                        addInterceptor(LoggingInterceptor())
-                    }
-                    connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
-                    readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
-                    writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
-                }.build()
+            .client(OkHttpClient.Builder()
+                    .addInterceptor(BmobInterceptor())
+                    .apply { if (isDebug) addInterceptor(LoggingInterceptor()) }
+                    .connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                    .readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                    .writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                    .build()
             )
             .build()
     }

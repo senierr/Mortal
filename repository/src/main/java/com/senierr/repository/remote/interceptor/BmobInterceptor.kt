@@ -7,6 +7,7 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
 import java.security.SecureRandom
+import java.util.*
 
 /**
  * 公共参数拦截器
@@ -67,9 +68,9 @@ class BmobInterceptor : Interceptor {
         val rd = SecureRandom()
         for (i in 0..15) {
             when (rd.nextInt(3)) {
-                0 -> sb.append(rd.nextInt(10))  //0-9的随机数
-                1 -> sb.append((rd.nextInt(25) + 65).toChar())   //ASCII在65-90之间为大写,获取大写随机
-                2 -> sb.append((rd.nextInt(25) + 97).toChar()) //ASCII在97-122之间为小写，获取小写随机
+                0 -> sb.append(rd.nextInt(10))  // 0-9的随机数
+                1 -> sb.append((rd.nextInt(25) + 65).toChar())  // ASCII在65-90之间为大写,获取大写随机
+                2 -> sb.append((rd.nextInt(25) + 97).toChar())  // ASCII在97-122之间为小写，获取小写随机
             }
         }
         return sb.toString()
@@ -78,13 +79,8 @@ class BmobInterceptor : Interceptor {
     /**
      * 生成签名
      */
-    private fun createSafeSign(
-        url: String,
-        timeStamp: String,
-        safeToken: String,
-        noncestrKey: String
-    ): String {
+    private fun createSafeSign(url: String, timeStamp: String, safeToken: String, noncestrKey: String): String {
         val safeSign = EncryptUtil.encryptMD5ToString(url + timeStamp + safeToken + noncestrKey) ?: ""
-        return safeSign.toLowerCase()
+        return safeSign.toLowerCase(Locale.ROOT)
     }
 }

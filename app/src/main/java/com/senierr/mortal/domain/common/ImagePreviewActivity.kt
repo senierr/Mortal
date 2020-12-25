@@ -15,11 +15,10 @@ import com.senierr.base.support.ext.setGone
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
+import com.senierr.mortal.databinding.ActivityImagePreviewBinding
 import com.senierr.mortal.domain.common.vm.DownloadViewModel
 import com.senierr.mortal.ext.show
 import kotlinx.android.parcel.Parcelize
-import kotlinx.android.synthetic.main.activity_image_preview.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.io.File
 
 /**
@@ -28,8 +27,7 @@ import java.io.File
  * @author zhouchunjie
  * @date 2019/5/30 10:03
  */
-@ExperimentalCoroutinesApi
-class ImagePreviewActivity : BaseActivity(R.layout.activity_image_preview) {
+class ImagePreviewActivity : BaseActivity() {
 
     @Parcelize
     data class ImageItem(
@@ -49,6 +47,7 @@ class ImagePreviewActivity : BaseActivity(R.layout.activity_image_preview) {
         }
     }
 
+    private lateinit var binding: ActivityImagePreviewBinding
     private lateinit var downloadViewModel: DownloadViewModel
 
     private val imageItems = mutableListOf<ImageItem>()
@@ -64,9 +63,9 @@ class ImagePreviewActivity : BaseActivity(R.layout.activity_image_preview) {
             pvPreview?.click { finish() }
             pvPreview?.enable()
             // 索引
-            tv_index?.text = getString(R.string.format_index_normal, position+1, imageItems.size)
+            binding.tvIndex.text = getString(R.string.format_index_normal, position+1, imageItems.size)
             // 保存
-            btn_save?.setGone(true)
+            binding.btnSave.setGone(true)
             // 图片显示
             val resId = imageItems[position].resId
             val url = imageItems[position].url
@@ -75,8 +74,8 @@ class ImagePreviewActivity : BaseActivity(R.layout.activity_image_preview) {
                 pvPreview?.show(resId)
             }else if (url != null) {
                 pvPreview?.show(url)
-                btn_save?.setGone(false)
-                btn_save?.click {
+                binding.btnSave.setGone(false)
+                binding.btnSave.click {
                     ToastUtil.showShort(this@ImagePreviewActivity, R.string.saving)
                     downloadViewModel.download(url, url, "${System.currentTimeMillis()}.jpg")
                 }
@@ -95,6 +94,9 @@ class ImagePreviewActivity : BaseActivity(R.layout.activity_image_preview) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityImagePreviewBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         initParams()
         initView()
         initViewModel()
@@ -106,7 +108,7 @@ class ImagePreviewActivity : BaseActivity(R.layout.activity_image_preview) {
     }
 
     private fun initView() {
-        vp_preview?.adapter = imagePreviewAdapter
+        binding.vpPreview.adapter = imagePreviewAdapter
     }
 
     private fun initViewModel() {

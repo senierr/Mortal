@@ -9,6 +9,7 @@ import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivitySplashBinding
 import com.senierr.mortal.domain.main.MainActivity
 import com.senierr.mortal.domain.splash.vm.SplashViewModel
+import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.show
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -42,7 +43,7 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun initViewModel() {
-        splashViewModel = ViewModelProvider(this).get(SplashViewModel::class.java)
+        splashViewModel = getViewModel()
         splashViewModel.fetchAdvertResult.observe(this) {
             binding.ivSplash.show(it.image)
         }

@@ -1,28 +1,27 @@
 package com.senierr.mortal.domain.main
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.AppUtil
 import com.senierr.mortal.R
+import com.senierr.mortal.databinding.ActivityMainBinding
 import com.senierr.mortal.domain.home.HomeFragment
 import com.senierr.mortal.domain.main.vm.MainViewModel
 import com.senierr.mortal.domain.recommend.RecommendFragment
 import com.senierr.mortal.domain.user.MeFragment
-import com.senierr.mortal.ext.show
+import com.senierr.mortal.ext.getAndroidViewModel
 import com.senierr.repository.entity.bmob.VersionInfo
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_splash.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
  * 主页面
@@ -30,7 +29,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
  * @author zhouchunjie
  * @date 2019/7/6
  */
-class MainActivity : BaseActivity(R.layout.activity_main) {
+class MainActivity : BaseActivity() {
 
     companion object {
         fun start(context: Context) {
@@ -38,10 +37,14 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         }
     }
 
+    private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         initView()
         initViewModel()
     }
@@ -52,31 +55,31 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
     private fun initView() {
-        vp_main?.adapter = MainPageAdapter(this)
-        vp_main?.offscreenPageLimit = 2
-        vp_main?.isUserInputEnabled = false
-        vp_main?.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        binding.vpMain.adapter = MainPageAdapter(this)
+        binding.vpMain.offscreenPageLimit = 2
+        binding.vpMain.isUserInputEnabled = false
+        binding.vpMain.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 when (position) {
-                    0 -> bnv_bottom?.selectedItemId = R.id.tab_home
-                    1 -> bnv_bottom?.selectedItemId = R.id.tab_recommend
-                    2 -> bnv_bottom?.selectedItemId = R.id.tab_me
-                    else -> bnv_bottom?.selectedItemId = R.id.tab_home
+                    0 -> binding.bnvBottom.selectedItemId = R.id.tab_home
+                    1 -> binding.bnvBottom.selectedItemId = R.id.tab_recommend
+                    2 -> binding.bnvBottom.selectedItemId = R.id.tab_me
+                    else -> binding.bnvBottom.selectedItemId = R.id.tab_home
                 }
             }
         })
 
-        bnv_bottom?.setOnNavigationItemSelectedListener {
+        binding.bnvBottom.setOnNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.tab_home -> vp_main.currentItem = 0
-                R.id.tab_recommend -> vp_main.currentItem = 1
-                R.id.tab_me -> vp_main.currentItem = 2
+                R.id.tab_home -> binding.vpMain.currentItem = 0
+                R.id.tab_recommend -> binding.vpMain.currentItem = 1
+                R.id.tab_me -> binding.vpMain.currentItem = 2
             }
             return@setOnNavigationItemSelectedListener true
         }
 
         // TODO 测试徽章功能
-        val badgeDrawable = bnv_bottom?.getOrCreateBadge(R.id.tab_me)
+        val badgeDrawable = binding.bnvBottom.getOrCreateBadge(R.id.tab_me)
         badgeDrawable?.badgeTextColor = ContextCompat.getColor(this, R.color.text_white)
         badgeDrawable?.backgroundColor = ContextCompat.getColor(this, R.color.app_warn)
         badgeDrawable?.maxCharacterCount = 2
@@ -84,7 +87,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     }
 
     private fun initViewModel() {
-        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        mainViewModel = getAndroidViewModel(application)
         mainViewModel.newVersionResult.observe(this) {
             showNewVersionDialog(it)
         }

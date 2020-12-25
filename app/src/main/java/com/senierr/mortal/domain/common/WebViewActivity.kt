@@ -15,8 +15,7 @@ import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.LogUtil
 import com.senierr.base.support.utils.NetworkUtil
 import com.senierr.mortal.R
-import kotlinx.android.synthetic.main.activity_webview.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.senierr.mortal.databinding.ActivityWebviewBinding
 
 /**
  * WebView容器
@@ -24,8 +23,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
  * @author zhouchunjie
  * @date 2019/6/12 11:38
  */
-@ExperimentalCoroutinesApi
-class WebViewActivity : BaseActivity(R.layout.activity_webview) {
+class WebViewActivity : BaseActivity() {
 
     companion object {
         private const val TAG_LOG = "WebViewActivity"
@@ -50,46 +48,51 @@ class WebViewActivity : BaseActivity(R.layout.activity_webview) {
         }
     }
 
+    private lateinit var binding: ActivityWebviewBinding
+
     private var originalUrl: String? = null
     private var title: String? = null
     private var allowFileAccess: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityWebviewBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         initParams()
         initView()
 
-        originalUrl?.let { wv_web?.loadUrl(it) }
+        originalUrl?.let { binding.wvWeb.loadUrl(it) }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onResume() {
         super.onResume()
-        wv_web?.settings?.javaScriptEnabled = true
+        binding.wvWeb.settings?.javaScriptEnabled = true
     }
 
     override fun onStop() {
         super.onStop()
-        wv_web?.settings?.javaScriptEnabled = false
+        binding.wvWeb.settings?.javaScriptEnabled = false
     }
 
     override fun onDestroy() {
-        wv_web?.parent?.let {
+        binding.wvWeb.parent?.let {
             if (it is ViewGroup) {
-                it.removeView(wv_web)
+                it.removeView(binding.wvWeb)
             }
         }
-        wv_web?.stopLoading()
-        wv_web?.settings?.javaScriptEnabled = false
-        wv_web?.clearHistory()
-        wv_web?.removeAllViews()
-        wv_web?.destroy()
+        binding.wvWeb.stopLoading()
+        binding.wvWeb.settings?.javaScriptEnabled = false
+        binding.wvWeb.clearHistory()
+        binding.wvWeb.removeAllViews()
+        binding.wvWeb.destroy()
         super.onDestroy()
     }
 
     override fun onBackPressed() {
-        if (wv_web != null && wv_web.canGoBack()) {
-            wv_web.goBack()
+        if (binding.wvWeb.canGoBack()) {
+            binding.wvWeb.goBack()
         } else {
             super.onBackPressed()
         }
@@ -102,13 +105,13 @@ class WebViewActivity : BaseActivity(R.layout.activity_webview) {
     }
 
     private fun initView() {
-        setSupportActionBar(tb_top)
-        tb_top?.navigationIcon?.setTint(getColor(R.color.btn_black))
-        tb_top?.setNavigationOnClickListener { finish() }
+        setSupportActionBar(binding.tbTop)
+        binding.tbTop.navigationIcon?.setTint(getColor(R.color.btn_black))
+        binding.tbTop.setNavigationOnClickListener { finish() }
         // 设置标题
-        title?.let { tb_top?.title = it }
+        title?.let { binding.tbTop.title = it }
         // 初始化WebView
-        wv_web?.let { initWebView(it) }
+        initWebView(binding.wvWeb)
     }
 
     /**
@@ -163,17 +166,17 @@ class WebViewActivity : BaseActivity(R.layout.activity_webview) {
             override fun onReceivedTitle(view: WebView?, t: String?) {
                 super.onReceivedTitle(view, t)
                 // 当Title参数为空时，设置Title为网页Title
-                tb_top?.title = title ?: t
+                binding.tbTop.title = title ?: t
             }
 
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (newProgress in 0..95) {
-                    pb_progress?.visibility = View.VISIBLE
+                    binding.pbProgress.visibility = View.VISIBLE
                 } else {
-                    pb_progress?.visibility = View.GONE
+                    binding.pbProgress.visibility = View.GONE
                 }
-                pb_progress?.progress = newProgress
+                binding.pbProgress.progress = newProgress
             }
         }
     }

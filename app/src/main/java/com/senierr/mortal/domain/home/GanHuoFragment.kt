@@ -2,14 +2,17 @@ package com.senierr.mortal.domain.home
 
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.ui.recyclerview.LinearItemDecoration
-import com.senierr.base.support.utils.LogUtil
 import com.senierr.base.support.utils.ScreenUtil
-import com.senierr.mortal.R
+import com.senierr.mortal.databinding.FragmentHomeGanhuoBinding
 import com.senierr.mortal.domain.common.WebViewActivity
 import com.senierr.mortal.domain.common.wrapper.LoadMoreWrapper
 import com.senierr.mortal.domain.home.vm.GanHuoViewModel
@@ -21,8 +24,6 @@ import com.senierr.mortal.ext.showEmptyView
 import com.senierr.mortal.ext.showLoadingView
 import com.senierr.mortal.ext.showNetworkErrorView
 import com.senierr.repository.entity.gank.GanHuo
-import kotlinx.android.synthetic.main.fragment_home_ganhuo.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -32,8 +33,7 @@ import kotlinx.coroutines.launch
  * @author zhouchunjie
  * @date 2019/7/8 21:21
  */
-@ExperimentalCoroutinesApi
-class GanHuoFragment : BaseFragment(R.layout.fragment_home_ganhuo) {
+class GanHuoFragment : BaseFragment() {
 
     companion object {
         private const val TYPE = "type"
@@ -55,17 +55,28 @@ class GanHuoFragment : BaseFragment(R.layout.fragment_home_ganhuo) {
     private val noImageWrapper = GanHuoNoImageWrapper()
     private val loadMoreWrapper = LoadMoreWrapper()
 
+    private var binding: FragmentHomeGanhuoBinding? = null
     private lateinit var ganHuoViewModel: GanHuoViewModel
 
     private var page = 1
     private val pageSize = 10
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentHomeGanhuoBinding.inflate(inflater, container, false)
+        return binding?.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
+
     override fun onLazyCreate(context: Context) {
         initParam()
         initView(context)
         initViewModel()
-        launch {
-            msv_state?.showLoadingView()
+        lifecycleScope.launch {
+            binding?.msvState?.showLoadingView()
             delay(200)
             doRefresh()
         }
@@ -77,9 +88,9 @@ class GanHuoFragment : BaseFragment(R.layout.fragment_home_ganhuo) {
     }
 
     private fun initView(context: Context) {
-        srl_refresh?.setOnRefreshListener { doRefresh() }
-        rv_list?.layoutManager = LinearLayoutManager(context)
-        rv_list?.addItemDecoration(LinearItemDecoration(dividerSize = ScreenUtil.dp2px(context, 4F)))
+        binding?.srlRefresh?.setOnRefreshListener { doRefresh() }
+        binding?.rvList?.layoutManager = LinearLayoutManager(context)
+        binding?.rvList?.addItemDecoration(LinearItemDecoration(dividerSize = ScreenUtil.dp2px(context, 4F)))
         // 列表
         moreImageWrapper.setOnItemClickListener { _, _, item ->
             WebViewActivity.start(context, item.url, item.title)
@@ -100,7 +111,7 @@ class GanHuoFragment : BaseFragment(R.layout.fragment_home_ganhuo) {
         // 加载更多
         loadMoreWrapper.onLoadMoreListener = { doLoadMore() }
         multiTypeAdapter.register(loadMoreWrapper)
-        rv_list?.adapter = multiTypeAdapter
+        binding?.rvList?.adapter = multiTypeAdapter
     }
 
     private fun initViewModel() {
@@ -114,8 +125,8 @@ class GanHuoFragment : BaseFragment(R.layout.fragment_home_ganhuo) {
             }
         }, {
             if (page == 1) {
-                msv_state?.showNetworkErrorView {
-                    msv_state?.showLoadingView()
+                binding?.msvState?.showNetworkErrorView {
+                    binding?.msvState?.showLoadingView()
                     doRefresh()
                 }
             } else {
@@ -143,11 +154,11 @@ class GanHuoFragment : BaseFragment(R.layout.fragment_home_ganhuo) {
      * 渲染刷新
      */
     private fun renderRefresh(ganHuos: MutableList<GanHuo>) {
-        srl_refresh?.isRefreshing = false
+        binding?.srlRefresh?.isRefreshing = false
         if (ganHuos.isEmpty()) {
-            msv_state?.showEmptyView()
+            binding?.msvState?.showEmptyView()
         } else {
-            msv_state?.showContentView()
+            binding?.msvState?.showContentView()
             multiTypeAdapter.data.clear()
             multiTypeAdapter.data.addAll(ganHuos)
             multiTypeAdapter.data.add(loadMoreWrapper.loadMoreBean)

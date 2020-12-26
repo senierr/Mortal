@@ -3,7 +3,6 @@ package com.senierr.mortal.domain.home
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -33,7 +32,7 @@ import kotlinx.coroutines.launch
  * @author zhouchunjie
  * @date 2019/7/8 21:21
  */
-class GanHuoFragment : BaseFragment() {
+class GanHuoFragment : BaseFragment<FragmentHomeGanhuoBinding>() {
 
     companion object {
         private const val TYPE = "type"
@@ -55,20 +54,13 @@ class GanHuoFragment : BaseFragment() {
     private val noImageWrapper = GanHuoNoImageWrapper()
     private val loadMoreWrapper = LoadMoreWrapper()
 
-    private var binding: FragmentHomeGanhuoBinding? = null
     private lateinit var ganHuoViewModel: GanHuoViewModel
 
     private var page = 1
     private val pageSize = 10
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentHomeGanhuoBinding.inflate(inflater, container, false)
-        return binding?.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
+    override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentHomeGanhuoBinding {
+        return FragmentHomeGanhuoBinding.inflate(inflater, container, false)
     }
 
     override fun onLazyCreate(context: Context) {

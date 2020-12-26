@@ -7,6 +7,7 @@ import android.net.Uri
 import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
@@ -23,7 +24,7 @@ import com.senierr.mortal.databinding.ActivityWebviewBinding
  * @author zhouchunjie
  * @date 2019/6/12 11:38
  */
-class WebViewActivity : BaseActivity() {
+class WebViewActivity : BaseActivity<ActivityWebviewBinding>() {
 
     companion object {
         private const val TAG_LOG = "WebViewActivity"
@@ -48,17 +49,16 @@ class WebViewActivity : BaseActivity() {
         }
     }
 
-    private lateinit var binding: ActivityWebviewBinding
-
     private var originalUrl: String? = null
     private var title: String? = null
     private var allowFileAccess: Boolean = false
 
+    override fun createViewBinding(layoutInflater: LayoutInflater): ActivityWebviewBinding {
+        return ActivityWebviewBinding.inflate(layoutInflater)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityWebviewBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         initParams()
         initView()
 

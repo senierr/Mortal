@@ -3,6 +3,7 @@ package com.senierr.mortal.domain.user
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.lifecycle.ViewModelProvider
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.ToastUtil
@@ -18,7 +19,7 @@ import com.senierr.repository.entity.bmob.UserInfo
  * @author zhouchunjie
  * @date 2019/7/6
  */
-class UserInfoActivity : BaseActivity() {
+class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
 
     companion object {
         fun start(context: Context) {
@@ -27,14 +28,14 @@ class UserInfoActivity : BaseActivity() {
         }
     }
 
-    private lateinit var binding: ActivityUserInfoBinding
     private lateinit var userInfoViewModel: UserInfoViewModel
+
+    override fun createViewBinding(layoutInflater: LayoutInflater): ActivityUserInfoBinding {
+        return ActivityUserInfoBinding.inflate(layoutInflater)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityUserInfoBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         initView()
         initViewModel()
         userInfoViewModel.fetchUserInfo()
@@ -62,7 +63,7 @@ class UserInfoActivity : BaseActivity() {
         // 头像
         binding.ivAvatar.show(userInfo.avatar, isCircle = true)
         // 昵称
-        userInfo.username.let {
+        userInfo.nickname.let {
             binding.tvNickname.text = if (it.isNotBlank()) it else getString(R.string.none)
         }
         // 邮箱

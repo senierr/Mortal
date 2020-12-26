@@ -1,6 +1,7 @@
 package com.senierr.mortal.domain.splash
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.senierr.base.support.ext.click
@@ -20,16 +21,16 @@ import kotlinx.coroutines.launch
  * @author zhouchunjie
  * @date 2019/7/6
  */
-class SplashActivity : BaseActivity() {
+class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
-    private lateinit var binding: ActivitySplashBinding
     private lateinit var splashViewModel: SplashViewModel
+
+    override fun createViewBinding(layoutInflater: LayoutInflater): ActivitySplashBinding {
+        return ActivitySplashBinding.inflate(layoutInflater)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySplashBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         initView()
         initViewModel()
         splashViewModel.fetchAdvert()

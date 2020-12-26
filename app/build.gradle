@@ -1,5 +1,8 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'  // 暂时使用它的序列化，1.4.X时弃用
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion

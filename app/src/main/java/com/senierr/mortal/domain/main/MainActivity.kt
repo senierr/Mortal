@@ -3,6 +3,7 @@ package com.senierr.mortal.domain.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -29,7 +30,7 @@ import com.senierr.repository.entity.bmob.VersionInfo
  * @author zhouchunjie
  * @date 2019/7/6
  */
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     companion object {
         fun start(context: Context) {
@@ -37,14 +38,14 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
+
+    override fun createViewBinding(layoutInflater: LayoutInflater): ActivityMainBinding {
+        return ActivityMainBinding.inflate(layoutInflater)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         initView()
         initViewModel()
     }

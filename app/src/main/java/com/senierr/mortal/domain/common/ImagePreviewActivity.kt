@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
@@ -27,7 +28,7 @@ import java.io.File
  * @author zhouchunjie
  * @date 2019/5/30 10:03
  */
-class ImagePreviewActivity : BaseActivity() {
+class ImagePreviewActivity : BaseActivity<ActivityImagePreviewBinding>() {
 
     @Parcelize
     data class ImageItem(
@@ -47,7 +48,6 @@ class ImagePreviewActivity : BaseActivity() {
         }
     }
 
-    private lateinit var binding: ActivityImagePreviewBinding
     private lateinit var downloadViewModel: DownloadViewModel
 
     private val imageItems = mutableListOf<ImageItem>()
@@ -92,11 +92,12 @@ class ImagePreviewActivity : BaseActivity() {
         }
     }
 
+    override fun createViewBinding(layoutInflater: LayoutInflater): ActivityImagePreviewBinding {
+        return ActivityImagePreviewBinding.inflate(layoutInflater)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityImagePreviewBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         initParams()
         initView()
         initViewModel()

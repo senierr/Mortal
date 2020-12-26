@@ -20,23 +20,16 @@ import com.senierr.repository.entity.bmob.UserInfo
  * @author zhouchunjie
  * @date 2019/7/8 21:21
  */
-class MeFragment : BaseFragment() {
+class MeFragment : BaseFragment<FragmentMeBinding>() {
 
     companion object {
         const val REQUEST_CODE_LOGIN = 100
     }
 
-    private var binding: FragmentMeBinding? = null
     private lateinit var userInfoViewModel: UserInfoViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentMeBinding.inflate(inflater, container, false)
-        return binding?.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
+    override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentMeBinding {
+        return FragmentMeBinding.inflate(inflater, container, false)
     }
 
     override fun onLazyCreate(context: Context) {

@@ -28,26 +28,19 @@ import com.senierr.repository.entity.gank.Girl
  * @author zhouchunjie
  * @date 2019/7/8 21:21
  */
-class RecommendFragment : BaseFragment() {
+class RecommendFragment : BaseFragment<FragmentRecommendBinding>() {
 
     private val multiTypeAdapter = MultiTypeAdapter()
     private val recommendWrapper = RecommendWrapper()
     private val loadMoreWrapper = LoadMoreWrapper()
 
-    private var binding: FragmentRecommendBinding? = null
     private lateinit var recommendViewModel: RecommendViewModel
 
     private var page = 1
     private val pageSize = 10
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentRecommendBinding.inflate(inflater, container, false)
-        return binding?.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
+    override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentRecommendBinding {
+        return FragmentRecommendBinding.inflate(inflater, container, false)
     }
 
     override fun onLazyCreate(context: Context) {

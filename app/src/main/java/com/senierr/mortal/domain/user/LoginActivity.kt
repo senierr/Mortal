@@ -3,6 +3,7 @@ package com.senierr.mortal.domain.user
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -25,7 +26,7 @@ import java.lang.Exception
  * @author zhouchunjie
  * @date 2019/7/6
  */
-class LoginActivity : BaseActivity() {
+class LoginActivity : BaseActivity<ActivityLoginBinding>() {
 
     companion object {
         private const val EXTRA_TARGET_INTENT = "target_intent"
@@ -51,16 +52,16 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    private lateinit var binding: ActivityLoginBinding
     private lateinit var loadingDialog: AlertDialog
 
     private lateinit var loginViewModel: LoginViewModel
 
+    override fun createViewBinding(layoutInflater: LayoutInflater): ActivityLoginBinding {
+        return ActivityLoginBinding.inflate(layoutInflater)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
         initView()
         initViewModel()
     }

@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import androidx.core.content.FileProvider
+import androidx.fragment.app.Fragment
 import com.senierr.base.support.ui.BaseFragment
 import java.io.File
 
@@ -18,7 +19,7 @@ import java.io.File
  * @author zhouchunjie
  * @date 2019/6/14 11:04
  */
-class InstallFragment : BaseFragment() {
+class InstallFragment : Fragment() {
 
     companion object {
         const val TAG = "InstallFragment"

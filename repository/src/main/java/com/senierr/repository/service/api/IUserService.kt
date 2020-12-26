@@ -43,11 +43,13 @@ interface IUserService {
     suspend fun clearCacheUserInfo(objectId: String)
 
     /**
-     * 更新用户邮箱
+     * 更新用户信息
+     *
+     * @param infoMap 需要更新的信息表，例如：<"nickname": "Tom">
      *
      * @throws BmobException 网络请求异常
      */
-    suspend fun updateEmail(objectId: String, sessionToken: String, email: String): BmobResponse
+    suspend fun updateInfo(objectId: String, sessionToken: String, infoMap: MutableMap<String, String>): BmobResponse
 
     /**
      * 重置密码

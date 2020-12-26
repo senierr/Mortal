@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
@@ -18,10 +17,7 @@ import com.senierr.mortal.domain.home.vm.GanHuoViewModel
 import com.senierr.mortal.domain.home.wrapper.GanHuoMoreImageWrapper
 import com.senierr.mortal.domain.home.wrapper.GanHuoNoImageWrapper
 import com.senierr.mortal.domain.home.wrapper.GanHuoOneImageWrapper
-import com.senierr.mortal.ext.showContentView
-import com.senierr.mortal.ext.showEmptyView
-import com.senierr.mortal.ext.showLoadingView
-import com.senierr.mortal.ext.showNetworkErrorView
+import com.senierr.mortal.ext.*
 import com.senierr.repository.entity.gank.GanHuo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -54,7 +50,7 @@ class GanHuoFragment : BaseFragment<FragmentHomeGanhuoBinding>() {
     private val noImageWrapper = GanHuoNoImageWrapper()
     private val loadMoreWrapper = LoadMoreWrapper()
 
-    private lateinit var ganHuoViewModel: GanHuoViewModel
+    private val ganHuoViewModel by getViewModel<GanHuoViewModel>()
 
     private var page = 1
     private val pageSize = 10
@@ -107,8 +103,6 @@ class GanHuoFragment : BaseFragment<FragmentHomeGanhuoBinding>() {
     }
 
     private fun initViewModel() {
-        ganHuoViewModel = ViewModelProvider(this).get(GanHuoViewModel::class.java)
-
         ganHuoViewModel.fetchGanHuosResult.observe(this, {
             if (page == 1) {
                 renderRefresh(it)

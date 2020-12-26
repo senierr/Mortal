@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.senierr.mortal.domain.common.vm.StatefulLiveData
 import com.senierr.repository.Repository
+import com.senierr.repository.entity.bmob.BmobResponse
 import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.service.api.IUserService
 import kotlinx.coroutines.launch
@@ -17,9 +18,13 @@ import kotlinx.coroutines.launch
 class UserInfoViewModel : ViewModel() {
 
     val fetchUserInfoResult = StatefulLiveData<UserInfo>()
+    val updateNicknameResult = StatefulLiveData<UserInfo>()
 
     private val userService = Repository.getService<IUserService>()
 
+    /**
+     * 拉取最新用户信息
+     */
     fun fetchUserInfo() {
         viewModelScope.launch {
             try {
@@ -31,6 +36,25 @@ class UserInfoViewModel : ViewModel() {
                 fetchUserInfoResult.setValue(userInfo)
             } catch (e: Exception) {
                 fetchUserInfoResult.setException(e)
+            }
+        }
+    }
+
+    /**
+     * 更新用户昵称
+     */
+    fun updateNickname(userInfo: UserInfo, newNickname: String) {
+        viewModelScope.launch {
+            try {
+                userService.updateInfo(
+                    userInfo.objectId,
+                    userInfo.sessionToken,
+                    mutableMapOf(Pair("nickname", newNickname))
+                )
+                userInfo.nickname = newNickname
+                updateNicknameResult.setValue(userInfo)
+            } catch (e: Exception) {
+                updateNicknameResult.setException(e)
             }
         }
     }

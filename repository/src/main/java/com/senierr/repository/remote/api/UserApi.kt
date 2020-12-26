@@ -54,13 +54,15 @@ interface UserApi {
     ): BmobResponse
 
     /**
-     * 更新用户邮箱
+     * 更新用户信息
+     *
+     * @param newInfo eg: <"nickname": "Tom">
      */
     @PUT("1/users/{objectId}")
-    suspend fun updateEmail(
+    suspend fun updateInfo(
         @Header("X-Bmob-Session-Token") sessionToken: String,
         @Path("objectId") objectId: String,
-        @Body email: String
+        @Body newInfo: MutableMap<String, String>
     ): BmobResponse
 
     /**

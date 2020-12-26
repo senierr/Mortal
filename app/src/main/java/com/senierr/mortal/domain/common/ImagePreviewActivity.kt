@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
-import androidx.lifecycle.ViewModelProvider
 import com.bm.library.PhotoView
 import com.senierr.adapter.internal.ViewHolder
 import com.senierr.base.support.ext.click
@@ -18,6 +17,7 @@ import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityImagePreviewBinding
 import com.senierr.mortal.domain.common.vm.DownloadViewModel
+import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.show
 import kotlinx.android.parcel.Parcelize
 import java.io.File
@@ -48,7 +48,7 @@ class ImagePreviewActivity : BaseActivity<ActivityImagePreviewBinding>() {
         }
     }
 
-    private lateinit var downloadViewModel: DownloadViewModel
+    private val downloadViewModel by getViewModel<DownloadViewModel>()
 
     private val imageItems = mutableListOf<ImageItem>()
     private val imagePreviewAdapter = object : androidx.viewpager.widget.PagerAdapter() {
@@ -113,7 +113,6 @@ class ImagePreviewActivity : BaseActivity<ActivityImagePreviewBinding>() {
     }
 
     private fun initViewModel() {
-        downloadViewModel = ViewModelProvider(this).get(DownloadViewModel::class.java)
         downloadViewModel.downloadResult.observe(this, {
             ToastUtil.showLong(this, getString(R.string.format_download_success, it.absolutePath))
         }, {

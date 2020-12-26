@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.senierr.base.support.ui.BaseFragment
@@ -12,6 +11,7 @@ import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.FragmentHomeBinding
 import com.senierr.mortal.domain.home.vm.HomeViewModel
+import com.senierr.mortal.ext.getViewModel
 import com.senierr.repository.entity.gank.Category
 
 /**
@@ -22,7 +22,7 @@ import com.senierr.repository.entity.gank.Category
  */
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
-    private lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel by getViewModel<HomeViewModel>()
 
     override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentHomeBinding {
         return FragmentHomeBinding.inflate(inflater, container, false)
@@ -35,8 +35,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     private fun initViewModel() {
-        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-
         homeViewModel.fetchCategoriesResult.observe(this, {
             initViewPager(it)
         }, {

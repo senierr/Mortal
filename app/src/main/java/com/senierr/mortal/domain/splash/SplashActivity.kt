@@ -2,7 +2,6 @@ package com.senierr.mortal.domain.splash
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
@@ -23,7 +22,7 @@ import kotlinx.coroutines.launch
  */
 class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
-    private lateinit var splashViewModel: SplashViewModel
+    private val splashViewModel by getViewModel<SplashViewModel>()
 
     override fun createViewBinding(layoutInflater: LayoutInflater): ActivitySplashBinding {
         return ActivitySplashBinding.inflate(layoutInflater)
@@ -44,7 +43,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     }
 
     private fun initViewModel() {
-        splashViewModel = getViewModel()
         splashViewModel.fetchAdvertResult.observe(this) {
             binding.ivSplash.show(it.image)
         }

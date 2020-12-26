@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="@dimen/dp_16"
+	android:orientation="vertical">
+
+	<com.senierr.mortal.widget.ClearEditText
+		android:id="@+id/et_edit"
+		android:textColor="@color/text_content"
+		android:textSize="@dimen/sp_14"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/dp_56"/>
+</LinearLayout>

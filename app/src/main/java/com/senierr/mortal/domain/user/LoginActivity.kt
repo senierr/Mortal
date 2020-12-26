@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
@@ -16,9 +15,9 @@ import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityLoginBinding
 import com.senierr.mortal.domain.user.vm.LoginViewModel
+import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.widget.CircularAnim
 import com.senierr.repository.entity.bmob.BmobException
-import java.lang.Exception
 
 /**
  * 登录页面
@@ -54,7 +53,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
 
     private lateinit var loadingDialog: AlertDialog
 
-    private lateinit var loginViewModel: LoginViewModel
+    private val loginViewModel by getViewModel<LoginViewModel>()
 
     override fun createViewBinding(layoutInflater: LayoutInflater): ActivityLoginBinding {
         return ActivityLoginBinding.inflate(layoutInflater)
@@ -80,8 +79,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     }
 
     private fun initViewModel() {
-        loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
-
         loginViewModel.loginResult.observe(this,
             { showLoginSuccess() },
             { showLoginFailure(it) })

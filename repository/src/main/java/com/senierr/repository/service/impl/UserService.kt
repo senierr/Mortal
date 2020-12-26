@@ -1,5 +1,6 @@
 package com.senierr.repository.service.impl
 
+import com.google.gson.Gson
 import com.senierr.repository.db.DatabaseManager
 import com.senierr.repository.entity.bmob.BmobResponse
 import com.senierr.repository.entity.bmob.UserInfo
@@ -60,12 +61,13 @@ class UserService : IUserService {
         }
     }
 
-    override suspend fun updateEmail(
+    override suspend fun updateInfo(
         objectId: String,
         sessionToken: String,
-        email: String): BmobResponse {
+        infoMap: MutableMap<String, String>
+    ): BmobResponse {
         return withContext(Dispatchers.IO) {
-            return@withContext userApi.updateEmail(sessionToken, objectId, email)
+            return@withContext userApi.updateInfo(sessionToken, objectId, infoMap)
         }
     }
 

@@ -8,9 +8,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.senierr.base.support.ui.BaseActivity
@@ -38,7 +35,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
     }
 
-    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel by getAndroidViewModel<MainViewModel>()
 
     override fun createViewBinding(layoutInflater: LayoutInflater): ActivityMainBinding {
         return ActivityMainBinding.inflate(layoutInflater)
@@ -88,7 +85,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     private fun initViewModel() {
-        mainViewModel = getAndroidViewModel(application)
         mainViewModel.newVersionResult.observe(this) {
             showNewVersionDialog(it)
         }

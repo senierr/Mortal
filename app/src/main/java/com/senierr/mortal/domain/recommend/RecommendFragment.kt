@@ -16,10 +16,7 @@ import com.senierr.mortal.domain.common.ImagePreviewActivity
 import com.senierr.mortal.domain.common.wrapper.LoadMoreWrapper
 import com.senierr.mortal.domain.recommend.vm.RecommendViewModel
 import com.senierr.mortal.domain.recommend.wrapper.RecommendWrapper
-import com.senierr.mortal.ext.showContentView
-import com.senierr.mortal.ext.showEmptyView
-import com.senierr.mortal.ext.showLoadingView
-import com.senierr.mortal.ext.showNetworkErrorView
+import com.senierr.mortal.ext.*
 import com.senierr.repository.entity.gank.Girl
 
 /**
@@ -34,7 +31,7 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>() {
     private val recommendWrapper = RecommendWrapper()
     private val loadMoreWrapper = LoadMoreWrapper()
 
-    private lateinit var recommendViewModel: RecommendViewModel
+    private val recommendViewModel by getViewModel<RecommendViewModel>()
 
     private var page = 1
     private val pageSize = 10
@@ -70,8 +67,6 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>() {
     }
 
     private fun initViewModel(context: Context) {
-        recommendViewModel = ViewModelProvider(this).get(RecommendViewModel::class.java)
-
         recommendViewModel.fetchGirlsResult.observe(this, {
             if (page == 1) {
                 renderRefresh(it)

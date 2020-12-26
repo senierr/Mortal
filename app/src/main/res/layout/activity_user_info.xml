@@ -35,6 +35,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_nickname"
         android:orientation="horizontal"
         android:background="@drawable/ripple_btn_white"
         android:paddingStart="@dimen/dp_16"

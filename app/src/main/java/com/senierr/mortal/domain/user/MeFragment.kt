@@ -12,6 +12,8 @@ import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.databinding.FragmentMeBinding
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
+import com.senierr.mortal.ext.getViewModel
+import com.senierr.mortal.ext.show
 import com.senierr.repository.entity.bmob.UserInfo
 
 /**
@@ -26,7 +28,7 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         const val REQUEST_CODE_LOGIN = 100
     }
 
-    private lateinit var userInfoViewModel: UserInfoViewModel
+    private val userInfoViewModel by getViewModel<UserInfoViewModel>()
 
     override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentMeBinding {
         return FragmentMeBinding.inflate(inflater, container, false)
@@ -44,7 +46,6 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
     }
 
     private fun initViewModel(context: Context) {
-        userInfoViewModel = ViewModelProvider(this).get(UserInfoViewModel::class.java)
         userInfoViewModel.fetchUserInfoResult.observe(this, {
             renderLogged(it)
         }, {
@@ -78,7 +79,7 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
             }
         }
         // 头像
-//        iv_avatar?.show(userInfo.)
+        binding?.ivAvatar?.show(userInfo.avatar, isCircle = true)
         // 昵称
         binding?.tvNickname?.text = userInfo.username
     }

@@ -1,9 +1,6 @@
 package com.senierr.repository.service.api
 
-import com.senierr.repository.entity.gank.Banner
-import com.senierr.repository.entity.gank.Category
-import com.senierr.repository.entity.gank.GanHuo
-import com.senierr.repository.entity.gank.Girl
+import com.senierr.repository.entity.gank.*
 
 /**
  * 文章服务
@@ -53,4 +50,13 @@ interface IGankService {
      * @param count 数量 [10, 50]
      */
     suspend fun getGanHuos(type: String, page: Int, count: Int): MutableList<GanHuo>
+
+    /**
+     * 搜索干货
+     *
+     * @param type 子分类
+     * @param page 页码 >=1
+     * @param count 数量 [10, 50]
+     */
+    suspend fun searchGanHuo(search: String, type: String, page: Int, count: Int): MutableList<GanHuo>
 }

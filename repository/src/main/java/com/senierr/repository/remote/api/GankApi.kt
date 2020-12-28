@@ -65,4 +65,19 @@ interface GankApi {
         @Path("page") page: Int,
         @Path("count") count: Int
     ): GankResponse<MutableList<GanHuo>>
+
+    /**
+     * 搜索干货
+     *
+     * @param type 子分类
+     * @param page 页码 >=1
+     * @param count 数量 [10, 50]
+     */
+    @GET("search/{search}/category/GanHuo/type/{type}/page/{page}/count/{count}")
+    suspend fun searchGanHuo(
+        @Path("search", encoded = true) search: String,
+        @Path("type", encoded = true) type: String,
+        @Path("page") page: Int,
+        @Path("count") count: Int
+    ): GankResponse<MutableList<GanHuo>>
 }

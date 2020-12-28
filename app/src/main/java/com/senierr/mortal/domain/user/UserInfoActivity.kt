@@ -3,6 +3,7 @@ package com.senierr.mortal.domain.user
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import com.senierr.base.support.ext.click
@@ -33,7 +34,7 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
 
     private val userInfoViewModel by getViewModel<UserInfoViewModel>()
 
-    private var userInfo: UserInfo? = null
+    private var currentUserInfo: UserInfo? = null
 
     override fun createViewBinding(layoutInflater: LayoutInflater): ActivityUserInfoBinding {
         return ActivityUserInfoBinding.inflate(layoutInflater)
@@ -53,6 +54,9 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
 
         binding.llNickname.click {
             val dialogBinding = DialogEditTextBinding.inflate(layoutInflater)
+            // 默认值
+            dialogBinding.etEdit.text = SpannableStringBuilder(currentUserInfo?.nickname)
+            dialogBinding.etEdit.setSelection(dialogBinding.etEdit.text?.length ?: 0)
             AlertDialog.Builder(this)
                 .setTitle(R.string.edit_nickname)
                 .setView(dialogBinding.root)
@@ -61,8 +65,30 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
                 }
                 .setPositiveButton(R.string.done) { dialog, _ ->
                     val newNickname = dialogBinding.etEdit.text?.toString()?.trim() ?: return@setPositiveButton
-                    userInfo?.let {
+                    currentUserInfo?.let {
                         userInfoViewModel.updateNickname(it, newNickname)
+                    }
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
+        }
+
+        binding.llEmail.click {
+            val dialogBinding = DialogEditTextBinding.inflate(layoutInflater)
+            // 默认值
+            dialogBinding.etEdit.text = SpannableStringBuilder(currentUserInfo?.email)
+            dialogBinding.etEdit.setSelection(dialogBinding.etEdit.text?.length ?: 0)
+            AlertDialog.Builder(this)
+                .setTitle(R.string.edit_email)
+                .setView(dialogBinding.root)
+                .setNegativeButton(R.string.cancel) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton(R.string.done) { dialog, _ ->
+                    val newEmail = dialogBinding.etEdit.text?.toString()?.trim() ?: return@setPositiveButton
+                    currentUserInfo?.let {
+                        userInfoViewModel.updateEmail(it, newEmail)
                     }
                     dialog.dismiss()
                 }
@@ -72,24 +98,24 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
     }
 
     private fun initViewModel() {
-        userInfoViewModel.fetchUserInfoResult.observe(this, {
-            userInfo = it
-            renderLogged(it)
+        userInfoViewModel.userinfo.observe(this, {
+            renderUserInfo(it)
         }, {
             ToastUtil.showShort(this, it.message)
         })
-        userInfoViewModel.updateNicknameResult.observe(this, {
-            userInfo = it
-            renderLogged(it)
+        userInfoViewModel.userinfo.observe(this, {
+            renderUserInfo(it)
         }, {
             ToastUtil.showShort(this, it.message)
         })
     }
 
     /**
-     * 渲染登录状态
+     * 渲染用户信息
      */
-    private fun renderLogged(userInfo: UserInfo) {
+    private fun renderUserInfo(userInfo: UserInfo) {
+        // 缓存当前用户信息
+        currentUserInfo = userInfo
         // 头像
         binding.ivAvatar.show(userInfo.avatar, isCircle = true)
         // 昵称

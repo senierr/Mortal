@@ -46,7 +46,7 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
     }
 
     private fun initViewModel(context: Context) {
-        userInfoViewModel.fetchUserInfoResult.observe(this, {
+        userInfoViewModel.userinfo.observe(this, {
             renderLogged(it)
         }, {
             ToastUtil.showShort(context, it.message)

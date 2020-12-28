@@ -17,8 +17,7 @@ import kotlinx.coroutines.launch
  */
 class UserInfoViewModel : ViewModel() {
 
-    val fetchUserInfoResult = StatefulLiveData<UserInfo>()
-    val updateNicknameResult = StatefulLiveData<UserInfo>()
+    val userinfo = StatefulLiveData<UserInfo>()
 
     private val userService = Repository.getService<IUserService>()
 
@@ -30,12 +29,12 @@ class UserInfoViewModel : ViewModel() {
             try {
                 // 先获取缓存数据
                 val cacheUserInfo = userService.getCacheUserInfo()
-                fetchUserInfoResult.setValue(cacheUserInfo)
+                userinfo.setValue(cacheUserInfo)
                 // 再获取最新数据
                 val userInfo = userService.getUserInfo(cacheUserInfo.objectId)
-                fetchUserInfoResult.setValue(userInfo)
+                userinfo.setValue(userInfo)
             } catch (e: Exception) {
-                fetchUserInfoResult.setException(e)
+                userinfo.setException(e)
             }
         }
     }
@@ -52,9 +51,28 @@ class UserInfoViewModel : ViewModel() {
                     mutableMapOf(Pair("nickname", newNickname))
                 )
                 userInfo.nickname = newNickname
-                updateNicknameResult.setValue(userInfo)
+                userinfo.setValue(userInfo)
             } catch (e: Exception) {
-                updateNicknameResult.setException(e)
+                userinfo.setException(e)
+            }
+        }
+    }
+
+    /**
+     * 更新用户邮箱
+     */
+    fun updateEmail(userInfo: UserInfo, newEmail: String) {
+        viewModelScope.launch {
+            try {
+                userService.updateInfo(
+                    userInfo.objectId,
+                    userInfo.sessionToken,
+                    mutableMapOf(Pair("email", newEmail))
+                )
+                userInfo.email = newEmail
+                userinfo.setValue(userInfo)
+            } catch (e: Exception) {
+                userinfo.setException(e)
             }
         }
     }

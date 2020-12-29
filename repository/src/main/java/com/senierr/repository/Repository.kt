@@ -1,5 +1,6 @@
 package com.senierr.repository
 
+import android.app.Application
 import android.content.Context
 import com.senierr.repository.db.DatabaseManager
 import com.senierr.repository.disk.DiskManager
@@ -23,15 +24,23 @@ import com.senierr.repository.sp.SPManager
  */
 object Repository {
 
+    private lateinit var application: Application
+
     /**
      * 初始化
      */
-    fun initialize(context: Context, isDebug: Boolean) {
-        RemoteManager.initialize(context, isDebug)
-        DatabaseManager.initialize(context)
-        SPManager.initialize(context)
-        DiskManager.initialize(context)
+    fun initialize(application: Application, isDebug: Boolean) {
+        this.application = application
+        RemoteManager.initialize(application, isDebug)
+        DatabaseManager.initialize(application)
+        SPManager.initialize(application)
+        DiskManager.initialize(application)
     }
+
+    /**
+     * 获取应用实例
+     */
+    fun getApplication(): Application = application
 
     /**
      * 获取数据服务

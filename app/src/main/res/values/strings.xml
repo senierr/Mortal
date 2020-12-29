@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Mortal</string>
 
@@ -54,4 +55,12 @@
     <string name="edit_email">编辑邮箱</string>
     <string name="done">确认</string>
     <string name="cancel">取消</string>
+
+    <string name="discover_new_version">发现新版本</string>
+    <string name="upgrade_now">立即更新</string>
+    <string name="upgrade_later">稍后更新</string>
+    <string name="ignore_this_version">忽略此版本</string>
+    <string name="version_upgrade">版本更新</string>
+    <string name="download_ing">正在下载&#8230;</string>
+    <string name="download_completed">下载完成</string>
 </resources>

@@ -1,11 +1,7 @@
 package com.senierr.mortal.domain.main.vm
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.senierr.base.support.utils.AppUtil
-import com.senierr.mortal.app.SessionApplication
 import com.senierr.mortal.domain.common.vm.StatefulLiveData
 import com.senierr.repository.Repository
 import com.senierr.repository.entity.bmob.VersionInfo
@@ -20,12 +16,11 @@ import java.io.File
  * @author zhouchunjie
  * @date 2019/7/9
  */
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class MainViewModel : ViewModel() {
 
     val newVersionResult = StatefulLiveData<VersionInfo>()
     val apkDownloadResult = StatefulLiveData<File>()
 
-    private val application = getApplication<SessionApplication>()
     private val settingService = Repository.getService<ISettingService>()
     private val commonService = Repository.getService<ICommonService>()
 
@@ -35,9 +30,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun checkNewVersion() {
         viewModelScope.launch {
             try {
-                val versionInfo = settingService.checkNewVersion(application.packageName)
-                if (versionInfo != null && versionInfo.versionCode > AppUtil.getVersionCode(application, application.packageName)) {
-                    newVersionResult.setValue(versionInfo)
+                val versionInfo = settingService.checkNewVersion()
+                versionInfo?.let {
+                    newVersionResult.setValue(it)
                 }
             } catch (e: Exception) {
                 newVersionResult.setException(e)
@@ -48,13 +43,31 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * 下载APK
      */
-    fun downloadApk(versionInfo: VersionInfo) {
+    fun downloadApk(versionInfo: VersionInfo, downloadTag: String) {
         viewModelScope.launch {
             try {
-                val apkFile = commonService.downloadFile("apk", versionInfo.url, versionInfo.fileName)
+                val apkFile = commonService.downloadFile(
+                    downloadTag,
+                    versionInfo.url,
+                    versionInfo.fileName,
+                    versionInfo.md5
+                )
                 apkDownloadResult.setValue(apkFile)
             } catch (e: Exception) {
                 apkDownloadResult.setException(e)
+            }
+        }
+    }
+
+    /**
+     * 忽略此版本
+     */
+    fun ignoreThisVersion(versionInfo: VersionInfo) {
+        viewModelScope.launch {
+            try {
+                settingService.ignoreUpdateVersion(versionInfo.versionName)
+            } catch (e: Exception) {
+                // ignore
             }
         }
     }

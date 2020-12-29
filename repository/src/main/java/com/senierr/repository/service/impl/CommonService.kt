@@ -1,6 +1,7 @@
 package com.senierr.repository.service.impl
 
 import com.senierr.base.support.utils.CloseUtil
+import com.senierr.base.support.utils.EncryptUtil
 import com.senierr.repository.disk.DiskManager
 import com.senierr.repository.remote.RemoteManager
 import com.senierr.repository.remote.api.CommonApi
@@ -30,7 +31,7 @@ class CommonService : ICommonService {
         RemoteManager.getGankHttp().create(CommonApi::class.java)
     }
 
-    override suspend fun downloadFile(tag: String, url: String, destName: String): File {
+        override suspend fun downloadFile(tag: String, url: String, destName: String, md5: String): File {
         return withContext(Dispatchers.IO) {
             suspendCancellableCoroutine<File> { continuation ->
                 try {
@@ -53,6 +54,12 @@ class CommonService : ICommonService {
                     val destFile = File(destDir, destName)
                     // 判断文件是否存在
                     if (destFile.exists()) {
+                        // 判断是否需要重新下载
+                        val destMD5 = EncryptUtil.encryptMD5File2String(destFile)
+                        if (destMD5 == md5) {
+                            continuation.resume(destFile)
+                            return@suspendCancellableCoroutine
+                        }
                         val result = destFile.delete()
                         if (!result) {
                             throw Exception(destFile.path + " delete failed!")

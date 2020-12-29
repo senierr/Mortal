@@ -1,8 +1,8 @@
 package com.senierr.mortal.domain.home
 
 import android.content.Context
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
@@ -29,9 +29,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     override fun onLazyCreate(context: Context) {
+        initView()
         initViewModel()
 
         homeViewModel.fetchCategories()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_fragment_home, menu)
+    }
+
+    private fun initView() {
+        setHasOptionsMenu(true)
+        (activity as AppCompatActivity).setSupportActionBar(binding?.tbTop)
     }
 
     private fun initViewModel() {

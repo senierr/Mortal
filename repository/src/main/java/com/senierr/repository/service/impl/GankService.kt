@@ -2,6 +2,7 @@ package com.senierr.repository.service.impl
 
 import com.google.gson.Gson
 import com.senierr.base.support.utils.TypeUtil
+import com.senierr.repository.disk.DiskLruKey
 import com.senierr.repository.disk.DiskManager
 import com.senierr.repository.entity.gank.*
 import com.senierr.repository.remote.RemoteManager
@@ -33,7 +34,7 @@ class GankService : IGankService {
             val response = gankApi.getRandomGirls(count)
             if (!response.isSuccessful()) throw response.getException()
             // 缓存
-            diskLruCache?.putString("randomGirls", Gson().toJson(response.data))
+            diskLruCache?.putString(DiskLruKey.KEY_RANDOM_GIRLS, Gson().toJson(response.data))
             return@withContext response.data
         }
     }
@@ -41,7 +42,7 @@ class GankService : IGankService {
     override suspend fun getCacheRandomGirls(count: Int): MutableList<Girl> {
         return withContext(Dispatchers.IO) {
             val result = mutableListOf<Girl>()
-            val cache = diskLruCache?.getString("randomGirls")
+            val cache = diskLruCache?.getString(DiskLruKey.KEY_RANDOM_GIRLS)
             if (cache != null) {
                 val girls: MutableList<Girl> = Gson().fromJson(
                     cache,
@@ -73,7 +74,24 @@ class GankService : IGankService {
         return withContext(Dispatchers.IO) {
             val response = gankApi.getGanHuoCategories()
             if (!response.isSuccessful()) throw response.getException()
+            // 缓存
+            diskLruCache?.putString(DiskLruKey.KEY_GANHUO_CATEGORY, Gson().toJson(response.data))
             return@withContext response.data
+        }
+    }
+
+    override suspend fun getGanHuoCacheCategories(): MutableList<Category> {
+        return withContext(Dispatchers.IO) {
+            val result = mutableListOf<Category>()
+            val cache = diskLruCache?.getString(DiskLruKey.KEY_GANHUO_CATEGORY)
+            if (cache != null) {
+                val categories: MutableList<Category> = Gson().fromJson(
+                    cache,
+                    TypeUtil.parseType(MutableList::class.java, arrayOf(Category::class.java))
+                )
+                result.addAll(categories)
+            }
+            return@withContext result
         }
     }
 

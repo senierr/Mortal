@@ -92,7 +92,8 @@ fun ImageView.show(file: File?,
 fun ImageView.show(@DrawableRes resId: Int?,
                    @DrawableRes placeholderRes: Int? = R.drawable.ic_photo,
                    @DrawableRes errorRes: Int? = R.drawable.ic_photo,
-                   isGif: Boolean = false
+                   isGif: Boolean = false,
+                   isCircle: Boolean = false
 ) {
     // 处理Gif
     val requestBuilder = if (isGif) {
@@ -105,6 +106,10 @@ fun ImageView.show(@DrawableRes resId: Int?,
         .apply {
             // 占位图
             if (placeholderRes != null) placeholder(placeholderRes)
+        }
+        .apply {
+            // 圆形
+            if (isCircle) transform(CircleCrop())
         }
         .apply {
             // 加载失败图

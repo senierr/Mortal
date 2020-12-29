@@ -2,14 +2,12 @@ package com.senierr.mortal.domain.user
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.utils.ToastUtil
+import com.senierr.mortal.R
 import com.senierr.mortal.databinding.FragmentMeBinding
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
@@ -91,5 +89,9 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         binding?.llUser?.click {
             LoginActivity.startForResult(this, REQUEST_CODE_LOGIN)
         }
+        // 头像
+        binding?.ivAvatar?.show(R.drawable.ic_account_circle, isCircle = true)
+        // 昵称
+        binding?.tvNickname?.setText(R.string.login_or_register)
     }
 }

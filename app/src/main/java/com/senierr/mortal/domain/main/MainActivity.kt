@@ -72,9 +72,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         binding.bnvBottom.setOnNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.tab_home -> binding.vpMain.currentItem = 0
-                R.id.tab_recommend -> binding.vpMain.currentItem = 1
-                R.id.tab_me -> binding.vpMain.currentItem = 2
+                R.id.tab_home -> binding.vpMain.setCurrentItem(0, false)
+                R.id.tab_recommend -> binding.vpMain.setCurrentItem(1, false)
+                R.id.tab_me -> binding.vpMain.setCurrentItem(2, false)
             }
             return@setOnNavigationItemSelectedListener true
         }

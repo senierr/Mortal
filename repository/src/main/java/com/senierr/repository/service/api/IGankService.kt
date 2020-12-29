@@ -50,6 +50,11 @@ interface IGankService {
     suspend fun getGanHuoCategories(): MutableList<Category>
 
     /**
+     * 获取干货下缓存分类
+     */
+    suspend fun getGanHuoCacheCategories(): MutableList<Category>
+
+    /**
      * 获取干货
      *
      * @param type 子分类

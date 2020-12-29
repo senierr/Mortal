@@ -12,14 +12,10 @@ import java.lang.reflect.Type
 object TypeUtil {
 
     /**
-     * 获取Type
-     */
-    fun getType(rawType: Type, actualTypes: Array<Type>): Type {
-        return ParameterizedTypeImpl(rawType, actualTypes)
-    }
-
-    /**
      * 解析单个泛型参数的类
+     *
+     * 例如：解析 MutableList<UserInfo>
+     *      TypeUtil.parseType(MutableList::class.java, arrayOf(UserInfo::class.java))
      */
     fun parseType(rawType: Type, types: Array<Type>): Type {
         val length = types.size
@@ -29,7 +25,7 @@ object TypeUtil {
             newTypes[newTypes.size - 1] = parameterizedType
             return parseType(rawType, newTypes)
         }
-        return getType(rawType, types)
+        return ParameterizedTypeImpl(rawType, types)
     }
 
     class ParameterizedTypeImpl(

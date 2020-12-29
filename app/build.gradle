@@ -91,7 +91,7 @@ dependencies {
     implementation "com.airbnb.android:lottie:$rootProject.ext.lottie"
     implementation "com.bm.photoview:library:$rootProject.ext.photoview"
     // 后台任务
-    implementation "androidx.work:work-runtime:$rootProject.ext.worker_manager"
+    implementation "androidx.work:work-runtime-ktx:$rootProject.ext.worker_manager"
     // 内存泄露
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 }

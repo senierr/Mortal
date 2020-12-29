@@ -1,5 +1,8 @@
 package com.senierr.repository.service.impl
 
+import com.google.gson.Gson
+import com.senierr.base.support.utils.TypeUtil
+import com.senierr.repository.disk.DiskManager
 import com.senierr.repository.entity.gank.*
 import com.senierr.repository.remote.RemoteManager
 import com.senierr.repository.remote.api.GankApi
@@ -15,6 +18,7 @@ import kotlinx.coroutines.withContext
 class GankService : IGankService {
 
     private val gankApi by lazy { RemoteManager.getGankHttp().create(GankApi::class.java) }
+    private val diskLruCache by lazy { DiskManager.getDiskLruCache() }
 
     override suspend fun getBanners(): MutableList<Banner> {
         return withContext(Dispatchers.IO) {
@@ -28,7 +32,24 @@ class GankService : IGankService {
         return withContext(Dispatchers.IO) {
             val response = gankApi.getRandomGirls(count)
             if (!response.isSuccessful()) throw response.getException()
+            // 缓存
+            diskLruCache?.putString("randomGirls", Gson().toJson(response.data))
             return@withContext response.data
+        }
+    }
+
+    override suspend fun getCacheRandomGirls(count: Int): MutableList<Girl> {
+        return withContext(Dispatchers.IO) {
+            val result = mutableListOf<Girl>()
+            val cache = diskLruCache?.getString("randomGirls")
+            if (cache != null) {
+                val girls: MutableList<Girl> = Gson().fromJson(
+                    cache,
+                    TypeUtil.parseType(MutableList::class.java, arrayOf(Girl::class.java))
+                )
+                result.addAll(girls)
+            }
+            return@withContext result
         }
     }
 

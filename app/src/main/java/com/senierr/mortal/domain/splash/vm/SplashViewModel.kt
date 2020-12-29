@@ -1,11 +1,13 @@
 package com.senierr.mortal.domain.splash.vm
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.senierr.mortal.domain.common.vm.StatefulLiveData
+import com.senierr.mortal.worker.SplashWorker
 import com.senierr.repository.Repository
-import com.senierr.repository.entity.bmob.Advert
-import com.senierr.repository.service.api.IAdvertService
+import com.senierr.repository.entity.gank.Girl
+import com.senierr.repository.service.api.IGankService
 import kotlinx.coroutines.launch
 
 /**
@@ -14,21 +16,27 @@ import kotlinx.coroutines.launch
  * @author zhouchunjie
  * @date 2019/7/9
  */
-class SplashViewModel : ViewModel() {
+class SplashViewModel(application: Application) : AndroidViewModel(application) {
 
-    val fetchAdvertResult = StatefulLiveData<Advert>()
+    val randomGil = StatefulLiveData<Girl>()
 
-    private val advertService = Repository.getService<IAdvertService>()
+    private val gankService = Repository.getService<IGankService>()
 
+    /**
+     * 获取广告位
+     */
     fun fetchAdvert() {
         viewModelScope.launch {
             try {
-                val adverts = advertService.getSplash()
-                if (adverts.isNotEmpty()) {
-                    fetchAdvertResult.setValue(adverts.first())
+                // 展示已加载广告位
+                val cacheGirl = gankService.getCacheRandomGirls(1).firstOrNull()
+                if (cacheGirl != null) {
+                    randomGil.setValue(cacheGirl)
                 }
+                // 启动后台预加载
+                SplashWorker.start(getApplication())
             } catch (e: Exception) {
-                fetchAdvertResult.setException(e)
+                randomGil.setException(e)
             }
         }
     }

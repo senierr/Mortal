@@ -8,6 +8,7 @@
     <color name="app_theme_dark">#296BB1</color>
     <color name="app_warn">#ce3d3a</color>
     <!-- 窗口背景色 -->
+    <color name="window_theme">@color/app_theme</color>
     <color name="window_content">#FFFFFF</color>
     <color name="window_empty">#EDF0F2</color>
     <color name="window_black">#000000</color>
@@ -31,6 +32,5 @@
     <color name="btn_transparent">@color/transparent</color>
     <!-- 水波纹色 -->
     <color name="ripple_theme">@color/app_theme_dark</color>
-    <color name="ripple_white">#B4B4B4</color>
-    <color name="ripple_transparent">#B4B4B4</color>
+    <color name="ripple_grey">#B4B4B4</color>
 </resources>

@@ -5,8 +5,14 @@ import com.senierr.repository.db.DatabaseManager
 import com.senierr.repository.disk.DiskManager
 import com.senierr.repository.remote.RemoteManager
 import com.senierr.repository.remote.progress.ProgressBus
-import com.senierr.repository.service.api.*
-import com.senierr.repository.service.impl.*
+import com.senierr.repository.service.api.ICommonService
+import com.senierr.repository.service.api.IGankService
+import com.senierr.repository.service.api.ISettingService
+import com.senierr.repository.service.api.IUserService
+import com.senierr.repository.service.impl.CommonService
+import com.senierr.repository.service.impl.GankService
+import com.senierr.repository.service.impl.SettingService
+import com.senierr.repository.service.impl.UserService
 import com.senierr.repository.sp.SPManager
 
 /**
@@ -34,7 +40,6 @@ object Repository {
         IGankService::class.java -> GankService() as T
         IUserService::class.java -> UserService() as T
         ICommonService::class.java -> CommonService() as T
-        IAdvertService::class.java -> AdvertService() as T
         ISettingService::class.java -> SettingService() as T
         else -> throw IllegalArgumentException("Can not find ${T::class.java.simpleName}!")
     }

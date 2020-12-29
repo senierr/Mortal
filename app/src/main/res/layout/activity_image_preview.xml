@@ -27,7 +27,7 @@
         android:textColor="@color/text_white"
         style="@style/BaseButton"
         app:backgroundTint="@color/btn_transparent"
-        app:rippleColor="@color/ripple_transparent"
+        app:rippleColor="@color/ripple_grey"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:paddingStart="@dimen/dp_16"

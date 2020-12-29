@@ -20,7 +20,7 @@
 
         <activity
             android:name=".domain.splash.SplashActivity"
-            android:theme="@style/AppTheme.FullScreenTheme">
+            android:theme="@style/AppTheme.SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />

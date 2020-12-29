@@ -9,7 +9,7 @@ import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivitySplashBinding
 import com.senierr.mortal.domain.main.MainActivity
 import com.senierr.mortal.domain.splash.vm.SplashViewModel
-import com.senierr.mortal.ext.getViewModel
+import com.senierr.mortal.ext.getAndroidViewModel
 import com.senierr.mortal.ext.show
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
  */
 class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
-    private val splashViewModel by getViewModel<SplashViewModel>()
+    private val splashViewModel by getAndroidViewModel<SplashViewModel>()
 
     override fun createViewBinding(layoutInflater: LayoutInflater): ActivitySplashBinding {
         return ActivitySplashBinding.inflate(layoutInflater)
@@ -43,8 +43,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     }
 
     private fun initViewModel() {
-        splashViewModel.fetchAdvertResult.observe(this) {
-            binding.ivSplash.show(it.image)
+        splashViewModel.randomGil.observe(this) {
+            binding.ivSplash.show(it.url)
         }
     }
 

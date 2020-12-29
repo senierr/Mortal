@@ -1,17 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@color/app_theme</item>
-        <item name="colorPrimaryDark">@color/app_theme</item>
-        <item name="colorAccent">@color/app_theme</item>
-        <!-- 光标颜色 -->
-        <item name="android:textCursorDrawable">@drawable/shape_cursor</item>
-        <!-- 默认灰色背景 -->
-        <item name="android:windowBackground">@color/window_empty</item>
-        <!-- 状态栏 -->
-        <item name="android:statusBarColor">@color/window_content</item>
-        <item name="android:windowLightStatusBar">true</item>
-    </style>
 
     <!-- ToolBar菜单样式 -->
     <style name="BaseToolbar">
@@ -97,35 +85,5 @@
         <item name="android:insetTop">@dimen/dp_0</item>
         <item name="android:insetBottom">@dimen/dp_0</item>
         <item name="android:letterSpacing">0</item>
-    </style>
-
-    <!-- 黑色背景主题 -->
-    <style name="AppTheme.Black">
-        <item name="android:windowBackground">@color/black</item>
-    </style>
-
-    <!-- 全屏主题 -->
-    <style name="AppTheme.FullScreenTheme">
-        <item name="android:windowFullscreen">true</item>
-    </style>
-
-    <!-- 全屏黑色背景主题 -->
-    <style name="AppTheme.FullScreenTheme.Black">
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowBackground">@color/black</item>
-    </style>
-
-    <!-- 登录页主题 -->
-    <style name="AppTheme.LoginTheme">
-        <item name="android:windowBackground">@color/window_content</item>
-        <item name="android:statusBarColor">@color/window_content</item>
-        <item name="android:windowLightStatusBar">true</item>
-    </style>
-
-    <!-- 图片预览页主题 -->
-    <style name="AppTheme.ImagePreviewTheme">
-        <item name="android:windowBackground">@color/window_black</item>
-        <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowTranslucentStatus">true</item>
     </style>
 </resources>

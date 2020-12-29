@@ -23,6 +23,13 @@ interface IGankService {
     suspend fun getRandomGirls(count: Int): MutableList<Girl>
 
     /**
+     * 获取缓存随机妹纸图
+     *
+     * @param count 数量 [10, 50]
+     */
+    suspend fun getCacheRandomGirls(count: Int): MutableList<Girl>
+
+    /**
      * 获取热门干货
      *
      * @param count 数量 [10, 50]

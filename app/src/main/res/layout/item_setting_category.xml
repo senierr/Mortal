@@ -5,9 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/iv_image"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_240"
-        android:scaleType="centerCrop" />
+    <TextView
+        android:id="@+id/tv_category"
+        android:textSize="@dimen/sp_14"
+        android:textColor="@color/text_title_sub"
+        android:paddingTop="@dimen/dp_12"
+        android:paddingBottom="@dimen/dp_12"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </com.google.android.material.card.MaterialCardView>

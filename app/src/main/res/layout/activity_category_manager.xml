@@ -19,16 +19,10 @@
         app:msv_errorView="@layout/layout_status_error"
         app:msv_emptyView="@layout/layout_status_empty">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/srl_refresh"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_list"
+            android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_list"
-                android:scrollbars="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            android:layout_height="match_parent"/>
     </com.senierr.mortal.widget.MultiStateView>
 </LinearLayout>

@@ -31,9 +31,8 @@ class SettingService : ISettingService {
             where["platform"] = "android"
             val newVersionInfo = settingApi.checkNewVersion(Gson().toJson(where)).results.firstOrNull()
             if (newVersionInfo != null) {
-                val currentVersionCode = AppUtil.getVersionCode(Repository.getApplication())
                 // 判断是否是新版本
-                if (newVersionInfo.versionCode > currentVersionCode) {
+                if (checkIfNewVersion(newVersionInfo.versionName)) {
                     // 判断是否是忽略版本
                     val ignoreVersionName = spUtil.getString(SPKey.IGNORE_UPDATE_VERSION_NAME)
                     if (newVersionInfo.versionName != ignoreVersionName) {
@@ -50,5 +49,20 @@ class SettingService : ISettingService {
             spUtil.putString(SPKey.IGNORE_UPDATE_VERSION_NAME, versionName)
             return@withContext true
         }
+    }
+
+    /**
+     * 检测是否需要升级
+     */
+    private fun checkIfNewVersion(targetVersionName: String): Boolean {
+        val currentVersionName = AppUtil.getVersionName(Repository.getApplication()) ?: return false
+        val currentVersionArray = currentVersionName.split(".").toTypedArray()
+        val targetVersionArray = targetVersionName.split(".").toTypedArray()
+        val minLength = currentVersionArray.size.coerceAtMost(targetVersionArray.size)
+        for (i in 0 until minLength) {
+            val diff = targetVersionArray[i].toInt() - currentVersionArray[i].toInt()
+            if (diff != 0) return diff > 0
+        }
+        return false
     }
 }

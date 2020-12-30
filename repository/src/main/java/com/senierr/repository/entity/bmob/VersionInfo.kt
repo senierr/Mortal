@@ -7,7 +7,6 @@ data class VersionInfo(
     var objectId: String = "",
     var platform: String = "",  // android/ios
     var applicationId: String = "",
-    var versionCode: Int = 0,
     var versionName: String = "",
     var url: String = "",
     var fileName: String = "",

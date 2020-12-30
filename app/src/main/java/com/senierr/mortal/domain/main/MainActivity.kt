@@ -1,15 +1,13 @@
 package com.senierr.mortal.domain.main
 
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.os.Bundle
+import android.os.IBinder
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.senierr.base.support.ui.BaseActivity
@@ -17,13 +15,11 @@ import com.senierr.base.support.utils.AppUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityMainBinding
 import com.senierr.mortal.domain.home.HomeFragment
-import com.senierr.mortal.domain.main.vm.MainViewModel
 import com.senierr.mortal.domain.recommend.RecommendFragment
 import com.senierr.mortal.domain.user.MeFragment
-import com.senierr.mortal.ext.getViewModel
-import com.senierr.mortal.notification.NotificationManager
-import com.senierr.repository.Repository
+import com.senierr.mortal.service.UpgradeService
 import com.senierr.repository.entity.bmob.VersionInfo
+import java.io.File
 
 /**
  * 主页面
@@ -31,17 +27,26 @@ import com.senierr.repository.entity.bmob.VersionInfo
  * @author zhouchunjie
  * @date 2019/7/6
  */
-class MainActivity : BaseActivity<ActivityMainBinding>() {
+class MainActivity : BaseActivity<ActivityMainBinding>(), UpgradeService.UpgradeCallback {
 
     companion object {
-        private const val TAG_DOWNLOAD = "MainActivity_apk_download"
-
         fun start(context: Context) {
             context.startActivity(Intent(context, MainActivity::class.java))
         }
     }
 
-    private val mainViewModel by getViewModel<MainViewModel>()
+    private var upgradeBinder: UpgradeService.UpgradeBinder? = null
+    private val upgradeConnection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            upgradeBinder = service as UpgradeService.UpgradeBinder
+            upgradeBinder?.setCallBack(this@MainActivity)
+            upgradeBinder?.getService()?.checkNewVersion()
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            upgradeBinder = null
+        }
+    }
 
     override fun createViewBinding(layoutInflater: LayoutInflater): ActivityMainBinding {
         return ActivityMainBinding.inflate(layoutInflater)
@@ -50,9 +55,26 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
-        initViewModel()
+        bindService(Intent(this, UpgradeService::class.java), upgradeConnection, BIND_AUTO_CREATE)
+    }
 
-        mainViewModel.checkNewVersion()
+    override fun onDestroy() {
+        unbindService(upgradeConnection)
+        super.onDestroy()
+    }
+
+    /**
+     * 发现新版本
+     */
+    override fun onNewVersion(versionInfo: VersionInfo) {
+        showNewVersionDialog(versionInfo)
+    }
+
+    /**
+     * 新版本下载完成
+     */
+    override fun onDownloadCompleted(apkFile: File) {
+        AppUtil.installApk(this@MainActivity, "${packageName}.provider", apkFile)
     }
 
     private fun initView() {
@@ -87,24 +109,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         badgeDrawable?.number = 999
     }
 
-    private fun initViewModel() {
-        mainViewModel.newVersionResult.observe(this) {
-            showNewVersionDialog(it)
-        }
-        mainViewModel.apkDownloadResult.observe(this) {
-            // 移除下载通知
-            NotificationManager.cancel(this, NotificationManager.NOTIFY_ID_UPDATE)
-            // 安装APK
-            AppUtil.installApk(this, "${packageName}.provider", it)
-        }
-        // 监听下载进度
-        Repository.getProgressBus().downloadProgress.observe(this, Observer {
-            if (it.tag == TAG_DOWNLOAD) {
-                NotificationManager.sendUpdateNotification(this, it.percent)
-            }
-        })
-    }
-
     /**
      * 显示新版本提示
      */
@@ -113,14 +117,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 .setTitle(R.string.discover_new_version)
                 .setMessage(versionInfo.changeLog.replace("\\n", "\n")) // 传输时\n被转义成\\n了
                 .setPositiveButton(R.string.upgrade_now) { dialog, _ ->
-                    mainViewModel.downloadApk(versionInfo, TAG_DOWNLOAD)
+                    upgradeBinder?.getService()?.downloadApk(versionInfo)
                     dialog.dismiss()
                 }
                 .setNegativeButton(R.string.upgrade_later) { dialog, _ ->
                     dialog.dismiss()
                 }
                 .setNeutralButton(R.string.ignore_this_version) { dialog, _ ->
-                    mainViewModel.ignoreThisVersion(versionInfo)
+                    upgradeBinder?.getService()?.ignoreThisVersion(versionInfo)
                     dialog.dismiss()
                 }
                 .create()

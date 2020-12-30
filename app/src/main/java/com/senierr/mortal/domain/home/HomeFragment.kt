@@ -1,6 +1,7 @@
 package com.senierr.mortal.domain.home
 
 import android.content.Context
+import android.content.Intent
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.FragmentHomeBinding
 import com.senierr.mortal.domain.home.vm.HomeViewModel
+import com.senierr.mortal.domain.setting.CategoryManagerActivity
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.repository.entity.gank.Category
 
@@ -38,6 +40,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_fragment_home, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.tab_category -> {
+                startActivity(Intent(context, CategoryManagerActivity::class.java))
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initView() {

@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 class UserInfoViewModel : ViewModel() {
 
     val userinfo = StatefulLiveData<UserInfo>()
+    val resetPasswordResult = StatefulLiveData<Boolean>()
 
     private val userService = Repository.getService<IUserService>()
 
@@ -73,6 +74,23 @@ class UserInfoViewModel : ViewModel() {
                 userinfo.setValue(userInfo)
             } catch (e: Exception) {
                 userinfo.setException(e)
+            }
+        }
+    }
+
+    /**
+     * 更新用户邮箱
+     */
+    fun resetPassword(userInfo: UserInfo, oldPassword: String, newPassword: String) {
+        viewModelScope.launch {
+            try {
+                val response = userService.resetPassword(
+                    userInfo.objectId, userInfo.sessionToken,
+                    oldPassword, newPassword
+                )
+                resetPasswordResult.setValue(response.isSuccessful())
+            } catch (e: Exception) {
+                resetPasswordResult.setException(e)
             }
         }
     }

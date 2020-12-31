@@ -64,4 +64,8 @@
     <string name="version_upgrade">版本更新</string>
     <string name="download_ing">正在下载&#8230;</string>
     <string name="download_completed">下载完成</string>
+
+    <string name="account_and_safety">帐号与安全</string>
+    <string name="reset_password">重置密码</string>
+    <string name="account_cancellation">帐号注销</string>
 </resources>

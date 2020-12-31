@@ -9,7 +9,6 @@ import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import com.senierr.base.support.ui.listener.EditTextWatcher
-import com.senierr.base.support.utils.DrawableUtil
 import com.senierr.mortal.R
 
 /**
@@ -35,7 +34,6 @@ class ClearEditText : AppCompatEditText {
         }
         mClearDrawable?.let {
             it.setBounds(0, 0, it.intrinsicWidth, it.intrinsicHeight)
-            DrawableUtil.tintDrawable(it, ContextCompat.getColor(context, R.color.app_theme))
         }
 
         setClearIconVisible(false)

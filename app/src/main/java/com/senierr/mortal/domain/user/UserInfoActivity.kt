@@ -3,15 +3,13 @@ package com.senierr.mortal.domain.user
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
-import androidx.appcompat.app.AlertDialog
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityUserInfoBinding
-import com.senierr.mortal.databinding.DialogEditTextBinding
+import com.senierr.mortal.domain.common.EditTextActivity
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.show
@@ -26,6 +24,9 @@ import com.senierr.repository.entity.bmob.UserInfo
 class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
 
     companion object {
+        private const val REQUEST_CODE_EDIT_NICKNAME = 100
+        private const val REQUEST_CODE_EDIT_EMAIL = 101
+
         fun start(context: Context) {
             val intent = Intent(context, UserInfoActivity::class.java)
             context.startActivity(intent)
@@ -47,53 +48,43 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
         userInfoViewModel.fetchUserInfo()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == 0 && data != null) {
+            when (requestCode) {
+                REQUEST_CODE_EDIT_NICKNAME -> {
+                    val newNickname = data.getStringExtra(EditTextActivity.KEY_EDIT_TEXT) ?: return
+                    currentUserInfo?.let {
+                        userInfoViewModel.updateNickname(it, newNickname)
+                    }
+                }
+                REQUEST_CODE_EDIT_EMAIL -> {
+                    val newEmail = data.getStringExtra(EditTextActivity.KEY_EDIT_TEXT) ?: return
+                    currentUserInfo?.let {
+                        userInfoViewModel.updateEmail(it, newEmail)
+                    }
+                }
+            }
+        }
+    }
+
     private fun initView() {
         setSupportActionBar(binding.tbTop)
         binding.tbTop.navigationIcon?.setTint(getColor(R.color.btn_black))
         binding.tbTop.setNavigationOnClickListener { finish() }
 
-        binding.llNickname.click {
-            val dialogBinding = DialogEditTextBinding.inflate(layoutInflater)
-            // 默认值
-            dialogBinding.etEdit.text = SpannableStringBuilder(currentUserInfo?.nickname)
-            dialogBinding.etEdit.setSelection(dialogBinding.etEdit.text?.length ?: 0)
-            AlertDialog.Builder(this)
-                .setTitle(R.string.edit_nickname)
-                .setView(dialogBinding.root)
-                .setNegativeButton(R.string.cancel) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .setPositiveButton(R.string.done) { dialog, _ ->
-                    val newNickname = dialogBinding.etEdit.text?.toString()?.trim() ?: return@setPositiveButton
-                    currentUserInfo?.let {
-                        userInfoViewModel.updateNickname(it, newNickname)
-                    }
-                    dialog.dismiss()
-                }
-                .create()
-                .show()
+        binding.siNickname.click {
+            currentUserInfo?.let {
+                EditTextActivity.startForResult(this, REQUEST_CODE_EDIT_NICKNAME,
+                    getString(R.string.edit_nickname), "提示", it.nickname)
+            }
         }
 
-        binding.llEmail.click {
-            val dialogBinding = DialogEditTextBinding.inflate(layoutInflater)
-            // 默认值
-            dialogBinding.etEdit.text = SpannableStringBuilder(currentUserInfo?.email)
-            dialogBinding.etEdit.setSelection(dialogBinding.etEdit.text?.length ?: 0)
-            AlertDialog.Builder(this)
-                .setTitle(R.string.edit_email)
-                .setView(dialogBinding.root)
-                .setNegativeButton(R.string.cancel) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .setPositiveButton(R.string.done) { dialog, _ ->
-                    val newEmail = dialogBinding.etEdit.text?.toString()?.trim() ?: return@setPositiveButton
-                    currentUserInfo?.let {
-                        userInfoViewModel.updateEmail(it, newEmail)
-                    }
-                    dialog.dismiss()
-                }
-                .create()
-                .show()
+        binding.siEmail.click {
+            currentUserInfo?.let {
+                EditTextActivity.startForResult(this, REQUEST_CODE_EDIT_EMAIL,
+                    getString(R.string.edit_email), "提示", it.email)
+            }
         }
     }
 
@@ -120,11 +111,11 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
         binding.ivAvatar.show(userInfo.avatar, isCircle = true)
         // 昵称
         userInfo.nickname.let {
-            binding.tvNickname.text = if (it.isNotBlank()) it else getString(R.string.none)
+            binding.siNickname.message = if (it.isNotBlank()) it else getString(R.string.none)
         }
         // 邮箱
         userInfo.email.let {
-            binding.tvEmail.text = if (it.isNotBlank()) it else getString(R.string.none)
+            binding.siEmail.message = if (it.isNotBlank()) it else getString(R.string.none)
         }
     }
 }

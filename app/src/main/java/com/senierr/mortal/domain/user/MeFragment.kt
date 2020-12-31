@@ -12,6 +12,7 @@ import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.FragmentMeBinding
 import com.senierr.mortal.domain.category.CategoryManagerActivity
+import com.senierr.mortal.domain.setting.SettingActivity
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.show
@@ -49,6 +50,9 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
 
         binding?.siCategoryManager?.click {
             startActivity(Intent(context, CategoryManagerActivity::class.java))
+        }
+        binding?.siSetting?.click {
+            startActivity(Intent(context, SettingActivity::class.java))
         }
     }
 

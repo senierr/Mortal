@@ -48,6 +48,14 @@
 
         <activity android:name=".domain.category.CategoryManagerActivity" />
 
+        <activity android:name=".domain.setting.SettingActivity" />
+
+        <activity android:name=".domain.user.AccountSafetyActivity" />
+
+        <activity android:name=".domain.common.EditTextActivity" />
+
+
+
         <service android:name=".service.UpgradeService"/>
 
         <provider

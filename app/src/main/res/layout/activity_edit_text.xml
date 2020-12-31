@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb_top"
+        style="@style/BaseToolbar"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:title="@string/app_name" />
+
+    <com.senierr.mortal.widget.ClearEditText
+        android:id="@+id/et_edit"
+        android:textColor="@color/text_content"
+        android:textSize="@dimen/sp_14"
+        android:maxLines="1"
+        android:inputType="text"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_56"/>
+
+    <TextView
+        android:id="@+id/tv_tips"
+        android:textSize="@dimen/sp_12"
+        android:textColor="@color/text_warn"
+        android:layout_marginTop="@dimen/dp_8"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

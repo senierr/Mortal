@@ -1,13 +1,11 @@
-package com.senierr.mortal.domain.setting
+package com.senierr.mortal.domain.user
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.mortal.R
-import com.senierr.mortal.databinding.ActivitySettingBinding
-import com.senierr.mortal.domain.user.AccountSafetyActivity
+import com.senierr.mortal.databinding.ActivityAccountSafetyBinding
 
 /**
  * 设置页面
@@ -15,10 +13,10 @@ import com.senierr.mortal.domain.user.AccountSafetyActivity
  * @author zhouchunjie
  * @date 2019/7/6
  */
-class SettingActivity : BaseActivity<ActivitySettingBinding>() {
+class AccountSafetyActivity : BaseActivity<ActivityAccountSafetyBinding>() {
 
-    override fun createViewBinding(layoutInflater: LayoutInflater): ActivitySettingBinding {
-        return ActivitySettingBinding.inflate(layoutInflater)
+    override fun createViewBinding(layoutInflater: LayoutInflater): ActivityAccountSafetyBinding {
+        return ActivityAccountSafetyBinding.inflate(layoutInflater)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,8 +29,11 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
         binding.tbTop.navigationIcon?.setTint(getColor(R.color.btn_black))
         binding.tbTop.setNavigationOnClickListener { finish() }
 
-        binding.siAccountAndSafety.click {
-            startActivity(Intent(this, AccountSafetyActivity::class.java))
+        binding.siResetPassword.click {
+
+        }
+        binding.siAccountCancellation.click {
+
         }
     }
 }

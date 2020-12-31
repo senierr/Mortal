@@ -1,8 +1,5 @@
 package com.senierr.mortal.ext
 
-import android.animation.ObjectAnimator
-import android.view.View
-import android.view.animation.DecelerateInterpolator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -69,50 +66,36 @@ class ItemTouchCallback<VH: RecyclerView.ViewHolder>(
         // 侧滑删除可以使用
     }
 
-    override fun isLongPressDragEnabled(): Boolean {
-        return true
-    }
+    override fun isLongPressDragEnabled(): Boolean = true
+
+    // 原先的Z轴偏移值
+    private var rawTranslationZ = 0F
 
     /**
      * 长按选中Item的时候开始调用
-     * 长按高亮
+     *
      * @param viewHolder
      * @param actionState
      */
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
-            viewHolder?.itemView?.let { pickUpAnimation(it) }
+            viewHolder?.itemView?.let {
+                it.translationZ = rawTranslationZ + 12F
+            }
         }
         super.onSelectedChanged(viewHolder, actionState)
     }
 
     /**
      * 手指松开的时候还原高亮
+     *
      * @param recyclerView
      * @param viewHolder
      */
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         super.clearView(recyclerView, viewHolder)
-        pickDownAnimation(viewHolder.itemView)
+        viewHolder.itemView.translationZ = rawTranslationZ
         // 完成拖动后刷新适配器，这样拖动后删除就不会错乱
         adapter.notifyDataSetChanged()
-    }
-
-    // 原先的Z轴偏移值
-    private var rawTranslationZ = 0F
-
-    private fun pickUpAnimation(view: View) {
-        rawTranslationZ = view.translationZ
-        val animator = ObjectAnimator.ofFloat(view, "translationZ", rawTranslationZ, rawTranslationZ + 12F)
-        animator.interpolator = DecelerateInterpolator()
-        animator.duration = 300
-        animator.start()
-    }
-
-    private fun pickDownAnimation(view: View) {
-        val animator = ObjectAnimator.ofFloat(view, "translationZ", view.translationZ, rawTranslationZ)
-        animator.interpolator = DecelerateInterpolator()
-        animator.duration = 300
-        animator.start()
     }
 }

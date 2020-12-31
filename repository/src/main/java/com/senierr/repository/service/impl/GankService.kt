@@ -8,6 +8,8 @@ import com.senierr.repository.entity.gank.*
 import com.senierr.repository.remote.RemoteManager
 import com.senierr.repository.remote.api.GankApi
 import com.senierr.repository.service.api.IGankService
+import com.senierr.repository.sp.SPKey
+import com.senierr.repository.sp.SPManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -19,6 +21,7 @@ import kotlinx.coroutines.withContext
 class GankService : IGankService {
 
     private val gankApi by lazy { RemoteManager.getGankHttp().create(GankApi::class.java) }
+    private val spUtil by lazy { SPManager.getSP() }
     private val diskLruCache by lazy { DiskManager.getDiskLruCache() }
 
     override suspend fun getBanners(): MutableList<Banner> {
@@ -72,26 +75,29 @@ class GankService : IGankService {
 
     override suspend fun getGanHuoCategories(): MutableList<Category> {
         return withContext(Dispatchers.IO) {
-            val response = gankApi.getGanHuoCategories()
-            if (!response.isSuccessful()) throw response.getException()
-            // 缓存
-            diskLruCache?.putString(DiskLruKey.KEY_GANHUO_CATEGORY, Gson().toJson(response.data))
-            return@withContext response.data
-        }
-    }
-
-    override suspend fun getGanHuoCacheCategories(): MutableList<Category> {
-        return withContext(Dispatchers.IO) {
             val result = mutableListOf<Category>()
-            val cache = diskLruCache?.getString(DiskLruKey.KEY_GANHUO_CATEGORY)
-            if (cache != null) {
+            val cache = spUtil.getString(SPKey.GANHUO_CATEGORY)
+            if (cache.isNotBlank()) {
                 val categories: MutableList<Category> = Gson().fromJson(
-                    cache,
-                    TypeUtil.parseType(MutableList::class.java, arrayOf(Category::class.java))
+                        cache,
+                        TypeUtil.parseType(MutableList::class.java, arrayOf(Category::class.java))
                 )
                 result.addAll(categories)
             }
+            // 若缓存为空，强制从远程获取
+            if (result.isEmpty()) {
+                val response = gankApi.getGanHuoCategories()
+                if (!response.isSuccessful()) throw response.getException()
+                result.addAll(response.data)
+            }
             return@withContext result
+        }
+    }
+
+    override suspend fun saveGanHuoCategories(categories: MutableList<Category>): Boolean {
+        return withContext(Dispatchers.IO) {
+            spUtil.putString(SPKey.GANHUO_CATEGORY, Gson().toJson(categories))
+            return@withContext true
         }
     }
 

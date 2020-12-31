@@ -9,7 +9,7 @@
         android:id="@+id/tb_top"
         style="@style/BaseToolbar"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="@string/tag_manager" />
+        app:title="@string/category_manager" />
 
     <com.senierr.mortal.widget.MultiStateView
         android:id="@+id/msv_state"

@@ -2,13 +2,16 @@ package com.senierr.mortal.domain.user
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.FragmentMeBinding
+import com.senierr.mortal.domain.category.CategoryManagerActivity
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.show
@@ -32,15 +35,21 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         return FragmentMeBinding.inflate(inflater, container, false)
     }
 
-    override fun onLazyCreate(context: Context) {
-        super.onLazyCreate(context)
-        initView(context)
-        initViewModel(context)
-        doRefresh()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        context?.let {
+            initView()
+            initViewModel(it)
+            doRefresh()
+        }
     }
 
-    private fun initView(context: Context) {
+    private fun initView() {
         binding?.llUser?.isClickable = false
+
+        binding?.siCategoryManager?.click {
+            startActivity(Intent(context, CategoryManagerActivity::class.java))
+        }
     }
 
     private fun initViewModel(context: Context) {

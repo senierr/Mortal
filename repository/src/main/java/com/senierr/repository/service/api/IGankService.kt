@@ -46,13 +46,15 @@ interface IGankService {
 
     /**
      * 获取干货下分类
+     *
+     * 优先获取本地缓存，若无，从远程获取
      */
     suspend fun getGanHuoCategories(): MutableList<Category>
 
     /**
-     * 获取干货下缓存分类
+     * 保存分类
      */
-    suspend fun getGanHuoCacheCategories(): MutableList<Category>
+    suspend fun saveGanHuoCategories(categories: MutableList<Category>): Boolean
 
     /**
      * 获取干货

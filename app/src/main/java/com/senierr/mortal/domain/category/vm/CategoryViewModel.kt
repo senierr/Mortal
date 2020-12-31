@@ -1,4 +1,4 @@
-package com.senierr.mortal.domain.setting.vm
+package com.senierr.mortal.domain.category.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,35 +16,35 @@ import kotlinx.coroutines.launch
  */
 class CategoryViewModel : ViewModel() {
 
-    val cacheCategories = StatefulLiveData<MutableList<Category>>()
-    val remoteCategories = StatefulLiveData<MutableList<Category>>()
+    val ganHuoCategories = StatefulLiveData<MutableList<Category>>()
+    val saveCategories = StatefulLiveData<Boolean>()
 
     private val gankService = Repository.getService<IGankService>()
 
     /**
-     * 拉取缓存分类标签
+     * 拉取分类标签
      */
-    fun fetchCacheCategories() {
+    fun fetchGanHuoCategories() {
         viewModelScope.launch {
             try {
-                val categories = gankService.getGanHuoCacheCategories()
-                cacheCategories.setValue(categories)
+                val categories = gankService.getGanHuoCategories()
+                ganHuoCategories.setValue(categories)
             } catch (e: Exception) {
-                cacheCategories.setException(e)
+                ganHuoCategories.setException(e)
             }
         }
     }
 
     /**
-     * 拉取分类
+     * 保存分类标签
      */
-    fun fetchRemoteCategories() {
+    fun saveGanHuoCategories(categories: MutableList<Category>) {
         viewModelScope.launch {
             try {
-                val categories = gankService.getGanHuoCategories()
-                remoteCategories.setValue(categories)
+                val result = gankService.saveGanHuoCategories(categories)
+                saveCategories.setValue(result)
             } catch (e: Exception) {
-                remoteCategories.setException(e)
+                saveCategories.setException(e)
             }
         }
     }

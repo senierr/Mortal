@@ -46,7 +46,7 @@
 
         <activity android:name=".domain.user.UserInfoActivity" />
 
-        <activity android:name=".domain.setting.CategoryManagerActivity" />
+        <activity android:name=".domain.category.CategoryManagerActivity" />
 
         <service android:name=".service.UpgradeService"/>
 

@@ -3,6 +3,7 @@ package com.senierr.mortal.domain.home
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -59,14 +60,17 @@ class GanHuoFragment : BaseFragment<FragmentHomeGanhuoBinding>() {
         return FragmentHomeGanhuoBinding.inflate(inflater, container, false)
     }
 
-    override fun onLazyCreate(context: Context) {
-        initParam()
-        initView(context)
-        initViewModel()
-        lifecycleScope.launch {
-            binding?.msvState?.showLoadingView()
-            delay(200)
-            doRefresh()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        context?.let {
+            initParam()
+            initView(it)
+            initViewModel()
+            lifecycleScope.launch {
+                binding?.msvState?.showLoadingView()
+                delay(200)
+                doRefresh()
+            }
         }
     }
 

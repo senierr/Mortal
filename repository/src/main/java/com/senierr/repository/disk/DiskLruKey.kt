@@ -10,6 +10,4 @@ object DiskLruKey {
 
     // 随机妹纸图
     const val KEY_RANDOM_GIRLS = "random_girls"
-    // 干活分类标签
-    const val KEY_GANHUO_CATEGORY = "ganhuo_category"
 }

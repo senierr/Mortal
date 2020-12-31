@@ -48,7 +48,7 @@
 
     <string name="login_or_register">登录/注册</string>
     <string name="message_center">消息中心</string>
-    <string name="tag_manager">标签管理</string>
+    <string name="category_manager">标签管理</string>
     <string name="feedback">意见反馈</string>
     <string name="setting">设置</string>
 

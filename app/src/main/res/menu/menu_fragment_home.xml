@@ -12,5 +12,5 @@
         android:id="@+id/tab_category"
         android:icon="@drawable/ic_sort"
         app:showAsAction="always"
-        android:title="@string/tag_manager"/>
+        android:title="@string/category_manager"/>
 </menu>

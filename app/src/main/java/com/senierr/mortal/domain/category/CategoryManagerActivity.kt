@@ -1,6 +1,5 @@
-package com.senierr.mortal.domain.setting
+package com.senierr.mortal.domain.category
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -12,9 +11,10 @@ import com.senierr.base.support.ui.recyclerview.GridItemDecoration
 import com.senierr.base.support.utils.ScreenUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityCategoryManagerBinding
-import com.senierr.mortal.domain.setting.vm.CategoryViewModel
-import com.senierr.mortal.domain.setting.wrapper.CategoryWrapper
+import com.senierr.mortal.domain.category.vm.CategoryViewModel
+import com.senierr.mortal.domain.category.wrapper.CategoryWrapper
 import com.senierr.mortal.ext.*
+import com.senierr.repository.entity.gank.Category
 
 /**
  * 标签管理页面
@@ -45,10 +45,11 @@ class CategoryManagerActivity : BaseActivity<ActivityCategoryManagerBinding>() {
         return super.onCreateOptionsMenu(menu)
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.tab_done -> {
-                // TODO
+                categoryViewModel.saveGanHuoCategories(multiTypeAdapter.data as MutableList<Category>)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -60,14 +61,14 @@ class CategoryManagerActivity : BaseActivity<ActivityCategoryManagerBinding>() {
         binding.tbTop.setNavigationOnClickListener { finish() }
 
         binding.rvList.layoutManager = GridLayoutManager(this, 4)
-        binding.rvList.addItemDecoration(GridItemDecoration(ScreenUtil.dp2px(this, 4F), true))
+        binding.rvList.addItemDecoration(GridItemDecoration(ScreenUtil.dp2px(this, 8F), true))
         binding.rvList.openItemDrag(multiTypeAdapter, multiTypeAdapter.data)
         multiTypeAdapter.register(categoryWrapper)
         binding.rvList.adapter = multiTypeAdapter
     }
 
     private fun initViewModel() {
-        categoryViewModel.remoteCategories.observe(this, {
+        categoryViewModel.ganHuoCategories.observe(this, {
             if (it.isEmpty()) {
                 binding.msvState.showEmptyView()
             } else {
@@ -79,9 +80,12 @@ class CategoryManagerActivity : BaseActivity<ActivityCategoryManagerBinding>() {
         }, {
             binding.msvState.showNetworkErrorView { doRefresh() }
         })
+        categoryViewModel.saveCategories.observe(this) {
+            finish()
+        }
     }
 
     private fun doRefresh() {
-        categoryViewModel.fetchRemoteCategories()
+        categoryViewModel.fetchGanHuoCategories()
     }
 }

@@ -9,8 +9,8 @@ import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import com.senierr.base.support.ui.listener.EditTextWatcher
+import com.senierr.base.support.utils.DrawableUtil
 import com.senierr.mortal.R
-import com.senierr.mortal.utils.DrawableUtil
 
 /**
  * 带清除按钮的输入框

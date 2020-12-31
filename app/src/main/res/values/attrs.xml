@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <!-- 状态容器属性 -->
     <declare-styleable name="MultiStateView">
         <attr name="msv_loadingView" format="reference" />
         <attr name="msv_emptyView" format="reference" />
@@ -14,4 +14,15 @@
         <attr name="msv_animateViewChanges" format="boolean" />
     </declare-styleable>
 
+    <!-- 设置项属性 -->
+    <declare-styleable name="SettingItem">
+        <attr name="si_icon_enabled" format="boolean" />
+        <attr name="si_icon" format="reference" />
+        <attr name="si_icon_tint" format="color" />
+        <attr name="si_title" format="string" />
+        <attr name="si_message" format="string" />
+        <attr name="si_switch_enabled" format="boolean" />
+        <attr name="si_switch_checked" format="boolean" />
+        <attr name="si_chevron_enabled" format="boolean" />
+    </declare-styleable>
 </resources>

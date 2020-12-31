@@ -1,11 +1,10 @@
-package com.senierr.mortal.domain.setting.wrapper
+package com.senierr.mortal.domain.category.wrapper
 
 import android.widget.TextView
 import com.senierr.adapter.internal.ViewHolder
 import com.senierr.adapter.internal.ViewHolderWrapper
 import com.senierr.mortal.R
 import com.senierr.repository.entity.gank.Category
-import com.senierr.repository.entity.gank.GanHuo
 
 /**
  * 分类标签管理适配器

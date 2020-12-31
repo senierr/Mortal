@@ -40,11 +40,14 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>() {
         return FragmentRecommendBinding.inflate(inflater, container, false)
     }
 
-    override fun onLazyCreate(context: Context) {
-        initView(context)
-        initViewModel(context)
-        binding?.msvState?.showLoadingView()
-        doRefresh()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        context?.let {
+            initView(it)
+            initViewModel()
+            binding?.msvState?.showLoadingView()
+            doRefresh()
+        }
     }
 
     private fun initView(context: Context) {
@@ -66,7 +69,7 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>() {
         binding?.rvList?.adapter = multiTypeAdapter
     }
 
-    private fun initViewModel(context: Context) {
+    private fun initViewModel() {
         recommendViewModel.fetchGirlsResult.observe(this, {
             if (page == 1) {
                 renderRefresh(it)

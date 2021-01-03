@@ -6,6 +6,7 @@
     <ImageView
         android:id="@+id/iv_splash"
         android:scaleType="centerCrop"
+        android:layout_above="@id/tv_message"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
@@ -13,13 +14,13 @@
         android:id="@+id/tv_message"
         android:text="@string/app_name"
         android:textStyle="bold"
-        android:textColor="@color/text_white"
-        android:textSize="@dimen/sp_15"
+        android:textColor="@color/text_title"
+        android:textSize="@dimen/sp_18"
         android:gravity="center"
         android:layout_alignParentBottom="true"
-        android:background="@color/window_layer_black"
+        android:background="@color/window_empty"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_48"/>
+        android:layout_height="@dimen/dp_88"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_timer"
@@ -27,9 +28,7 @@
         android:layout_height="wrap_content"
         style="@style/BaseButton"
         app:rippleColor="@color/ripple_grey"
-        app:strokeColor="@color/white"
-        app:strokeWidth="@dimen/px_1"
-        app:backgroundTint="@color/transparent"
+        app:backgroundTint="@color/window_layer_black"
         android:paddingStart="@dimen/dp_10"
         android:paddingEnd="@dimen/dp_10"
         android:paddingTop="@dimen/dp_6"
@@ -37,6 +36,6 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/dp_16"
         android:layout_marginTop="@dimen/dp_16"
-        android:textColor="@color/white"
+        android:textColor="@color/text_white"
         android:textSize="@dimen/sp_12" />
 </RelativeLayout>

@@ -10,7 +10,8 @@ import com.senierr.mortal.databinding.ActivitySplashBinding
 import com.senierr.mortal.domain.main.MainActivity
 import com.senierr.mortal.domain.splash.vm.SplashViewModel
 import com.senierr.mortal.ext.getAndroidViewModel
-import com.senierr.mortal.ext.show
+import com.senierr.mortal.ext.showImage
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -44,7 +45,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
     private fun initViewModel() {
         splashViewModel.randomGil.observe(this) {
-            binding.ivSplash.show(it.url)
+            binding.ivSplash.showImage(it.url)
         }
     }
 
@@ -58,7 +59,11 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
         }
     }
 
+    /**
+     * 打开首页
+     */
     private fun startToMain() {
+        lifecycleScope.cancel() // 主动关闭异步任务：finish有时间过程，极端情况会导致跳转两次
         MainActivity.start(this@SplashActivity)
         finish()
     }

@@ -14,7 +14,7 @@ import com.senierr.base.support.utils.KeyboardUtil
 import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityLoginBinding
-import com.senierr.mortal.domain.user.vm.LoginViewModel
+import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.widget.CircularAnim
 import com.senierr.repository.entity.bmob.BmobException
@@ -53,7 +53,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
 
     private lateinit var loadingDialog: AlertDialog
 
-    private val loginViewModel by getViewModel<LoginViewModel>()
+    private val accountViewModel by getViewModel<AccountViewModel>()
 
     override fun createViewBinding(layoutInflater: LayoutInflater): ActivityLoginBinding {
         return ActivityLoginBinding.inflate(layoutInflater)
@@ -79,7 +79,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     }
 
     private fun initViewModel() {
-        loginViewModel.loginResult.observe(this,
+        accountViewModel.loginResult.observe(this,
             { showLoginSuccess() },
             { showLoginFailure(it) })
     }
@@ -122,7 +122,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         if (verifyAccount(account) && verifyPassword(password)) {
             if (account != null && password != null) {
                 loadingDialog.show()
-                loginViewModel.login(account, password)
+                accountViewModel.login(account, password)
             }
         }
     }

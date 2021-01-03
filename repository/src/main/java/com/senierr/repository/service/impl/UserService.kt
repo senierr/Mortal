@@ -31,6 +31,13 @@ class UserService : IUserService {
         }
     }
 
+    override suspend fun logout(objectId: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            userInfoDao.deleteById(objectId)
+            return@withContext true
+        }
+    }
+
     override suspend fun getUserInfo(objectId: String): UserInfo {
         return withContext(Dispatchers.IO) {
             val cache = userInfoDao.getAll().firstOrNull()

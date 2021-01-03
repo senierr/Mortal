@@ -14,12 +14,16 @@ import kotlinx.coroutines.launch
  * @author zhouchunjie
  * @date 2019/7/9
  */
-class LoginViewModel : ViewModel() {
+class AccountViewModel : ViewModel() {
 
     val loginResult = StatefulLiveData<UserInfo>()
+    val logoutResult = StatefulLiveData<Boolean>()
 
     private val userService = Repository.getService<IUserService>()
 
+    /**
+     * 登录
+     */
     fun login(account: String, password: String) {
         viewModelScope.launch {
             try {
@@ -27,6 +31,25 @@ class LoginViewModel : ViewModel() {
                 loginResult.setValue(userInfo)
             } catch (e: Exception) {
                 loginResult.setException(e)
+            }
+        }
+    }
+
+    /**
+     * 登出
+     */
+    fun logout(objectId: String?) {
+        viewModelScope.launch {
+            try {
+                val result = if (objectId == null) {
+                    val currentUserInfo = userService.getCacheUserInfo()
+                    userService.logout(currentUserInfo.objectId)
+                } else {
+                    userService.logout(objectId)
+                }
+                logoutResult.setValue(result)
+            } catch (e: Exception) {
+                logoutResult.setException(e)
             }
         }
     }

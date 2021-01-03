@@ -2,7 +2,9 @@ package com.senierr.mortal.domain.common
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.text.SpannableStringBuilder
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -27,7 +29,7 @@ class EditTextActivity : BaseActivity<ActivityEditTextBinding>() {
         private const val KEY_DEFAULT_VALUE = "key_default_value"
 
         fun startForResult(context: FragmentActivity, requestCode: Int,
-                           title: String, tips: String = "", defaultValue: String = ""
+                           title: String, tips: String? = "", defaultValue: String? = ""
         ) {
             val intent = Intent(context, EditTextActivity::class.java)
             intent.putExtra(KEY_TITLE, title)
@@ -51,6 +53,19 @@ class EditTextActivity : BaseActivity<ActivityEditTextBinding>() {
         initView()
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val doneMenu = menu?.findItem(R.id.tab_done)
+        val newValue = binding.etEdit.text.toString()
+        if (newValue == defaultValue) {
+            doneMenu?.isEnabled = false
+            doneMenu?.icon?.setTint(getColor(R.color.btn_unable))
+        } else {
+            doneMenu?.isEnabled = true
+            doneMenu?.icon?.setTint(getColor(R.color.black))
+        }
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_common_done, menu)
         return super.onCreateOptionsMenu(menu)
@@ -60,13 +75,9 @@ class EditTextActivity : BaseActivity<ActivityEditTextBinding>() {
         when (item.itemId) {
             R.id.tab_done -> {
                 val newValue = binding.etEdit.text.toString()
-                if (newValue == defaultValue) {
-                    finish()
-                } else {
-                    intent.putExtra(KEY_EDIT_TEXT, newValue)
-                    setResult(RESULT_OK, intent)
-                    finish()
-                }
+                intent.putExtra(KEY_EDIT_TEXT, newValue)
+                setResult(RESULT_OK, intent)
+                finish()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -86,5 +97,16 @@ class EditTextActivity : BaseActivity<ActivityEditTextBinding>() {
         binding.tbTop.title = title
         binding.tvTips.text = SpannableStringBuilder(tips)
         binding.etEdit.text = SpannableStringBuilder(defaultValue)
+        binding.etEdit.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                invalidateOptionsMenu()
+            }
+        })
     }
 }

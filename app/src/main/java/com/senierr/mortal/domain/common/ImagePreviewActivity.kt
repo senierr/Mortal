@@ -18,7 +18,7 @@ import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityImagePreviewBinding
 import com.senierr.mortal.domain.common.vm.DownloadViewModel
 import com.senierr.mortal.ext.getViewModel
-import com.senierr.mortal.ext.show
+import com.senierr.mortal.ext.showImage
 import kotlinx.android.parcel.Parcelize
 import java.io.File
 
@@ -71,16 +71,16 @@ class ImagePreviewActivity : BaseActivity<ActivityImagePreviewBinding>() {
             val url = imageItems[position].url
             val file = imageItems[position].file
             if (resId != null) {
-                pvPreview?.show(resId)
+                pvPreview?.showImage(resId)
             }else if (url != null) {
-                pvPreview?.show(url)
+                pvPreview?.showImage(url)
                 binding.btnSave.setGone(false)
                 binding.btnSave.click {
                     ToastUtil.showShort(this@ImagePreviewActivity, R.string.saving)
                     downloadViewModel.download(url, url, "${System.currentTimeMillis()}.jpg")
                 }
             } else if (file != null) {
-                pvPreview?.show(file)
+                pvPreview?.showImage(file)
             }
 
             container.addView(holder.itemView)

@@ -19,12 +19,12 @@ import java.io.File
 /**
  * 加载网络图片
  */
-fun ImageView.show(url: String,
-                   @DrawableRes placeholderRes: Int? = R.drawable.ic_photo,
-                   @DrawableRes errorRes: Int? = R.drawable.ic_photo,
-                   isGif: Boolean = false,
-                   isCircle: Boolean = false,
-                   cookies: MutableMap<String, String>? = null
+fun ImageView.showImage(url: String,
+                        @DrawableRes placeholderRes: Int? = R.drawable.ic_photo,
+                        @DrawableRes errorRes: Int? = R.drawable.ic_photo,
+                        isGif: Boolean = false,
+                        isCircle: Boolean = false,
+                        cookies: MutableMap<String, String>? = null
 ) {
     // 处理Gif
     val requestBuilder = if (isGif) {
@@ -62,10 +62,10 @@ fun ImageView.show(url: String,
 /**
  * 加载本地文件图片
  */
-fun ImageView.show(file: File?,
-                   @DrawableRes placeholderRes: Int? = R.drawable.ic_photo,
-                   @DrawableRes errorRes: Int? = R.drawable.ic_photo,
-                   isGif: Boolean = false
+fun ImageView.showImage(file: File?,
+                        @DrawableRes placeholderRes: Int? = R.drawable.ic_photo,
+                        @DrawableRes errorRes: Int? = R.drawable.ic_photo,
+                        isGif: Boolean = false
 ) {
     // 处理Gif
     val requestBuilder = if (isGif) {
@@ -89,31 +89,10 @@ fun ImageView.show(file: File?,
 /**
  * 加载资源文件图片
  */
-fun ImageView.show(@DrawableRes resId: Int?,
-                   @DrawableRes placeholderRes: Int? = R.drawable.ic_photo,
-                   @DrawableRes errorRes: Int? = R.drawable.ic_photo,
-                   isGif: Boolean = false,
-                   isCircle: Boolean = false
-) {
-    // 处理Gif
-    val requestBuilder = if (isGif) {
-        Glide.with(this).asGif()
+fun ImageView.showImage(@DrawableRes resId: Int, isGif: Boolean = false) {
+    if (isGif) {
+        Glide.with(this).asGif().load(resId).into(this)
     } else {
-        Glide.with(this).asBitmap()
+        setImageResource(resId)
     }
-
-    requestBuilder.load(resId)
-        .apply {
-            // 占位图
-            if (placeholderRes != null) placeholder(placeholderRes)
-        }
-        .apply {
-            // 圆形
-            if (isCircle) transform(CircleCrop())
-        }
-        .apply {
-            // 加载失败图
-            if (errorRes != null) error(errorRes)
-        }
-        .into(this)
 }

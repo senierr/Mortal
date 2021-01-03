@@ -24,6 +24,11 @@ interface IUserService {
     suspend fun login(username: String, password: String): UserInfo
 
     /**
+     * 登出
+     */
+    suspend fun logout(objectId: String): Boolean
+
+    /**
      * 获取用户信息
      *
      * @throws BmobException 网络请求异常

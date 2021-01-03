@@ -12,7 +12,7 @@ import com.senierr.mortal.databinding.ActivityUserInfoBinding
 import com.senierr.mortal.domain.common.EditTextActivity
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
-import com.senierr.mortal.ext.show
+import com.senierr.mortal.ext.showImage
 import com.senierr.repository.entity.bmob.UserInfo
 
 /**
@@ -50,7 +50,7 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK && requestCode == 0 && data != null) {
+        if (resultCode == RESULT_OK && data != null) {
             when (requestCode) {
                 REQUEST_CODE_EDIT_NICKNAME -> {
                     val newNickname = data.getStringExtra(EditTextActivity.KEY_EDIT_TEXT) ?: return
@@ -76,14 +76,14 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
         binding.siNickname.click {
             currentUserInfo?.let {
                 EditTextActivity.startForResult(this, REQUEST_CODE_EDIT_NICKNAME,
-                    getString(R.string.edit_nickname), "提示", it.nickname)
+                    getString(R.string.edit_nickname), null, it.nickname)
             }
         }
 
         binding.siEmail.click {
             currentUserInfo?.let {
                 EditTextActivity.startForResult(this, REQUEST_CODE_EDIT_EMAIL,
-                    getString(R.string.edit_email), "提示", it.email)
+                    getString(R.string.edit_email), null, it.email)
             }
         }
     }
@@ -108,7 +108,7 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
         // 缓存当前用户信息
         currentUserInfo = userInfo
         // 头像
-        binding.ivAvatar.show(userInfo.avatar, isCircle = true)
+        binding.ivAvatar.showImage(userInfo.avatar)
         // 昵称
         userInfo.nickname.let {
             binding.siNickname.message = if (it.isNotBlank()) it else getString(R.string.none)

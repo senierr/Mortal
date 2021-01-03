@@ -86,4 +86,10 @@
         <item name="android:insetBottom">@dimen/dp_0</item>
         <item name="android:letterSpacing">0</item>
     </style>
+
+    <!-- 圆角图片 -->
+    <style name="RoundedCornerImage">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
 </resources>

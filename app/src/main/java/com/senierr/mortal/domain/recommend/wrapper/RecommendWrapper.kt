@@ -5,7 +5,7 @@ import android.widget.TextView
 import com.senierr.adapter.internal.ViewHolder
 import com.senierr.adapter.internal.ViewHolderWrapper
 import com.senierr.mortal.R
-import com.senierr.mortal.ext.show
+import com.senierr.mortal.ext.showImage
 import com.senierr.repository.entity.gank.Girl
 
 /**
@@ -21,7 +21,7 @@ class RecommendWrapper : ViewHolderWrapper<Girl>(R.layout.item_recommend) {
         val tvTitle = holder.findView<TextView>(R.id.tv_title)
         val tvView = holder.findView<TextView>(R.id.tv_view)
 
-        ivImage?.show(item.images.firstOrNull()?: "")
+        ivImage?.showImage(item.images.firstOrNull()?: "")
         tvTitle?.text = item.title
         tvView?.text = item.views.toString()
     }

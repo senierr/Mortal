@@ -8,7 +8,7 @@ import android.widget.TextView
 import com.senierr.adapter.internal.ViewHolder
 import com.senierr.adapter.internal.ViewHolderWrapper
 import com.senierr.mortal.R
-import com.senierr.mortal.ext.show
+import com.senierr.mortal.ext.showImage
 import com.senierr.mortal.utils.DateFormatUtil
 import com.senierr.repository.entity.gank.GanHuo
 
@@ -30,7 +30,7 @@ class GanHuoOneImageWrapper : ViewHolderWrapper<GanHuo>(R.layout.item_home_ganhu
         val tvCreator = holder.findView<TextView>(R.id.tv_creator)
         val tvPublishAt = holder.findView<TextView>(R.id.tv_publish_at)
 
-        ivImage?.show(item.images.firstOrNull()?: "")
+        ivImage?.showImage(item.images.firstOrNull()?: "")
         tvTitle?.text = item.title
         tvDesc?.text = item.desc
         val authorStr = context.getString(R.string.format_author, item.author)

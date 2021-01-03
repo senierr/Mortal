@@ -8,7 +8,7 @@ import android.widget.TextView
 import com.senierr.adapter.internal.ViewHolder
 import com.senierr.adapter.internal.ViewHolderWrapper
 import com.senierr.mortal.R
-import com.senierr.mortal.ext.show
+import com.senierr.mortal.ext.showImage
 import com.senierr.mortal.utils.DateFormatUtil
 import com.senierr.repository.entity.gank.GanHuo
 
@@ -33,9 +33,9 @@ class GanHuoMoreImageWrapper : ViewHolderWrapper<GanHuo>(R.layout.item_home_ganh
 
         item.images.forEachIndexed { index, s ->
             when (index) {
-                0 -> s?.let { ivImage1?.show(it) }
-                1 -> s?.let { ivImage2?.show(it) }
-                2 -> s?.let { ivImage3?.show(it) }
+                0 -> s?.let { ivImage1?.showImage(it) }
+                1 -> s?.let { ivImage2?.showImage(it) }
+                2 -> s?.let { ivImage3?.showImage(it) }
             }
         }
         tvTitle?.text = item.title

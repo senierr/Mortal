@@ -23,8 +23,10 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 
-		<ImageView
+		<com.google.android.material.imageview.ShapeableImageView
 			android:id="@+id/iv_avatar"
+			android:scaleType="centerCrop"
+			app:shapeAppearanceOverlay="@style/RoundedCornerImage"
 			android:layout_width="@dimen/dp_64"
 			android:layout_height="@dimen/dp_64"/>
 

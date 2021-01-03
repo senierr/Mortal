@@ -15,7 +15,7 @@ import com.senierr.mortal.domain.category.CategoryManagerActivity
 import com.senierr.mortal.domain.setting.SettingActivity
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
-import com.senierr.mortal.ext.show
+import com.senierr.mortal.ext.showImage
 import com.senierr.repository.entity.bmob.UserInfo
 
 /**
@@ -41,8 +41,12 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         context?.let {
             initView()
             initViewModel(it)
-            doRefresh()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        doRefresh()
     }
 
     private fun initView() {
@@ -58,10 +62,10 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
 
     private fun initViewModel(context: Context) {
         userInfoViewModel.userinfo.observe(this, {
-            renderLogged(it)
+            renderUserInfo(it)
         }, {
             ToastUtil.showShort(context, it.message)
-            renderNotLogged()
+            renderUserInfo(null)
         })
     }
 
@@ -82,29 +86,35 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
     /**
      * 渲染登录状态
      */
-    private fun renderLogged(userInfo: UserInfo) {
+    private fun renderUserInfo(userInfo: UserInfo?) {
         binding?.llUser?.click {
-            // 用户详情
-            activity?.let { context ->
-                UserInfoActivity.start(context)
+            if (userInfo == null) {
+                LoginActivity.startForResult(this, REQUEST_CODE_LOGIN)
+            } else {
+                activity?.let { context ->
+                    UserInfoActivity.start(context)
+                }
             }
         }
         // 头像
-        binding?.ivAvatar?.show(userInfo.avatar, isCircle = true)
-        // 昵称
-        binding?.tvNickname?.text = userInfo.username
-    }
-
-    /**
-     * 渲染未登录状态
-     */
-    private fun renderNotLogged() {
-        binding?.llUser?.click {
-            LoginActivity.startForResult(this, REQUEST_CODE_LOGIN)
+        binding?.ivAvatar?.apply {
+            if (userInfo == null) {
+                setImageResource(R.drawable.ic_account_circle)
+            } else {
+                showImage(userInfo.avatar)
+            }
         }
-        // 头像
-        binding?.ivAvatar?.show(R.drawable.ic_account_circle, isCircle = true)
         // 昵称
-        binding?.tvNickname?.setText(R.string.login_or_register)
+        binding?.tvNickname?.apply {
+            if (userInfo == null) {
+                setText(R.string.login_or_register)
+            } else {
+                text = if (userInfo.nickname.isBlank()) {
+                    userInfo.username
+                } else {
+                    userInfo.nickname
+                }
+            }
+        }
     }
 }

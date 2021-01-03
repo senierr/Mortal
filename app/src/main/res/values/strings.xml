@@ -68,4 +68,6 @@
     <string name="account_and_safety">帐号与安全</string>
     <string name="reset_password">重置密码</string>
     <string name="account_cancellation">帐号注销</string>
+
+    <string name="log_out">退出登录</string>
 </resources>

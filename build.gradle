@@ -45,7 +45,7 @@ ext {
     // androidx
     multidex = "2.0.1"
     appcompat = "1.1.0"
-    material = "1.1.0"
+    material = "1.2.0"
     lifecycle = "2.2.0"
     // 下拉刷新
     swiperefreshlayout = "1.0.0"

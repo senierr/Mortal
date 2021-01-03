@@ -10,12 +10,35 @@
         app:navigationIcon="@drawable/ic_arrow_back"
         app:title="@string/setting" />
 
-    <com.senierr.mortal.widget.SettingItem
-        android:id="@+id/si_account_and_safety"
-        android:layout_marginTop="@dimen/dp_8"
-        app:si_icon_enabled="false"
-        app:si_title="@string/account_and_safety"
-        app:si_chevron_enabled="true"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.senierr.mortal.widget.SettingItem
+                android:id="@+id/si_account_and_safety"
+                android:layout_marginTop="@dimen/dp_8"
+                app:si_icon_enabled="false"
+                app:si_title="@string/account_and_safety"
+                app:si_chevron_enabled="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_log_out"
+                android:text="@string/log_out"
+                android:textColor="@color/text_warn"
+                android:textSize="@dimen/sp_15"
+                style="@style/BaseButton"
+                app:backgroundTint="@color/btn_white"
+                app:rippleColor="@color/ripple_grey"
+                android:layout_marginTop="@dimen/dp_8"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_48"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

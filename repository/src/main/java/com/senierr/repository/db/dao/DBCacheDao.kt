@@ -16,7 +16,7 @@ import com.senierr.repository.entity.DBCache
 interface DBCacheDao {
 
     @Query("SELECT * FROM DBCache WHERE `key` = :key")
-    fun get(key: String): DBCache
+    fun get(key: String): DBCache?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOrReplace(dbCache: DBCache)

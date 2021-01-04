@@ -16,6 +16,7 @@ data class UserInfo(
     var nickname: String = "",
     var avatar: String = "",
     var email: String = "",
+    var logged: Boolean = false, // 是否已登录
     var createdAt: String = "",
     var updatedAt: String = ""
 )

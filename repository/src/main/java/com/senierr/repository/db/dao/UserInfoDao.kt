@@ -16,7 +16,7 @@ import com.senierr.repository.entity.bmob.UserInfo
 interface UserInfoDao {
 
     @Query("SELECT * FROM UserInfo WHERE `objectId` = :objectId")
-    fun get(objectId: String): UserInfo
+    fun get(objectId: String): UserInfo?
 
     @Query("SELECT * FROM UserInfo")
     fun getAll(): MutableList<UserInfo>

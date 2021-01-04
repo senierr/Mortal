@@ -4,35 +4,59 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.senierr.mortal.domain.common.vm.StatefulLiveData
 import com.senierr.repository.Repository
-import com.senierr.repository.entity.bmob.BmobResponse
 import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.service.api.IUserService
 import kotlinx.coroutines.launch
 
 /**
- * 用户详情
  *
  * @author zhouchunjie
  * @date 2019/7/9
  */
 class UserInfoViewModel : ViewModel() {
 
+    val allCacheUserInfo = StatefulLiveData<MutableList<UserInfo>>()
+    val loggedCacheUserInfo = StatefulLiveData<UserInfo>()
     val userinfo = StatefulLiveData<UserInfo>()
     val resetPasswordResult = StatefulLiveData<Boolean>()
 
     private val userService = Repository.getService<IUserService>()
 
     /**
-     * 拉取最新用户信息
+     * 获取所有缓存用户信息
      */
-    fun fetchUserInfo() {
+    fun getAllCacheUserInfo() {
         viewModelScope.launch {
             try {
-                // 先获取缓存数据
-                val cacheUserInfo = userService.getCacheUserInfo()
-                userinfo.setValue(cacheUserInfo)
-                // 再获取最新数据
-                val userInfo = userService.getUserInfo(cacheUserInfo.objectId)
+                val caches = userService.getAllCacheUserInfo()
+                allCacheUserInfo.setValue(caches)
+            } catch (e: Exception) {
+                allCacheUserInfo.setException(e)
+            }
+        }
+    }
+
+    /**
+     * 获取当前缓存用户信息
+     */
+    fun getLoggedCacheUserInfo() {
+        viewModelScope.launch {
+            try {
+                val cacheUserInfo = userService.getLoggedCacheUserInfo()
+                loggedCacheUserInfo.setValue(cacheUserInfo)
+            } catch (e: Exception) {
+                loggedCacheUserInfo.setException(e)
+            }
+        }
+    }
+
+    /**
+     * 拉取最新用户信息
+     */
+    fun fetchUserInfo(objectId: String) {
+        viewModelScope.launch {
+            try {
+                val userInfo = userService.fetchUserInfo(objectId)
                 userinfo.setValue(userInfo)
             } catch (e: Exception) {
                 userinfo.setException(e)
@@ -46,7 +70,7 @@ class UserInfoViewModel : ViewModel() {
     fun updateNickname(userInfo: UserInfo, newNickname: String) {
         viewModelScope.launch {
             try {
-                userService.updateInfo(
+                userService.updateUserInfo(
                     userInfo.objectId,
                     userInfo.sessionToken,
                     mutableMapOf(Pair("nickname", newNickname))
@@ -65,7 +89,7 @@ class UserInfoViewModel : ViewModel() {
     fun updateEmail(userInfo: UserInfo, newEmail: String) {
         viewModelScope.launch {
             try {
-                userService.updateInfo(
+                userService.updateUserInfo(
                     userInfo.objectId,
                     userInfo.sessionToken,
                     mutableMapOf(Pair("email", newEmail))

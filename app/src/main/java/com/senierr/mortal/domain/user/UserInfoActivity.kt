@@ -1,6 +1,5 @@
 package com.senierr.mortal.domain.user
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -26,11 +25,6 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
     companion object {
         private const val REQUEST_CODE_EDIT_NICKNAME = 100
         private const val REQUEST_CODE_EDIT_EMAIL = 101
-
-        fun start(context: Context) {
-            val intent = Intent(context, UserInfoActivity::class.java)
-            context.startActivity(intent)
-        }
     }
 
     private val userInfoViewModel by getViewModel<UserInfoViewModel>()
@@ -45,7 +39,7 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
         super.onCreate(savedInstanceState)
         initView()
         initViewModel()
-        userInfoViewModel.fetchUserInfo()
+        userInfoViewModel.getLoggedCacheUserInfo()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -75,26 +69,33 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
 
         binding.siNickname.click {
             currentUserInfo?.let {
-                EditTextActivity.startForResult(this, REQUEST_CODE_EDIT_NICKNAME,
-                    getString(R.string.edit_nickname), null, it.nickname)
+                EditTextActivity.startForResult(
+                    this, REQUEST_CODE_EDIT_NICKNAME,
+                    getString(R.string.edit_nickname), null, it.nickname
+                )
             }
         }
 
         binding.siEmail.click {
             currentUserInfo?.let {
-                EditTextActivity.startForResult(this, REQUEST_CODE_EDIT_EMAIL,
-                    getString(R.string.edit_email), null, it.email)
+                EditTextActivity.startForResult(
+                    this, REQUEST_CODE_EDIT_EMAIL,
+                    getString(R.string.edit_email), null, it.email
+                )
             }
         }
     }
 
     private fun initViewModel() {
-        userInfoViewModel.userinfo.observe(this, {
+        userInfoViewModel.loggedCacheUserInfo.observe(this, {
+            currentUserInfo = it
             renderUserInfo(it)
+            userInfoViewModel.fetchUserInfo(it.objectId)
         }, {
-            ToastUtil.showShort(this, it.message)
+            // 未登录，跳转至登录页
         })
         userInfoViewModel.userinfo.observe(this, {
+            currentUserInfo = it
             renderUserInfo(it)
         }, {
             ToastUtil.showShort(this, it.message)

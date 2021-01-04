@@ -12,10 +12,12 @@ import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityResetPasswordBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
+import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
+import com.senierr.repository.entity.bmob.UserInfo
 
 /**
- * 设置页面
+ * 重置密码页面
  *
  * @author zhouchunjie
  * @date 2019/7/6
@@ -26,10 +28,13 @@ class ResetPasswordActivity : BaseActivity<ActivityResetPasswordBinding>() {
         /**
          * 正则：密码，取值范围为a-z、A-Z、0-9、"_"，6-16位
          */
-        const val REGEX_PASSWORD = "^[a-zA-Z0-9]{6,16}$"
+        private const val REGEX_PASSWORD = "^[a-zA-Z0-9]{6,16}$"
     }
 
     private val accountViewModel by getViewModel<AccountViewModel>()
+    private val userInfoViewModel by getViewModel<UserInfoViewModel>()
+
+    private var currentUserInfo: UserInfo? = null
 
     override fun createViewBinding(layoutInflater: LayoutInflater): ActivityResetPasswordBinding {
         return ActivityResetPasswordBinding.inflate(layoutInflater)
@@ -39,6 +44,7 @@ class ResetPasswordActivity : BaseActivity<ActivityResetPasswordBinding>() {
         super.onCreate(savedInstanceState)
         initView()
         initViewModel()
+        userInfoViewModel.getLoggedCacheUserInfo()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -109,6 +115,11 @@ class ResetPasswordActivity : BaseActivity<ActivityResetPasswordBinding>() {
     }
 
     private fun initViewModel() {
+        userInfoViewModel.loggedCacheUserInfo.observe(this, {
+            currentUserInfo = it
+        }, {
+            // 未登录，跳转至登录页
+        })
         accountViewModel.resetPasswordResult.observe(this, {
             ToastUtil.showShort(this, R.string.reset_password_success)
             finish()
@@ -130,7 +141,9 @@ class ResetPasswordActivity : BaseActivity<ActivityResetPasswordBinding>() {
         val password = binding.etPassword.text.toString().trim()
         val newPassword = binding.etNewPassword.text.toString().trim()
         if (verifyPassword(password) && verifyPassword(newPassword)) {
-            accountViewModel.resetPassword(null, password, newPassword)
+            currentUserInfo?.let {
+                accountViewModel.resetPassword(it, password, newPassword)
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.senierr.mortal.domain.user
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -31,21 +30,22 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
 
     private val userInfoViewModel by getViewModel<UserInfoViewModel>()
 
+    private var currentUserInfo: UserInfo? = null
+
     override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentMeBinding {
         return FragmentMeBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        context?.let {
-            initView()
-            initViewModel(it)
-        }
+        initView()
+        initViewModel()
+        userInfoViewModel.getLoggedCacheUserInfo()
     }
 
     override fun onStart() {
         super.onStart()
-        doRefresh()
+        userInfoViewModel.getLoggedCacheUserInfo()
     }
 
     private fun initView() {
@@ -59,26 +59,25 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         }
     }
 
-    private fun initViewModel(context: Context) {
-        userInfoViewModel.userinfo.observe(this, {
+    private fun initViewModel() {
+        userInfoViewModel.loggedCacheUserInfo.observe(this, {
+            currentUserInfo = it
             renderUserInfo(it)
+            userInfoViewModel.fetchUserInfo(it.objectId)
         }, {
             renderUserInfo(null)
         })
+        userInfoViewModel.userinfo.observe(this) {
+            currentUserInfo = it
+            renderUserInfo(it)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_LOGIN && resultCode == LoginActivity.LOGIN_SUCCESS) {
-            doRefresh()
+            userInfoViewModel.getLoggedCacheUserInfo()
         }
-    }
-
-    /**
-     * 刷新页面
-     */
-    private fun doRefresh() {
-        userInfoViewModel.fetchUserInfo()
     }
 
     /**
@@ -89,9 +88,7 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
             if (userInfo == null) {
                 LoginActivity.startForResult(this, REQUEST_CODE_LOGIN)
             } else {
-                activity?.let { context ->
-                    UserInfoActivity.start(context)
-                }
+                startActivity(Intent(context, UserInfoActivity::class.java))
             }
         }
         // 头像

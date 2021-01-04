@@ -43,7 +43,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
 
     override fun onStart() {
         super.onStart()
-        userInfoViewModel.fetchUserInfo()
+        userInfoViewModel.getLoggedCacheUserInfo()
     }
 
     private fun initView() {
@@ -61,7 +61,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
     }
 
     private fun initViewModel() {
-        userInfoViewModel.userinfo.observe(this, {
+        userInfoViewModel.loggedCacheUserInfo.observe(this, {
             currentUserInfo = it
             binding.btnLogOut.setGone(false)
         }, {

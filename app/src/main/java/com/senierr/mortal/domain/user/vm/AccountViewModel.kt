@@ -54,15 +54,10 @@ class AccountViewModel : ViewModel() {
     /**
      * 登出
      */
-    fun logout(objectId: String?) {
+    fun logout(objectId: String) {
         viewModelScope.launch {
             try {
-                val result = if (objectId == null) {
-                    val currentUserInfo = userService.getCacheUserInfo()
-                    userService.logout(currentUserInfo.objectId)
-                } else {
-                    userService.logout(objectId)
-                }
+                val result = userService.logout(objectId)
                 logoutResult.setValue(result)
             } catch (e: Exception) {
                 logoutResult.setException(e)
@@ -73,21 +68,13 @@ class AccountViewModel : ViewModel() {
     /**
      * 重置密码
      */
-    fun resetPassword(userInfo: UserInfo?, oldPassword: String, newPassword: String) {
+    fun resetPassword(userInfo: UserInfo, oldPassword: String, newPassword: String) {
         viewModelScope.launch {
             try {
-                val response = if (userInfo == null) {
-                    val currentUserInfo = userService.getCacheUserInfo()
-                    userService.resetPassword(
-                        currentUserInfo.objectId, currentUserInfo.sessionToken,
-                        oldPassword, newPassword
-                    )
-                } else {
-                    userService.resetPassword(
-                        userInfo.objectId, userInfo.sessionToken,
-                        oldPassword, newPassword
-                    )
-                }
+                val response = userService.resetPassword(
+                    userInfo.objectId, userInfo.sessionToken,
+                    oldPassword, newPassword
+                )
                 resetPasswordResult.setValue(response.isSuccessful())
             } catch (e: Exception) {
                 resetPasswordResult.setException(e)

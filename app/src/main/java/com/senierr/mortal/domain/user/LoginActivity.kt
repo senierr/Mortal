@@ -3,6 +3,7 @@ package com.senierr.mortal.domain.user
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -15,9 +16,11 @@ import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityLoginBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
+import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.widget.CircularAnim
 import com.senierr.repository.entity.bmob.BmobException
+import com.senierr.repository.entity.bmob.UserInfo
 
 /**
  * 登录页面
@@ -54,6 +57,9 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     private lateinit var loadingDialog: AlertDialog
 
     private val accountViewModel by getViewModel<AccountViewModel>()
+    private val userInfoViewModel by getViewModel<UserInfoViewModel>()
+
+    private val allCacheUserInfo = mutableListOf<UserInfo>()
 
     override fun createViewBinding(layoutInflater: LayoutInflater): ActivityLoginBinding {
         return ActivityLoginBinding.inflate(layoutInflater)
@@ -63,6 +69,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         super.onCreate(savedInstanceState)
         initView()
         initViewModel()
+        userInfoViewModel.getAllCacheUserInfo()
     }
 
     override fun onBackPressed() {
@@ -91,6 +98,14 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     }
 
     private fun initViewModel() {
+        userInfoViewModel.allCacheUserInfo.observe(this) {
+            allCacheUserInfo.clear()
+            allCacheUserInfo.addAll(it)
+            allCacheUserInfo.first().let { info ->
+                binding.etAccount.text = SpannableStringBuilder(info.username)
+                binding.etPassword.text = SpannableStringBuilder(info.password)
+            }
+        }
         accountViewModel.loginResult.observe(this,
             { showLoginSuccess() },
             { showLoginFailure(it) })

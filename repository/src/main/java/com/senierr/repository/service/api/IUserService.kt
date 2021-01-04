@@ -3,7 +3,6 @@ package com.senierr.repository.service.api
 import com.senierr.repository.entity.bmob.BmobException
 import com.senierr.repository.entity.bmob.BmobResponse
 import com.senierr.repository.entity.bmob.UserInfo
-import com.senierr.repository.exception.NotLoggedException
 
 /**
  * 用户服务
@@ -39,18 +38,28 @@ interface IUserService {
     suspend fun logout(objectId: String): Boolean
 
     /**
-     * 获取用户信息
+     * 拉取最新用户信息
      *
      * @throws BmobException 网络请求异常
      */
-    suspend fun getUserInfo(objectId: String): UserInfo
+    suspend fun fetchUserInfo(objectId: String): UserInfo
 
     /**
-     * 获取缓存用户信息
+     * 获取所有缓存用户信息
+     */
+    suspend fun getAllCacheUserInfo(): MutableList<UserInfo>
+
+    /**
+     * 获取已登录的缓存用户信息
      *
      * @throws NotLoggedException
      */
-    suspend fun getCacheUserInfo(): UserInfo
+    suspend fun getLoggedCacheUserInfo(): UserInfo
+
+    /**
+     * 删除所有缓存用户信息
+     */
+    suspend fun clearAllCacheUserInfo()
 
     /**
      * 删除缓存用户信息
@@ -64,7 +73,7 @@ interface IUserService {
      *
      * @throws BmobException 网络请求异常
      */
-    suspend fun updateInfo(objectId: String, sessionToken: String, infoMap: MutableMap<String, String>): BmobResponse
+    suspend fun updateUserInfo(objectId: String, sessionToken: String, infoMap: MutableMap<String, String>): BmobResponse
 
     /**
      * 重置密码

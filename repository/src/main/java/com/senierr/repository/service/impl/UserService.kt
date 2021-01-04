@@ -7,6 +7,7 @@ import com.senierr.repository.exception.NotLoggedException
 import com.senierr.repository.remote.RemoteManager
 import com.senierr.repository.remote.api.UserApi
 import com.senierr.repository.service.api.IUserService
+import com.senierr.repository.sp.SPManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -19,12 +20,15 @@ class UserService : IUserService {
 
     private val userApi by lazy { RemoteManager.getBmobHttp().create(UserApi::class.java) }
     private val userInfoDao by lazy { DatabaseManager.getDatabase().getUserInfoDao() }
+    private val spUtil by lazy { SPManager.getSP() }
 
     override suspend fun login(username: String, password: String): UserInfo {
         return withContext(Dispatchers.IO) {
             val userInfo = userApi.login(username, password)
             // 保存密码
             userInfo.password = password
+            // 置为登录状态
+            userInfo.logged = true
             userInfoDao.insertOrReplace(userInfo)
             return@withContext userInfo
         }
@@ -41,32 +45,50 @@ class UserService : IUserService {
 
     override suspend fun logout(objectId: String): Boolean {
         return withContext(Dispatchers.IO) {
-            userInfoDao.deleteById(objectId)
+            val cache = userInfoDao.get(objectId)
+            cache?.let {
+                it.logged = false
+                userInfoDao.insertOrReplace(it)
+            }
             return@withContext true
         }
     }
 
-    override suspend fun getUserInfo(objectId: String): UserInfo {
+    override suspend fun fetchUserInfo(objectId: String): UserInfo {
         return withContext(Dispatchers.IO) {
-            val cache = userInfoDao.getAll().firstOrNull()
+            val cache = userInfoDao.get(objectId)
             val userInfo = userApi.getUserInfo(objectId)
-            // 保存密码
-            cache?.password?.let {
-                userInfo.password = it
-            }
-            // 保存SessionToken
-            cache?.sessionToken?.let {
-                userInfo.sessionToken = it
+            cache?.let {
+                // 保存密码
+                userInfo.password = it.password
+                // 保存SessionToken
+                userInfo.sessionToken = it.sessionToken
+                // 保存登录状态
+                userInfo.logged = it.logged
             }
             userInfoDao.insertOrReplace(userInfo)
             return@withContext userInfo
         }
     }
 
-    override suspend fun getCacheUserInfo(): UserInfo {
+    override suspend fun getAllCacheUserInfo(): MutableList<UserInfo> {
         return withContext(Dispatchers.IO) {
-            // TODO 多用户需要处理
-            return@withContext userInfoDao.getAll().firstOrNull() ?: throw NotLoggedException()
+            return@withContext userInfoDao.getAll()
+        }
+    }
+
+    override suspend fun getLoggedCacheUserInfo(): UserInfo {
+        return withContext(Dispatchers.IO) {
+            val caches = userInfoDao.getAll()
+            return@withContext caches.firstOrNull {
+                return@firstOrNull it.logged
+            } ?: throw NotLoggedException()
+        }
+    }
+
+    override suspend fun clearAllCacheUserInfo() {
+        return withContext(Dispatchers.IO) {
+            return@withContext userInfoDao.deleteAll()
         }
     }
 
@@ -76,7 +98,7 @@ class UserService : IUserService {
         }
     }
 
-    override suspend fun updateInfo(
+    override suspend fun updateUserInfo(
         objectId: String,
         sessionToken: String,
         infoMap: MutableMap<String, String>

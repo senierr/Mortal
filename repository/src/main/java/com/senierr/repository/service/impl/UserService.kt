@@ -1,6 +1,5 @@
 package com.senierr.repository.service.impl
 
-import com.google.gson.Gson
 import com.senierr.repository.db.DatabaseManager
 import com.senierr.repository.entity.bmob.BmobResponse
 import com.senierr.repository.entity.bmob.UserInfo
@@ -28,6 +27,15 @@ class UserService : IUserService {
             userInfo.password = password
             userInfoDao.insertOrReplace(userInfo)
             return@withContext userInfo
+        }
+    }
+
+    override suspend fun register(username: String, password: String): UserInfo {
+        return withContext(Dispatchers.IO) {
+            val userInfo = mutableMapOf<String, String>()
+            userInfo["username"] = username
+            userInfo["password"] = password
+            return@withContext userApi.register(userInfo)
         }
     }
 

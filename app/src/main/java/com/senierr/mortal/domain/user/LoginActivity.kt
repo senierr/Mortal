@@ -69,13 +69,25 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         doFinish(false)
     }
 
+    override fun onDestroy() {
+        loadingDialog.dismiss()
+        super.onDestroy()
+    }
+
     private fun initView() {
         binding.btnClose.click { onBackPressed() }
         binding.btnLogin.click { doLogin() }
+        binding.btnRegister.click {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
 
         loadingDialog = MaterialAlertDialogBuilder(this)
             .setView(R.layout.layout_status_loading)
             .create()
+            .apply {
+                setCancelable(false)
+                setCanceledOnTouchOutside(false)
+            }
     }
 
     private fun initViewModel() {

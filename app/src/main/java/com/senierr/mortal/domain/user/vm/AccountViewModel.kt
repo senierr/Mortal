@@ -17,7 +17,9 @@ import kotlinx.coroutines.launch
 class AccountViewModel : ViewModel() {
 
     val loginResult = StatefulLiveData<UserInfo>()
+    val registerResult = StatefulLiveData<UserInfo>()
     val logoutResult = StatefulLiveData<Boolean>()
+    val resetPasswordResult = StatefulLiveData<Boolean>()
 
     private val userService = Repository.getService<IUserService>()
 
@@ -31,6 +33,20 @@ class AccountViewModel : ViewModel() {
                 loginResult.setValue(userInfo)
             } catch (e: Exception) {
                 loginResult.setException(e)
+            }
+        }
+    }
+
+    /**
+     * 登录
+     */
+    fun register(account: String, password: String) {
+        viewModelScope.launch {
+            try {
+                val userInfo = userService.register(account, password)
+                registerResult.setValue(userInfo)
+            } catch (e: Exception) {
+                registerResult.setException(e)
             }
         }
     }
@@ -50,6 +66,31 @@ class AccountViewModel : ViewModel() {
                 logoutResult.setValue(result)
             } catch (e: Exception) {
                 logoutResult.setException(e)
+            }
+        }
+    }
+
+    /**
+     * 重置密码
+     */
+    fun resetPassword(userInfo: UserInfo?, oldPassword: String, newPassword: String) {
+        viewModelScope.launch {
+            try {
+                val response = if (userInfo == null) {
+                    val currentUserInfo = userService.getCacheUserInfo()
+                    userService.resetPassword(
+                        currentUserInfo.objectId, currentUserInfo.sessionToken,
+                        oldPassword, newPassword
+                    )
+                } else {
+                    userService.resetPassword(
+                        userInfo.objectId, userInfo.sessionToken,
+                        oldPassword, newPassword
+                    )
+                }
+                resetPasswordResult.setValue(response.isSuccessful())
+            } catch (e: Exception) {
+                resetPasswordResult.setException(e)
             }
         }
     }

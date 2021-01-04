@@ -29,12 +29,17 @@
     <string name="format_date_month_ago">%1$d个月前</string>
 
     <string name="account">账号</string>
+    <string name="account_verify_hint">帐号必须是3&#8211;16位的数字、字母、下划线组合</string>
     <string name="password">密码</string>
+    <string name="new_password">新密码</string>
+    <string name="re_password">确认密码</string>
+    <string name="password_verify_hint">密码必须是6&#8211;16位的数字、字母组合</string>
     <string name="account_empty">请输入账号</string>
     <string name="password_empty">请输入密码</string>
     <string name="login">登录</string>
     <string name="logging">登录中&#8230;</string>
     <string name="register">注册</string>
+    <string name="register_success">注册成功</string>
 
     <string name="format_skip">跳过%1$d</string>
 
@@ -67,7 +72,9 @@
 
     <string name="account_and_safety">帐号与安全</string>
     <string name="reset_password">重置密码</string>
+    <string name="reset_password_success">重置密码成功</string>
     <string name="account_cancellation">帐号注销</string>
 
     <string name="log_out">退出登录</string>
+    <string name="log_out_confirm">确定退出当前登录帐号吗？</string>
 </resources>

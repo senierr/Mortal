@@ -15,15 +15,11 @@ interface UserApi {
     /**
      * 注册
      *
-     * @param username 用户名
-     * @param password 密码
+     * @param userInfo  :username 用户名
+     *                  :password 密码
      */
-    @FormUrlEncoded
-    @POST("users")
-    suspend fun register(
-        @Field("username") username: String,
-        @Field("password") password: String
-    ): UserInfo
+    @POST("1/users")
+    suspend fun register(@Body userInfo: MutableMap<String, String>): UserInfo
 
     /**
      * 登录

@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseFragment
-import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.FragmentMeBinding
 import com.senierr.mortal.domain.category.CategoryManagerActivity
@@ -64,7 +63,6 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         userInfoViewModel.userinfo.observe(this, {
             renderUserInfo(it)
         }, {
-            ToastUtil.showShort(context, it.message)
             renderUserInfo(null)
         })
     }

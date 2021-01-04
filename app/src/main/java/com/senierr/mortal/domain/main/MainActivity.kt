@@ -4,12 +4,12 @@ import android.content.*
 import android.os.Bundle
 import android.os.IBinder
 import android.view.LayoutInflater
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.AppUtil
 import com.senierr.mortal.R
@@ -113,7 +113,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), UpgradeService.Upgrade
      * 显示新版本提示
      */
     private fun showNewVersionDialog(versionInfo: VersionInfo) {
-        val newVersionDialog = AlertDialog.Builder(this)
+        val newVersionDialog = MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.discover_new_version)
                 .setMessage(versionInfo.changeLog.replace("\\n", "\n")) // 传输时\n被转义成\\n了
                 .setPositiveButton(R.string.upgrade_now) { dialog, _ ->

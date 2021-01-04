@@ -1,5 +1,6 @@
 package com.senierr.mortal.domain.user
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import com.senierr.base.support.ext.click
@@ -30,7 +31,7 @@ class AccountSafetyActivity : BaseActivity<ActivityAccountSafetyBinding>() {
         binding.tbTop.setNavigationOnClickListener { finish() }
 
         binding.siResetPassword.click {
-
+            startActivity(Intent(this, ResetPasswordActivity::class.java))
         }
         binding.siAccountCancellation.click {
 

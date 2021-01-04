@@ -54,6 +54,12 @@
 
         <activity android:name=".domain.common.EditTextActivity" />
 
+        <activity android:name=".domain.user.ResetPasswordActivity" />
+
+        <activity android:name=".domain.user.RegisterActivity" />
+
+
+
 
 
         <service android:name=".service.UpgradeService"/>

@@ -34,6 +34,15 @@ interface UserApi {
     ): UserInfo
 
     /**
+     * 删除用户
+     */
+    @DELETE("1/users/{objectId}")
+    suspend fun delete(
+        @Header("X-Bmob-Session-Token") sessionToken: String,
+        @Path("objectId") objectId: String
+    ): BmobResponse
+
+    /**
      * 获取用户信息
      */
     @GET("1/users/{objectId}")
@@ -67,7 +76,6 @@ interface UserApi {
     suspend fun resetPassword(
         @Header("X-Bmob-Session-Token") sessionToken: String,
         @Path("objectId") objectId: String,
-        @Body oldPassword: String,
-        @Body newPassword: String
+        @Body newInfo: MutableMap<String, String>
     ): BmobResponse
 }

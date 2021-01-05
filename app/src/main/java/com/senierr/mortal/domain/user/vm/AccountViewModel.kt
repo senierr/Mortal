@@ -19,6 +19,7 @@ class AccountViewModel : ViewModel() {
     val loginResult = StatefulLiveData<UserInfo>()
     val registerResult = StatefulLiveData<UserInfo>()
     val logoutResult = StatefulLiveData<Boolean>()
+    val deleteResult = StatefulLiveData<Boolean>()
     val resetPasswordResult = StatefulLiveData<Boolean>()
 
     private val userService = Repository.getService<IUserService>()
@@ -66,6 +67,20 @@ class AccountViewModel : ViewModel() {
     }
 
     /**
+     * 注销账户
+     */
+    fun delete(objectId: String, sessionToken: String) {
+        viewModelScope.launch {
+            try {
+                val result = userService.delete(objectId, sessionToken)
+                deleteResult.setValue(result)
+            } catch (e: Exception) {
+                deleteResult.setException(e)
+            }
+        }
+    }
+
+    /**
      * 重置密码
      */
     fun resetPassword(userInfo: UserInfo, oldPassword: String, newPassword: String) {
@@ -75,7 +90,7 @@ class AccountViewModel : ViewModel() {
                     userInfo.objectId, userInfo.sessionToken,
                     oldPassword, newPassword
                 )
-                resetPasswordResult.setValue(response.isSuccessful())
+                resetPasswordResult.setValue(response)
             } catch (e: Exception) {
                 resetPasswordResult.setException(e)
             }

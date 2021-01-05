@@ -44,7 +44,6 @@ class ResetPasswordActivity : BaseActivity<ActivityResetPasswordBinding>() {
         super.onCreate(savedInstanceState)
         initView()
         initViewModel()
-        userInfoViewModel.getLoggedCacheUserInfo()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -71,6 +70,11 @@ class ResetPasswordActivity : BaseActivity<ActivityResetPasswordBinding>() {
             R.id.tab_done -> resetPassword()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        userInfoViewModel.getLoggedCacheUserInfo()
     }
 
     private fun initView() {

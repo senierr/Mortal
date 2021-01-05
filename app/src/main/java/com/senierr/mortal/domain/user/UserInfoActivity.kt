@@ -39,6 +39,10 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
         super.onCreate(savedInstanceState)
         initView()
         initViewModel()
+    }
+
+    override fun onStart() {
+        super.onStart()
         userInfoViewModel.getLoggedCacheUserInfo()
     }
 

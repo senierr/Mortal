@@ -1,7 +1,9 @@
 package com.senierr.mortal.domain.user.vm
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.senierr.base.support.utils.LogUtil
 import com.senierr.mortal.domain.common.vm.StatefulLiveData
 import com.senierr.repository.Repository
 import com.senierr.repository.entity.bmob.UserInfo
@@ -18,7 +20,6 @@ class UserInfoViewModel : ViewModel() {
     val allCacheUserInfo = StatefulLiveData<MutableList<UserInfo>>()
     val loggedCacheUserInfo = StatefulLiveData<UserInfo>()
     val userinfo = StatefulLiveData<UserInfo>()
-    val resetPasswordResult = StatefulLiveData<Boolean>()
 
     private val userService = Repository.getService<IUserService>()
 
@@ -45,6 +46,7 @@ class UserInfoViewModel : ViewModel() {
                 val cacheUserInfo = userService.getLoggedCacheUserInfo()
                 loggedCacheUserInfo.setValue(cacheUserInfo)
             } catch (e: Exception) {
+                LogUtil.logE(Log.getStackTraceString(e))
                 loggedCacheUserInfo.setException(e)
             }
         }
@@ -98,23 +100,6 @@ class UserInfoViewModel : ViewModel() {
                 userinfo.setValue(userInfo)
             } catch (e: Exception) {
                 userinfo.setException(e)
-            }
-        }
-    }
-
-    /**
-     * 更新用户邮箱
-     */
-    fun resetPassword(userInfo: UserInfo, oldPassword: String, newPassword: String) {
-        viewModelScope.launch {
-            try {
-                val response = userService.resetPassword(
-                    userInfo.objectId, userInfo.sessionToken,
-                    oldPassword, newPassword
-                )
-                resetPasswordResult.setValue(response.isSuccessful())
-            } catch (e: Exception) {
-                resetPasswordResult.setException(e)
             }
         }
     }

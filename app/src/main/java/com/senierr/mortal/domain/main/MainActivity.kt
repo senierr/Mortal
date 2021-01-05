@@ -113,27 +113,30 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), UpgradeService.Upgrade
      * 显示新版本提示
      */
     private fun showNewVersionDialog(versionInfo: VersionInfo) {
-        val newVersionDialog = MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.discover_new_version)
-                .setMessage(versionInfo.changeLog.replace("\\n", "\n")) // 传输时\n被转义成\\n了
-                .setPositiveButton(R.string.upgrade_now) { dialog, _ ->
-                    upgradeBinder?.getService()?.downloadApk(versionInfo)
-                    dialog.dismiss()
-                }
-                .setNegativeButton(R.string.upgrade_later) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .setNeutralButton(R.string.ignore_this_version) { dialog, _ ->
-                    upgradeBinder?.getService()?.ignoreThisVersion(versionInfo)
-                    dialog.dismiss()
-                }
-                .create()
-        newVersionDialog.show()
-        newVersionDialog.setCanceledOnTouchOutside(false)
-        newVersionDialog.getButton(DialogInterface.BUTTON_NEGATIVE)
-                .setTextColor(ContextCompat.getColor(this, R.color.text_hint))
-        newVersionDialog.getButton(DialogInterface.BUTTON_NEUTRAL)
-                .setTextColor(ContextCompat.getColor(this, R.color.text_warn))
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.discover_new_version)
+            .setMessage(versionInfo.changeLog.replace("\\n", "\n")) // 传输时\n被转义成\\n了
+            .setPositiveButton(R.string.upgrade_now) { dialog, _ ->
+                upgradeBinder?.getService()?.downloadApk(versionInfo)
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.upgrade_later) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setNeutralButton(R.string.ignore_this_version) { dialog, _ ->
+                upgradeBinder?.getService()?.ignoreThisVersion(versionInfo)
+                dialog.dismiss()
+            }
+            .create()
+            .apply {
+                show()
+                setCanceledOnTouchOutside(false)
+                getButton(DialogInterface.BUTTON_NEGATIVE)
+                    .setTextColor(ContextCompat.getColor(this@MainActivity, R.color.text_hint))
+                getButton(DialogInterface.BUTTON_NEUTRAL)
+                    .setTextColor(ContextCompat.getColor(this@MainActivity, R.color.text_warn))
+            }
+
     }
 
     private inner class MainPageAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {

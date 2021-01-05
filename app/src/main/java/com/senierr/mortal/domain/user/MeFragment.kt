@@ -40,7 +40,6 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         super.onViewCreated(view, savedInstanceState)
         initView()
         initViewModel()
-        userInfoViewModel.getLoggedCacheUserInfo()
     }
 
     override fun onStart() {
@@ -93,10 +92,10 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         }
         // 头像
         binding?.ivAvatar?.apply {
-            if (userInfo == null) {
+            if (userInfo?.avatar.isNullOrBlank()) {
                 setImageResource(R.drawable.ic_account_circle)
             } else {
-                showImage(userInfo.avatar)
+                userInfo?.avatar?.let { showImage(it) }
             }
         }
         // 昵称

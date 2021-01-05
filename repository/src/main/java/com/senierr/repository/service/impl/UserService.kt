@@ -1,7 +1,6 @@
 package com.senierr.repository.service.impl
 
 import com.senierr.repository.db.DatabaseManager
-import com.senierr.repository.entity.bmob.BmobResponse
 import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.exception.NotLoggedException
 import com.senierr.repository.remote.RemoteManager
@@ -54,6 +53,14 @@ class UserService : IUserService {
         }
     }
 
+    override suspend fun delete(objectId: String, sessionToken: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            val response = userApi.delete(sessionToken, objectId)
+            userInfoDao.deleteById(objectId)
+            return@withContext response.isSuccessful()
+        }
+    }
+
     override suspend fun fetchUserInfo(objectId: String): UserInfo {
         return withContext(Dispatchers.IO) {
             val cache = userInfoDao.get(objectId)
@@ -80,9 +87,10 @@ class UserService : IUserService {
     override suspend fun getLoggedCacheUserInfo(): UserInfo {
         return withContext(Dispatchers.IO) {
             val caches = userInfoDao.getAll()
-            return@withContext caches.firstOrNull {
+            val result = caches.firstOrNull {
                 return@firstOrNull it.logged
-            } ?: throw NotLoggedException()
+            }
+            return@withContext result?: throw NotLoggedException()
         }
     }
 
@@ -102,9 +110,10 @@ class UserService : IUserService {
         objectId: String,
         sessionToken: String,
         infoMap: MutableMap<String, String>
-    ): BmobResponse {
+    ): Boolean {
         return withContext(Dispatchers.IO) {
-            return@withContext userApi.updateInfo(sessionToken, objectId, infoMap)
+            val response = userApi.updateInfo(sessionToken, objectId, infoMap)
+            return@withContext response.isSuccessful()
         }
     }
 
@@ -113,14 +122,17 @@ class UserService : IUserService {
         sessionToken: String,
         oldPassword: String,
         newPassword: String
-    ): BmobResponse {
+    ): Boolean {
         return withContext(Dispatchers.IO) {
-            return@withContext userApi.resetPassword(
+            val response = userApi.resetPassword(
                 sessionToken,
                 objectId,
-                oldPassword,
-                newPassword
+                mutableMapOf(
+                    Pair("oldPassword", oldPassword),
+                    Pair("newPassword", newPassword)
+                )
             )
+            return@withContext response.isSuccessful()
         }
     }
 }

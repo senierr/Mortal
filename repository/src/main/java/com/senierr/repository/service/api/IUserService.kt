@@ -1,7 +1,6 @@
 package com.senierr.repository.service.api
 
 import com.senierr.repository.entity.bmob.BmobException
-import com.senierr.repository.entity.bmob.BmobResponse
 import com.senierr.repository.entity.bmob.UserInfo
 
 /**
@@ -36,6 +35,11 @@ interface IUserService {
      * 登出
      */
     suspend fun logout(objectId: String): Boolean
+
+    /**
+     * 删除用户
+     */
+    suspend fun delete(objectId: String, sessionToken: String): Boolean
 
     /**
      * 拉取最新用户信息
@@ -73,7 +77,7 @@ interface IUserService {
      *
      * @throws BmobException 网络请求异常
      */
-    suspend fun updateUserInfo(objectId: String, sessionToken: String, infoMap: MutableMap<String, String>): BmobResponse
+    suspend fun updateUserInfo(objectId: String, sessionToken: String, infoMap: MutableMap<String, String>): Boolean
 
     /**
      * 重置密码
@@ -85,5 +89,5 @@ interface IUserService {
         sessionToken: String,
         oldPassword: String,
         newPassword: String
-    ): BmobResponse
+    ): Boolean
 }

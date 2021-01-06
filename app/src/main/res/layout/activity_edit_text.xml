@@ -8,26 +8,26 @@
         android:id="@+id/tb_top"
         style="@style/BaseToolbar"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="@string/app_name" />
+        app:title="@string/edit" />
 
-    <com.senierr.mortal.widget.ClearEditText
-        android:id="@+id/et_edit"
-        android:textColor="@color/text_content"
-        android:textSize="@dimen/sp_14"
-        android:maxLines="1"
-        android:inputType="text"
-        android:layout_marginStart="@dimen/dp_16"
-        android:layout_marginEnd="@dimen/dp_16"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_text"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_56"/>
-
-    <TextView
-        android:id="@+id/tv_tips"
-        android:textSize="@dimen/sp_12"
-        android:textColor="@color/text_warn"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_8"
-        android:layout_marginStart="@dimen/dp_16"
-        android:layout_marginEnd="@dimen/dp_16"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:hint="@string/please_input"
+        app:boxBackgroundColor="@color/window_content"
+        app:boxStrokeWidth="@dimen/dp_0"
+        app:boxStrokeWidthFocused="@dimen/dp_0"
+        app:endIconMode="clear_text">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="@color/text_content"
+            android:textSize="@dimen/sp_14" />
+    </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>

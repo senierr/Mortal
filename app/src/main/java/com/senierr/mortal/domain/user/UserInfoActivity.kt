@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
+import com.senierr.base.support.utils.RegexUtil
 import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityUserInfoBinding
@@ -75,7 +76,8 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
             currentUserInfo?.let {
                 EditTextActivity.startForResult(
                     this, REQUEST_CODE_EDIT_NICKNAME,
-                    getString(R.string.edit_nickname), null, it.nickname
+                    getString(R.string.edit_nickname), it.nickname,
+                    getString(R.string.nickname), getString(R.string.nickname_helper_text)
                 )
             }
         }
@@ -84,7 +86,9 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
             currentUserInfo?.let {
                 EditTextActivity.startForResult(
                     this, REQUEST_CODE_EDIT_EMAIL,
-                    getString(R.string.edit_email), null, it.email
+                    getString(R.string.edit_email), it.email,
+                    getString(R.string.email),
+                    regex = RegexUtil.REGEX_EMAIL, errorText = getString(R.string.email_verify_hint)
                 )
             }
         }

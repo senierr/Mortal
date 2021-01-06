@@ -1,0 +1,39 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb_top"
+        style="@style/BaseToolbar"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:title="@string/about" />
+
+    <com.senierr.mortal.widget.SettingItem
+        android:id="@+id/si_project_home_page"
+        android:layout_marginTop="@dimen/dp_8"
+        app:si_icon_enabled="false"
+        app:si_title="@string/project_home_page"
+        app:si_chevron_enabled="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.senierr.mortal.widget.SettingItem
+        android:id="@+id/si_user_agreement"
+        android:layout_marginTop="@dimen/px_1"
+        app:si_icon_enabled="false"
+        app:si_title="@string/user_agreement"
+        app:si_chevron_enabled="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <com.senierr.mortal.widget.SettingItem
+        android:id="@+id/si_privacy_and_policy"
+        android:layout_marginTop="@dimen/px_1"
+        app:si_icon_enabled="false"
+        app:si_title="@string/privacy_and_policy"
+        app:si_chevron_enabled="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

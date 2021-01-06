@@ -57,6 +57,12 @@
     <string name="feedback">意见反馈</string>
     <string name="setting">设置</string>
 
+    <string name="version_and_check">版本与检测</string>
+    <string name="about">关于</string>
+    <string name="privacy_and_policy">隐私政策</string>
+    <string name="user_agreement">用户协议</string>
+    <string name="project_home_page">项目首页</string>
+
     <string name="edit_nickname">编辑昵称</string>
     <string name="edit_email">编辑邮箱</string>
     <string name="done">确认</string>

@@ -28,6 +28,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <com.senierr.mortal.widget.SettingItem
+                android:id="@+id/si_about"
+                android:layout_marginTop="@dimen/dp_8"
+                app:si_icon_enabled="false"
+                app:si_title="@string/about"
+                app:si_chevron_enabled="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <com.senierr.mortal.widget.SettingItem
+                android:id="@+id/si_check_new_version"
+                android:layout_marginTop="@dimen/px_1"
+                app:si_icon_enabled="false"
+                app:si_title="@string/version_and_check"
+                app:si_chevron_enabled="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_log_out"
                 android:text="@string/log_out"

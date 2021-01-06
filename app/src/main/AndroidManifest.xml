@@ -50,6 +50,8 @@
 
         <activity android:name=".domain.setting.SettingActivity" />
 
+        <activity android:name=".domain.setting.AboutActivity" />
+
         <activity android:name=".domain.user.AccountSafetyActivity" />
 
         <activity android:name=".domain.common.EditTextActivity" />

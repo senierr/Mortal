@@ -17,34 +17,19 @@ import kotlinx.coroutines.launch
 class SettingViewModel : ViewModel() {
 
     val ganHuoCategories = StatefulLiveData<MutableList<Category>>()
-    val saveCategories = StatefulLiveData<Boolean>()
 
     private val gankService = Repository.getService<IGankService>()
 
     /**
-     * 拉取分类标签
+     * 获取版本号
      */
-    fun fetchGanHuoCategories() {
+    fun getVersionName() {
         viewModelScope.launch {
             try {
                 val categories = gankService.getGanHuoCategories()
                 ganHuoCategories.setValue(categories)
             } catch (e: Exception) {
                 ganHuoCategories.setException(e)
-            }
-        }
-    }
-
-    /**
-     * 保存分类标签
-     */
-    fun saveGanHuoCategories(categories: MutableList<Category>) {
-        viewModelScope.launch {
-            try {
-                val result = gankService.saveGanHuoCategories(categories)
-                saveCategories.setValue(result)
-            } catch (e: Exception) {
-                saveCategories.setException(e)
             }
         }
     }

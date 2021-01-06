@@ -74,7 +74,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), UpgradeService.Upgrade
      * 新版本下载完成
      */
     override fun onDownloadCompleted(apkFile: File) {
-        AppUtil.installApk(this@MainActivity, "${packageName}.provider", apkFile)
+        AppUtil.installApk(this, "${packageName}.provider", apkFile)
     }
 
     private fun initView() {
@@ -136,7 +136,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), UpgradeService.Upgrade
                 getButton(DialogInterface.BUTTON_NEUTRAL)
                     .setTextColor(ContextCompat.getColor(this@MainActivity, R.color.text_warn))
             }
-
     }
 
     private inner class MainPageAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {

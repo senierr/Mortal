@@ -123,6 +123,8 @@ class ResetPasswordActivity : BaseActivity<ActivityResetPasswordBinding>() {
             currentUserInfo = it
         }, {
             // 未登录，跳转至登录页
+            LoginActivity.start(this)
+            finish()
         })
         accountViewModel.resetPasswordResult.observe(this, {
             ToastUtil.showShort(this, R.string.reset_password_success)

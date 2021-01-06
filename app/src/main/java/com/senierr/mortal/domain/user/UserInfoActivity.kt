@@ -97,6 +97,8 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
             userInfoViewModel.fetchUserInfo(it.objectId)
         }, {
             // 未登录，跳转至登录页
+            LoginActivity.start(this)
+            finish()
         })
         userInfoViewModel.userinfo.observe(this, {
             currentUserInfo = it

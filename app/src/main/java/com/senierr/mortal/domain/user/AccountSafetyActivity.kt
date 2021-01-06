@@ -62,6 +62,8 @@ class AccountSafetyActivity : BaseActivity<ActivityAccountSafetyBinding>() {
             currentUserInfo = it
         }, {
             // 未登录，跳转至登录页
+            LoginActivity.start(this)
+            finish()
         })
         accountViewModel.deleteResult.observe(this, {
             ToastUtil.showShort(this, R.string.account_cancellation_success)

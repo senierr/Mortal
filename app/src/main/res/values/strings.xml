@@ -60,6 +60,7 @@
     <string name="feedback">意见反馈</string>
     <string name="setting">设置</string>
 
+    <string name="clear_cache">清理缓存</string>
     <string name="version_and_check">版本与检测</string>
     <string name="about">关于</string>
     <string name="privacy_and_policy">隐私政策</string>

@@ -13,12 +13,15 @@ import com.senierr.base.support.ext.click
 import com.senierr.base.support.ext.setGone
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.AppUtil
+import com.senierr.base.support.utils.FileUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivitySettingBinding
+import com.senierr.mortal.domain.setting.vm.SettingViewModel
 import com.senierr.mortal.domain.user.AccountSafetyActivity
 import com.senierr.mortal.domain.user.LoginActivity
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
+import com.senierr.mortal.ext.getAndroidViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.mortal.service.UpgradeService
@@ -36,6 +39,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>(), UpgradeService.U
 
     private val accountViewModel by getViewModel<AccountViewModel>()
     private val userInfoViewModel by getViewModel<UserInfoViewModel>()
+    private val settingViewModel by getAndroidViewModel<SettingViewModel>()
 
     private var currentUserInfo: UserInfo? = null
 
@@ -60,6 +64,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>(), UpgradeService.U
         initView()
         initViewModel()
         bindService(Intent(this, UpgradeService::class.java), upgradeConnection, BIND_AUTO_CREATE)
+        settingViewModel.getCacheSize()
     }
 
     override fun onStart() {
@@ -99,13 +104,17 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>(), UpgradeService.U
             startActivity(Intent(this, AccountSafetyActivity::class.java))
         }
 
-        binding.siAbout.click {
-            startActivity(Intent(this, AboutActivity::class.java))
+        binding.siClearCache.click {
+
         }
 
         binding.siCheckNewVersion.message = AppUtil.getVersionName(this, packageName)
         binding.siCheckNewVersion.click {
             upgradeBinder?.getService()?.checkNewVersion()
+        }
+
+        binding.siAbout.click {
+            startActivity(Intent(this, AboutActivity::class.java))
         }
 
         binding.btnLogOut.click {
@@ -123,6 +132,9 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>(), UpgradeService.U
         accountViewModel.logoutResult.observe(this) {
             LoginActivity.start(this)
             finish()
+        }
+        settingViewModel.cacheSize.observe(this) {
+            binding.siClearCache.message = FileUtil.getFormatSize(it)
         }
     }
 

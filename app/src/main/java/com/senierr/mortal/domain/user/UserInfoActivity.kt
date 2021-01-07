@@ -3,9 +3,9 @@ package com.senierr.mortal.domain.user
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import com.senierr.base.support.ext.click
-import com.senierr.base.support.ui.BaseActivity
-import com.senierr.base.support.utils.RegexUtil
+import com.senierr.mortal.support.ext.click
+import com.senierr.mortal.support.ui.BaseActivity
+import com.senierr.mortal.support.utils.RegexUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityUserInfoBinding
 import com.senierr.mortal.domain.common.EditTextActivity
@@ -13,7 +13,7 @@ import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.showImage
 import com.senierr.mortal.ext.showToast
-import com.senierr.repository.entity.bmob.UserInfo
+import com.senierr.mortal.repository.entity.bmob.UserInfo
 
 /**
  * 用户详情页面

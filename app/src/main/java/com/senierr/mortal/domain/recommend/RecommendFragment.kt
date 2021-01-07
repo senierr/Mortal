@@ -5,19 +5,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
-import com.senierr.base.support.ui.BaseFragment
-import com.senierr.base.support.ui.recyclerview.GridItemDecoration
-import com.senierr.base.support.utils.ScreenUtil
+import com.senierr.mortal.support.ui.BaseFragment
+import com.senierr.mortal.support.ui.recyclerview.GridItemDecoration
+import com.senierr.mortal.support.utils.ScreenUtil
 import com.senierr.mortal.databinding.FragmentRecommendBinding
 import com.senierr.mortal.domain.common.ImagePreviewActivity
 import com.senierr.mortal.domain.common.wrapper.LoadMoreWrapper
 import com.senierr.mortal.domain.recommend.vm.RecommendViewModel
 import com.senierr.mortal.domain.recommend.wrapper.RecommendWrapper
 import com.senierr.mortal.ext.*
-import com.senierr.repository.entity.gank.Girl
+import com.senierr.mortal.repository.entity.gank.Girl
 
 /**
  * 精选页面

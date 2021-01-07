@@ -12,9 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
 import androidx.annotation.RequiresApi
-import com.senierr.base.support.ui.BaseActivity
-import com.senierr.base.support.utils.LogUtil
-import com.senierr.base.support.utils.NetworkUtil
+import com.senierr.mortal.support.ui.BaseActivity
+import com.senierr.mortal.support.utils.LogUtil
+import com.senierr.mortal.support.utils.NetworkUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityWebviewBinding
 

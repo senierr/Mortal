@@ -8,8 +8,8 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.senierr.base.support.ui.BaseActivity
-import com.senierr.base.support.utils.RegexUtil
+import com.senierr.mortal.support.ui.BaseActivity
+import com.senierr.mortal.support.utils.RegexUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityRegisterBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel

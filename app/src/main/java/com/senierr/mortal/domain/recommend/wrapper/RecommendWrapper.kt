@@ -6,7 +6,7 @@ import com.senierr.adapter.internal.ViewHolder
 import com.senierr.adapter.internal.ViewHolderWrapper
 import com.senierr.mortal.R
 import com.senierr.mortal.ext.showImage
-import com.senierr.repository.entity.gank.Girl
+import com.senierr.mortal.repository.entity.gank.Girl
 
 /**
  * 精选推荐适配器

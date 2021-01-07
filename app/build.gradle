@@ -71,8 +71,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(":base_support")
-    implementation project(":repository")
     // 语言
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.ext.kotlin"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.ext.kotlinx_coroutines_android"
@@ -93,7 +91,6 @@ dependencies {
     // 视图
     implementation "com.github.bumptech.glide:glide:$rootProject.ext.glide"
     kapt 'com.github.bumptech.glide:compiler:4.11.0'
-    implementation 'com.caverock:androidsvg:1.2.1'
     implementation "com.senierr.adapter:multitype:$rootProject.ext.multitype"
     implementation "com.youth.banner:banner:$rootProject.ext.banner"
     implementation "com.nex3z:flow-layout:$rootProject.ext.flow_layout"
@@ -101,6 +98,16 @@ dependencies {
     implementation "com.bm.photoview:library:$rootProject.ext.photoview"
     // 后台任务
     implementation "androidx.work:work-runtime-ktx:$rootProject.ext.worker_manager"
+    // 网络请求
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.ext.converter_gson"
+    // 磁盘缓存
+    implementation "com.jakewharton:disklrucache:$rootProject.ext.disklrucache"
+    // 数据库
+    implementation "androidx.room:room-runtime:$rootProject.ext.room"
+    kapt "androidx.room:room-compiler:$rootProject.ext.room"
+    // 数据库调试
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
     // 内存泄露
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 }

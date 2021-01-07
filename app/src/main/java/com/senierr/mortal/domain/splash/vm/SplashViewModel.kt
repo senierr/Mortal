@@ -5,9 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.senierr.mortal.domain.common.vm.StatefulLiveData
 import com.senierr.mortal.worker.SplashWorker
-import com.senierr.repository.Repository
-import com.senierr.repository.entity.gank.Girl
-import com.senierr.repository.service.api.IGankService
+import com.senierr.mortal.repository.Repository
+import com.senierr.mortal.repository.entity.gank.Girl
+import com.senierr.mortal.repository.service.api.IGankService
 import kotlinx.coroutines.launch
 
 /**

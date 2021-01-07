@@ -9,8 +9,8 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.FragmentActivity
-import com.senierr.base.support.ui.BaseActivity
-import com.senierr.base.support.utils.RegexUtil
+import com.senierr.mortal.support.ui.BaseActivity
+import com.senierr.mortal.support.utils.RegexUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityEditTextBinding
 

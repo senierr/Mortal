@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
-import com.senierr.base.support.ui.BaseFragment
-import com.senierr.base.support.ui.recyclerview.LinearItemDecoration
-import com.senierr.base.support.utils.ScreenUtil
+import com.senierr.mortal.support.ui.BaseFragment
+import com.senierr.mortal.support.ui.recyclerview.LinearItemDecoration
+import com.senierr.mortal.support.utils.ScreenUtil
 import com.senierr.mortal.databinding.FragmentHomeGanhuoBinding
 import com.senierr.mortal.domain.common.WebViewActivity
 import com.senierr.mortal.domain.common.wrapper.LoadMoreWrapper
@@ -19,7 +19,7 @@ import com.senierr.mortal.domain.home.wrapper.GanHuoMoreImageWrapper
 import com.senierr.mortal.domain.home.wrapper.GanHuoNoImageWrapper
 import com.senierr.mortal.domain.home.wrapper.GanHuoOneImageWrapper
 import com.senierr.mortal.ext.*
-import com.senierr.repository.entity.gank.GanHuo
+import com.senierr.mortal.repository.entity.gank.GanHuo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

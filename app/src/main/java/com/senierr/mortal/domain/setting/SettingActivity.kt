@@ -9,11 +9,11 @@ import android.os.IBinder
 import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.senierr.base.support.ext.click
-import com.senierr.base.support.ext.setGone
-import com.senierr.base.support.ui.BaseActivity
-import com.senierr.base.support.utils.AppUtil
-import com.senierr.base.support.utils.FileUtil
+import com.senierr.mortal.support.ext.click
+import com.senierr.mortal.support.ext.setGone
+import com.senierr.mortal.support.ui.BaseActivity
+import com.senierr.mortal.support.utils.AppUtil
+import com.senierr.mortal.support.utils.FileUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivitySettingBinding
 import com.senierr.mortal.domain.setting.vm.SettingViewModel
@@ -25,8 +25,8 @@ import com.senierr.mortal.ext.getAndroidViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.mortal.service.UpgradeService
-import com.senierr.repository.entity.bmob.UserInfo
-import com.senierr.repository.entity.bmob.VersionInfo
+import com.senierr.mortal.repository.entity.bmob.UserInfo
+import com.senierr.mortal.repository.entity.bmob.VersionInfo
 import java.io.File
 
 /**

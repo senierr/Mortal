@@ -10,15 +10,15 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.senierr.base.support.ui.BaseActivity
-import com.senierr.base.support.utils.AppUtil
+import com.senierr.mortal.support.ui.BaseActivity
+import com.senierr.mortal.support.utils.AppUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityMainBinding
 import com.senierr.mortal.domain.home.HomeFragment
 import com.senierr.mortal.domain.recommend.RecommendFragment
 import com.senierr.mortal.domain.user.MeFragment
 import com.senierr.mortal.service.UpgradeService
-import com.senierr.repository.entity.bmob.VersionInfo
+import com.senierr.mortal.repository.entity.bmob.VersionInfo
 import java.io.File
 
 /**

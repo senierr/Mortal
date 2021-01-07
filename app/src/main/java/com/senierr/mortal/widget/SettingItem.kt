@@ -5,8 +5,8 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
-import com.senierr.base.support.ext.setGone
-import com.senierr.base.support.utils.DrawableUtil
+import com.senierr.mortal.support.ext.setGone
+import com.senierr.mortal.support.utils.DrawableUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.LayoutSettingItemBinding
 

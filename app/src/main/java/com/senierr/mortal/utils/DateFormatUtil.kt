@@ -1,7 +1,7 @@
 package com.senierr.mortal.utils
 
 import android.content.Context
-import com.senierr.base.support.utils.DateUtil
+import com.senierr.mortal.support.utils.DateUtil
 import com.senierr.mortal.R
 import java.util.*
 

@@ -7,9 +7,7 @@ import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.senierr.base.support.utils.LogUtil
 import com.senierr.mortal.R
-import com.senierr.mortal.domain.main.MainActivity
 
 /**
  * 通知管理

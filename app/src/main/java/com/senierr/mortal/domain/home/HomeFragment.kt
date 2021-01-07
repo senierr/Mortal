@@ -7,14 +7,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
-import com.senierr.base.support.ui.BaseFragment
+import com.senierr.mortal.support.ui.BaseFragment
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.FragmentHomeBinding
 import com.senierr.mortal.domain.category.CategoryManagerActivity
 import com.senierr.mortal.domain.home.vm.HomeViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.showToast
-import com.senierr.repository.entity.gank.Category
+import com.senierr.mortal.repository.entity.gank.Category
 
 /**
  * 首页

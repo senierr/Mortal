@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.senierr.base.support.ext.click
-import com.senierr.base.support.ui.BaseFragment
+import com.senierr.mortal.support.ext.click
+import com.senierr.mortal.support.ui.BaseFragment
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.FragmentMeBinding
 import com.senierr.mortal.domain.category.CategoryManagerActivity
@@ -14,7 +14,7 @@ import com.senierr.mortal.domain.setting.SettingActivity
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.showImage
-import com.senierr.repository.entity.bmob.UserInfo
+import com.senierr.mortal.repository.entity.bmob.UserInfo
 
 /**
  * 我的页面

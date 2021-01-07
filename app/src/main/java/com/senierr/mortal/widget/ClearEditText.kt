@@ -8,7 +8,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
-import com.senierr.base.support.ui.listener.EditTextWatcher
+import com.senierr.mortal.support.ui.listener.EditTextWatcher
 import com.senierr.mortal.R
 
 /**

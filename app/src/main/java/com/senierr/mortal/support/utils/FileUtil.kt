@@ -1,9 +1,16 @@
 package com.senierr.mortal.support.utils
 
+import com.senierr.mortal.repository.store.disk.DiskManager
+import kotlinx.coroutines.isActive
+import okhttp3.ResponseBody
+import okio.*
+import retrofit2.Call
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
+import java.io.IOException
 import java.math.BigDecimal
+import kotlin.coroutines.resume
 
 /**
  * 文件工具类
@@ -104,5 +111,51 @@ object FileUtil {
         }
         val result4 = BigDecimal(teraBytes)
         return result4.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "TB"
+    }
+
+    /**
+     * 将retrofit2.Call保存至本地文件
+     */
+    fun saveFile(call: Call<ResponseBody?>, destDir: File, destName: String, md5: String = ""): File {
+        val responseBody = call.execute().body()?: throw IOException("ResponseBody is null.")
+
+        // 判断路径是否存在
+        if (!destDir.exists()) {
+            val result = destDir.mkdirs()
+            if (!result) {
+                throw Exception(destDir.path + " create failed!")
+            }
+        }
+
+        val destFile = File(destDir, destName)
+        // 判断文件是否存在
+        if (destFile.exists()) {
+            // 判断是否需要重新下载
+            val destMD5 = EncryptUtil.encryptMD5File2String(destFile)
+            if (destMD5 == md5) {
+                return destFile
+            }
+            val result = destFile.delete()
+            if (!result) {
+                throw Exception(destFile.path + " delete failed!")
+            }
+        }
+
+        var bufferedSource: BufferedSource? = null
+        var bufferedSink: BufferedSink? = null
+        try {
+            bufferedSource = responseBody.byteStream().source().buffer()
+            bufferedSink = destFile.sink().buffer()
+
+            val bytes = ByteArray(1024)
+            var len = 0
+            while (call.isCanceled && bufferedSource.read(bytes).also { len = it } != -1) {
+                bufferedSink.write(bytes, 0, len)
+            }
+            bufferedSink.flush()
+            return destFile
+        } finally {
+            CloseUtil.closeIOQuietly(bufferedSource, bufferedSink)
+        }
     }
 }

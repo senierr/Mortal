@@ -24,14 +24,12 @@ import java.io.File
  * @author chunjiezhou
  * @date 2020/12/29
  */
-class UpgradeService : Service(), LifecycleOwner, CoroutineScope by MainScope() {
+class UpgradeService : LifecycleService() {
 
     companion object {
         private const val TAG_LOG = "UpgradeService"
         private const val TAG_DOWNLOAD = "upgrade_service_apk_download"
     }
-
-    private val lifecycleRegistry = LifecycleRegistry(this)
 
     private val settingService = Repository.getService<ISettingService>()
     private val commonService = Repository.getService<ICommonService>()
@@ -39,7 +37,6 @@ class UpgradeService : Service(), LifecycleOwner, CoroutineScope by MainScope() 
     private var upgradeCallback: UpgradeCallback? = null
 
     override fun onCreate() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         super.onCreate()
         Repository.getProgressBus().downloadProgress.observe(this, Observer {
             if (it.tag == TAG_DOWNLOAD) {
@@ -49,24 +46,14 @@ class UpgradeService : Service(), LifecycleOwner, CoroutineScope by MainScope() 
     }
 
     override fun onBind(intent: Intent?): IBinder {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
         return UpgradeBinder()
     }
 
-    override fun onUnbind(intent: Intent?): Boolean {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP)
-        return super.onUnbind(intent)
-    }
-
     override fun onDestroy() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
         // 注意解除引用，防止内存泄漏
         upgradeCallback = null
-        cancel()
         super.onDestroy()
     }
-
-    override fun getLifecycle(): Lifecycle = lifecycleRegistry
 
     /**
      * 检查新版本
@@ -75,9 +62,7 @@ class UpgradeService : Service(), LifecycleOwner, CoroutineScope by MainScope() 
         launch {
             try {
                 val versionInfo = settingService.checkNewVersion()
-                versionInfo?.let {
-                    upgradeCallback?.onNewVersion(it)
-                }
+                upgradeCallback?.onNewVersion(versionInfo)
             } catch (e: Exception) {
                 LogUtil.logE(TAG_LOG, Log.getStackTraceString(e))
             }
@@ -127,7 +112,7 @@ class UpgradeService : Service(), LifecycleOwner, CoroutineScope by MainScope() 
     }
 
     interface UpgradeCallback {
-        fun onNewVersion(versionInfo: VersionInfo)
+        fun onNewVersion(versionInfo: VersionInfo?)
         fun onDownloadCompleted(apkFile: File)
     }
 }

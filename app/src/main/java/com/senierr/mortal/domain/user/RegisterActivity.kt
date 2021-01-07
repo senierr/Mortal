@@ -10,11 +10,11 @@ import androidx.appcompat.app.AlertDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.RegexUtil
-import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityRegisterBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.ext.getViewModel
+import com.senierr.mortal.ext.showToast
 
 /**
  * 注册页面
@@ -141,10 +141,10 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>() {
 
     private fun initViewModel() {
         accountViewModel.registerResult.observe(this, {
-            ToastUtil.showShort(this, R.string.register_success)
+            showToast(R.string.register_success)
             finish()
         }, {
-            ToastUtil.showShort(this, it.message)
+            showToast(it.message)
         })
     }
 

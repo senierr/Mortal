@@ -66,8 +66,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), UpgradeService.Upgrade
     /**
      * 发现新版本
      */
-    override fun onNewVersion(versionInfo: VersionInfo) {
-        showNewVersionDialog(versionInfo)
+    override fun onNewVersion(versionInfo: VersionInfo?) {
+        versionInfo?.let {
+            showNewVersionDialog(it)
+        }
     }
 
     /**

@@ -12,12 +12,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.KeyboardUtil
-import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityLoginBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
+import com.senierr.mortal.ext.showToast
 import com.senierr.mortal.widget.CircularAnim
 import com.senierr.repository.entity.bmob.BmobException
 import com.senierr.repository.entity.bmob.UserInfo
@@ -174,9 +174,9 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     private fun showLoginFailure(exception: Exception) {
         loadingDialog.dismiss()
         if (exception is BmobException) {
-            ToastUtil.showLong(this, exception.error)
+            showToast(exception.error)
         } else {
-            ToastUtil.showLong(this, R.string.network_error)
+            showToast(R.string.network_error)
         }
     }
 

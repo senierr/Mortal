@@ -8,12 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.senierr.base.support.ui.BaseFragment
-import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.FragmentHomeBinding
 import com.senierr.mortal.domain.category.CategoryManagerActivity
 import com.senierr.mortal.domain.home.vm.HomeViewModel
 import com.senierr.mortal.ext.getViewModel
+import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.gank.Category
 
 /**
@@ -97,7 +97,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                 binding?.vpPage?.adapter?.notifyDataSetChanged()
             }
         }, {
-            context?.let { ToastUtil.showShort(it, R.string.network_error) }
+            context?.showToast(R.string.network_error)
         })
     }
 

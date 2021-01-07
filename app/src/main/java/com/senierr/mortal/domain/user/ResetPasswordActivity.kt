@@ -8,12 +8,12 @@ import android.view.Menu
 import android.view.MenuItem
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.RegexUtil
-import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityResetPasswordBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
+import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
 
 /**
@@ -127,10 +127,10 @@ class ResetPasswordActivity : BaseActivity<ActivityResetPasswordBinding>() {
             finish()
         })
         accountViewModel.resetPasswordResult.observe(this, {
-            ToastUtil.showShort(this, R.string.reset_password_success)
+            showToast(R.string.reset_password_success)
             finish()
         }, {
-            ToastUtil.showShort(this, it.message)
+            showToast(it.message)
         })
     }
 

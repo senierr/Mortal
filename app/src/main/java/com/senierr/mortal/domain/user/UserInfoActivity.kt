@@ -6,13 +6,13 @@ import android.view.LayoutInflater
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.RegexUtil
-import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityUserInfoBinding
 import com.senierr.mortal.domain.common.EditTextActivity
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.showImage
+import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
 
 /**
@@ -108,7 +108,7 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
             currentUserInfo = it
             renderUserInfo(it)
         }, {
-            ToastUtil.showShort(this, it.message)
+            showToast(it.message)
         })
     }
 

@@ -7,18 +7,19 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import com.bm.library.PhotoView
 import com.senierr.adapter.internal.ViewHolder
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ext.setGone
 import com.senierr.base.support.ui.BaseActivity
-import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityImagePreviewBinding
 import com.senierr.mortal.domain.common.vm.DownloadViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.showImage
+import com.senierr.mortal.ext.showToast
 import kotlinx.android.parcel.Parcelize
 import java.io.File
 
@@ -76,7 +77,7 @@ class ImagePreviewActivity : BaseActivity<ActivityImagePreviewBinding>() {
                 pvPreview?.showImage(url)
                 binding.btnSave.setGone(false)
                 binding.btnSave.click {
-                    ToastUtil.showShort(this@ImagePreviewActivity, R.string.saving)
+                    showToast(R.string.saving)
                     downloadViewModel.download(url, url, "${System.currentTimeMillis()}.jpg")
                 }
             } else if (file != null) {
@@ -114,9 +115,9 @@ class ImagePreviewActivity : BaseActivity<ActivityImagePreviewBinding>() {
 
     private fun initViewModel() {
         downloadViewModel.downloadResult.observe(this, {
-            ToastUtil.showLong(this, getString(R.string.format_download_success, it.absolutePath))
+            showToast(getString(R.string.format_download_success, it.absolutePath), Toast.LENGTH_LONG)
         }, {
-            ToastUtil.showLong(this, getString(R.string.format_download_success, it.message))
+            showToast(getString(R.string.format_download_success, it.message), Toast.LENGTH_LONG)
         })
     }
 }

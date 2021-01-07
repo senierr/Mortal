@@ -8,12 +8,12 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
-import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityAccountSafetyBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
+import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
 
 /**
@@ -66,10 +66,10 @@ class AccountSafetyActivity : BaseActivity<ActivityAccountSafetyBinding>() {
             finish()
         })
         accountViewModel.deleteResult.observe(this, {
-            ToastUtil.showShort(this, R.string.account_cancellation_success)
+            showToast(R.string.account_cancellation_success)
             finish()
         }, {
-            ToastUtil.showShort(this, it.message)
+            showToast(it.message)
         })
     }
 

@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
-import com.senierr.base.support.utils.ToastUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityAboutBinding
 import com.senierr.mortal.domain.common.WebViewActivity
+import com.senierr.mortal.ext.showToast
 
 /**
  * 关于页面
@@ -40,7 +40,7 @@ class AboutActivity : BaseActivity<ActivityAboutBinding>() {
         }
 
         binding.siPrivacyAndPolicy.click {
-            ToastUtil.showShort(this, R.string.none)
+            showToast(R.string.none)
         }
     }
 }

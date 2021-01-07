@@ -20,6 +20,7 @@ import com.senierr.mortal.domain.user.LoginActivity
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
+import com.senierr.mortal.ext.showToast
 import com.senierr.mortal.service.UpgradeService
 import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.entity.bmob.VersionInfo
@@ -38,13 +39,11 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>(), UpgradeService.U
 
     private var currentUserInfo: UserInfo? = null
 
-    private var isBindUpgradeService = false
     private var upgradeBinder: UpgradeService.UpgradeBinder? = null
     private val upgradeConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             upgradeBinder = service as UpgradeService.UpgradeBinder
             upgradeBinder?.setCallBack(this@SettingActivity)
-            upgradeBinder?.getService()?.checkNewVersion()
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -60,6 +59,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>(), UpgradeService.U
         super.onCreate(savedInstanceState)
         initView()
         initViewModel()
+        bindService(Intent(this, UpgradeService::class.java), upgradeConnection, BIND_AUTO_CREATE)
     }
 
     override fun onStart() {
@@ -68,17 +68,19 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>(), UpgradeService.U
     }
 
     override fun onDestroy() {
-        if (isBindUpgradeService) {
-            unbindService(upgradeConnection)
-        }
+        unbindService(upgradeConnection)
         super.onDestroy()
     }
 
     /**
      * 发现新版本
      */
-    override fun onNewVersion(versionInfo: VersionInfo) {
-        showNewVersionDialog(versionInfo)
+    override fun onNewVersion(versionInfo: VersionInfo?) {
+        if (versionInfo != null) {
+            showNewVersionDialog(versionInfo)
+        } else {
+            showToast(R.string.no_new_version)
+        }
     }
 
     /**
@@ -103,8 +105,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>(), UpgradeService.U
 
         binding.siCheckNewVersion.message = AppUtil.getVersionName(this, packageName)
         binding.siCheckNewVersion.click {
-            val intent = Intent(this, UpgradeService::class.java)
-            isBindUpgradeService = bindService(intent, upgradeConnection, BIND_AUTO_CREATE)
+            upgradeBinder?.getService()?.checkNewVersion()
         }
 
         binding.btnLogOut.click {

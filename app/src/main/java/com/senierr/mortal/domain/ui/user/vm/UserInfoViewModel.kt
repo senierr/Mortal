@@ -1,16 +1,14 @@
 package com.senierr.mortal.domain.ui.user.vm
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.senierr.mortal.support.utils.LogUtil
 import com.senierr.mortal.domain.ui.common.vm.StatefulLiveData
+import com.senierr.mortal.repository.Repository
 import com.senierr.mortal.repository.entity.bmob.UserInfo
-import com.senierr.mortal.repository.exception.NotLoggedException
-import com.senierr.mortal.repository.store.db.DatabaseManager
-import com.senierr.mortal.repository.store.remote.RemoteManager
-import com.senierr.mortal.repository.store.remote.api.UserApi
-import kotlinx.coroutines.Dispatchers
+import com.senierr.mortal.repository.service.api.IUserService
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  *
@@ -23,8 +21,7 @@ class UserInfoViewModel : ViewModel() {
     val loggedCacheUserInfo = StatefulLiveData<UserInfo>()
     val userinfo = StatefulLiveData<UserInfo>()
 
-    private val userApi by lazy { RemoteManager.getBmobHttp().create(UserApi::class.java) }
-    private val userInfoDao by lazy { DatabaseManager.getDatabase().getUserInfoDao() }
+    private val userService = Repository.getService<IUserService>()
 
     /**
      * 获取所有缓存用户信息
@@ -32,9 +29,7 @@ class UserInfoViewModel : ViewModel() {
     fun getAllCacheUserInfo() {
         viewModelScope.launch {
             try {
-                val caches = withContext(Dispatchers.IO) {
-                    return@withContext userInfoDao.getAll()
-                }
+                val caches = userService.getAllCacheUserInfo()
                 allCacheUserInfo.setValue(caches)
             } catch (e: Exception) {
                 allCacheUserInfo.setException(e)
@@ -48,15 +43,10 @@ class UserInfoViewModel : ViewModel() {
     fun getLoggedCacheUserInfo() {
         viewModelScope.launch {
             try {
-                val cacheUserInfo = withContext(Dispatchers.IO) {
-                    val caches = userInfoDao.getAll()
-                    val result = caches.firstOrNull {
-                        return@firstOrNull it.logged
-                    }
-                    return@withContext result?: throw NotLoggedException()
-                }
+                val cacheUserInfo = userService.getLoggedCacheUserInfo()
                 loggedCacheUserInfo.setValue(cacheUserInfo)
             } catch (e: Exception) {
+                LogUtil.logE(Log.getStackTraceString(e))
                 loggedCacheUserInfo.setException(e)
             }
         }
@@ -68,20 +58,7 @@ class UserInfoViewModel : ViewModel() {
     fun fetchUserInfo(objectId: String) {
         viewModelScope.launch {
             try {
-                val userInfo = withContext(Dispatchers.IO) {
-                    val cache = userInfoDao.get(objectId)
-                    val userInfo = userApi.getUserInfo(objectId)
-                    cache?.let {
-                        // 保存密码
-                        userInfo.password = it.password
-                        // 保存SessionToken
-                        userInfo.sessionToken = it.sessionToken
-                        // 保存登录状态
-                        userInfo.logged = it.logged
-                    }
-                    userInfoDao.insertOrReplace(userInfo)
-                    return@withContext userInfo
-                }
+                val userInfo = userService.fetchUserInfo(objectId)
                 userinfo.setValue(userInfo)
             } catch (e: Exception) {
                 userinfo.setException(e)
@@ -95,18 +72,13 @@ class UserInfoViewModel : ViewModel() {
     fun updateNickname(userInfo: UserInfo, newNickname: String) {
         viewModelScope.launch {
             try {
-                val result = withContext(Dispatchers.IO) {
-                    val response = userApi.updateInfo(
-                        userInfo.objectId,
-                        userInfo.sessionToken,
-                        mutableMapOf(Pair("nickname", newNickname))
-                    )
-                    return@withContext response.isSuccessful()
-                }
-                if (result) {
-                    userInfo.nickname = newNickname
-                    userinfo.setValue(userInfo)
-                }
+                userService.updateUserInfo(
+                    userInfo.objectId,
+                    userInfo.sessionToken,
+                    mutableMapOf(Pair("nickname", newNickname))
+                )
+                userInfo.nickname = newNickname
+                userinfo.setValue(userInfo)
             } catch (e: Exception) {
                 userinfo.setException(e)
             }
@@ -119,18 +91,13 @@ class UserInfoViewModel : ViewModel() {
     fun updateEmail(userInfo: UserInfo, newEmail: String) {
         viewModelScope.launch {
             try {
-                val result = withContext(Dispatchers.IO) {
-                    val response = userApi.updateInfo(
-                        userInfo.objectId,
-                        userInfo.sessionToken,
-                        mutableMapOf(Pair("email", newEmail))
-                    )
-                    return@withContext response.isSuccessful()
-                }
-                if (result) {
-                    userInfo.email = newEmail
-                    userinfo.setValue(userInfo)
-                }
+                userService.updateUserInfo(
+                    userInfo.objectId,
+                    userInfo.sessionToken,
+                    mutableMapOf(Pair("email", newEmail))
+                )
+                userInfo.email = newEmail
+                userinfo.setValue(userInfo)
             } catch (e: Exception) {
                 userinfo.setException(e)
             }

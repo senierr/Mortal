@@ -1,13 +1,19 @@
 package com.senierr.mortal.repository
 
 import android.app.Application
-import com.senierr.mortal.repository.store.db.DatabaseManager
-import com.senierr.mortal.repository.store.disk.DiskManager
-import com.senierr.mortal.repository.store.remote.RemoteManager
-import com.senierr.mortal.repository.store.remote.progress.ProgressBus
+import com.senierr.mortal.repository.db.DatabaseManager
+import com.senierr.mortal.repository.disk.DiskManager
+import com.senierr.mortal.repository.remote.RemoteManager
+import com.senierr.mortal.repository.remote.progress.ProgressBus
+import com.senierr.mortal.repository.service.api.ICommonService
 import com.senierr.mortal.repository.service.api.IGankService
+import com.senierr.mortal.repository.service.api.ISettingService
+import com.senierr.mortal.repository.service.api.IUserService
+import com.senierr.mortal.repository.service.impl.CommonService
 import com.senierr.mortal.repository.service.impl.GankService
-import com.senierr.mortal.repository.store.sp.SPManager
+import com.senierr.mortal.repository.service.impl.SettingService
+import com.senierr.mortal.repository.service.impl.UserService
+import com.senierr.mortal.repository.sp.SPManager
 
 /**
  * 数据仓库
@@ -40,6 +46,9 @@ object Repository {
      */
     inline fun <reified T> getService(): T = when (T::class.java) {
         IGankService::class.java -> GankService() as T
+        IUserService::class.java -> UserService() as T
+        ICommonService::class.java -> CommonService() as T
+        ISettingService::class.java -> SettingService() as T
         else -> throw IllegalArgumentException("Can not find ${T::class.java.simpleName}!")
     }
 

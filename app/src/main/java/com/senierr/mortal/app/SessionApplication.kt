@@ -1,23 +1,26 @@
 package com.senierr.mortal.app
 
-import androidx.multidex.MultiDexApplication
+import android.content.Context
+import androidx.multidex.MultiDex
+import com.senierr.mortal.support.ui.BaseApplication
 import com.senierr.mortal.repository.Repository
-import com.senierr.mortal.support.utils.ActivityUtil
-import com.senierr.mortal.support.utils.LogUtil
 
 /**
  *
  * @author zhouchunjie
  * @date 2019/7/5 22:20
  */
-class SessionApplication : MultiDexApplication() {
+class SessionApplication : BaseApplication() {
+
+    override fun isDebug(): Boolean = true
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
+    }
 
     override fun onCreate() {
         super.onCreate()
-        // 初始化工具类
-        ActivityUtil.bindToApplication(this)
-        LogUtil.isDebug = true
-        LogUtil.tag = javaClass.simpleName
-        Repository.initialize(this, true)
+        Repository.initialize(this, isDebug())
     }
 }

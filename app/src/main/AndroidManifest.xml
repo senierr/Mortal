@@ -20,7 +20,7 @@
         tools:targetApi="n">
 
         <activity
-            android:name="com.senierr.mortal.domain.ui.splash.SplashActivity"
+            android:name=".domain.splash.SplashActivity"
             android:theme="@style/AppTheme.SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,40 +31,40 @@
         </activity>
 
         <activity
-            android:name="com.senierr.mortal.domain.ui.main.MainActivity"
+            android:name=".domain.main.MainActivity"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:theme="@style/AppTheme.LoginTheme"
-            android:name="com.senierr.mortal.domain.ui.user.LoginActivity" />
+            android:name=".domain.user.LoginActivity" />
 
-        <activity android:name="com.senierr.mortal.domain.ui.common.WebViewActivity" />
+        <activity android:name=".domain.common.WebViewActivity" />
 
         <activity
             android:theme="@style/AppTheme.ImagePreviewTheme"
-            android:name="com.senierr.mortal.domain.ui.common.ImagePreviewActivity" />
+            android:name=".domain.common.ImagePreviewActivity" />
 
-        <activity android:name="com.senierr.mortal.domain.ui.user.UserInfoActivity" />
+        <activity android:name=".domain.user.UserInfoActivity" />
 
-        <activity android:name="com.senierr.mortal.domain.ui.category.CategoryManagerActivity" />
+        <activity android:name=".domain.category.CategoryManagerActivity" />
 
-        <activity android:name="com.senierr.mortal.domain.ui.setting.SettingActivity" />
+        <activity android:name=".domain.setting.SettingActivity" />
 
-        <activity android:name="com.senierr.mortal.domain.ui.setting.AboutActivity" />
+        <activity android:name=".domain.setting.AboutActivity" />
 
-        <activity android:name="com.senierr.mortal.domain.ui.user.AccountSafetyActivity" />
+        <activity android:name=".domain.user.AccountSafetyActivity" />
 
-        <activity android:name="com.senierr.mortal.domain.ui.common.EditTextActivity" />
+        <activity android:name=".domain.common.EditTextActivity" />
 
-        <activity android:name="com.senierr.mortal.domain.ui.user.ResetPasswordActivity" />
+        <activity android:name=".domain.user.ResetPasswordActivity" />
 
-        <activity android:name="com.senierr.mortal.domain.ui.user.RegisterActivity" />
-
-
+        <activity android:name=".domain.user.RegisterActivity" />
 
 
 
-        <service android:name="com.senierr.mortal.domain.service.UpgradeService"/>
+
+
+        <service android:name=".service.UpgradeService"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

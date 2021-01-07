@@ -3,11 +3,11 @@ package com.senierr.mortal.domain.user.vm
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.senierr.mortal.support.utils.LogUtil
+import com.senierr.base.support.utils.LogUtil
 import com.senierr.mortal.domain.common.vm.StatefulLiveData
-import com.senierr.mortal.repository.Repository
-import com.senierr.mortal.repository.entity.bmob.UserInfo
-import com.senierr.mortal.repository.service.api.IUserService
+import com.senierr.repository.Repository
+import com.senierr.repository.entity.bmob.UserInfo
+import com.senierr.repository.service.api.IUserService
 import kotlinx.coroutines.launch
 
 /**

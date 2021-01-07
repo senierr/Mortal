@@ -2,8 +2,8 @@ package com.senierr.mortal.app
 
 import android.content.Context
 import androidx.multidex.MultiDex
-import com.senierr.mortal.support.ui.BaseApplication
-import com.senierr.mortal.repository.Repository
+import com.senierr.base.support.ui.BaseApplication
+import com.senierr.repository.Repository
 
 /**
  *

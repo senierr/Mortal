@@ -2,7 +2,7 @@ package com.senierr.mortal.ext
 
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.button.MaterialButton
-import com.senierr.mortal.support.ext.click
+import com.senierr.base.support.ext.click
 import com.senierr.mortal.R
 import com.senierr.mortal.widget.MultiStateView
 

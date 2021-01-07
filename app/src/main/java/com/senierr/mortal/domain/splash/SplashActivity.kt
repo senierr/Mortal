@@ -3,8 +3,8 @@ package com.senierr.mortal.domain.splash
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.lifecycle.lifecycleScope
-import com.senierr.mortal.support.ext.click
-import com.senierr.mortal.support.ui.BaseActivity
+import com.senierr.base.support.ext.click
+import com.senierr.base.support.ui.BaseActivity
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivitySplashBinding
 import com.senierr.mortal.domain.main.MainActivity

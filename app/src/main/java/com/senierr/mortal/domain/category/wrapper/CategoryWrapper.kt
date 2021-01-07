@@ -4,7 +4,7 @@ import android.widget.TextView
 import com.senierr.adapter.internal.ViewHolder
 import com.senierr.adapter.internal.ViewHolderWrapper
 import com.senierr.mortal.R
-import com.senierr.mortal.repository.entity.gank.Category
+import com.senierr.repository.entity.gank.Category
 
 /**
  * 分类标签管理适配器

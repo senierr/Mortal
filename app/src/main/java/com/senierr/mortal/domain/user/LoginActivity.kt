@@ -9,9 +9,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.senierr.mortal.support.ext.click
-import com.senierr.mortal.support.ui.BaseActivity
-import com.senierr.mortal.support.utils.KeyboardUtil
+import com.senierr.base.support.ext.click
+import com.senierr.base.support.ui.BaseActivity
+import com.senierr.base.support.utils.KeyboardUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityLoginBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
@@ -19,8 +19,8 @@ import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.mortal.widget.CircularAnim
-import com.senierr.mortal.repository.entity.bmob.BmobException
-import com.senierr.mortal.repository.entity.bmob.UserInfo
+import com.senierr.repository.entity.bmob.BmobException
+import com.senierr.repository.entity.bmob.UserInfo
 
 /**
  * 登录页面

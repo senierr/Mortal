@@ -11,9 +11,9 @@ import android.widget.Toast
 import androidx.annotation.DrawableRes
 import com.bm.library.PhotoView
 import com.senierr.adapter.internal.ViewHolder
-import com.senierr.mortal.support.ext.click
-import com.senierr.mortal.support.ext.setGone
-import com.senierr.mortal.support.ui.BaseActivity
+import com.senierr.base.support.ext.click
+import com.senierr.base.support.ext.setGone
+import com.senierr.base.support.ui.BaseActivity
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityImagePreviewBinding
 import com.senierr.mortal.domain.common.vm.DownloadViewModel

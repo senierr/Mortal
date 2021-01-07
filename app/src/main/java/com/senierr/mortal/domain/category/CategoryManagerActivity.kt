@@ -6,15 +6,15 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.recyclerview.widget.GridLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
-import com.senierr.mortal.support.ui.BaseActivity
-import com.senierr.mortal.support.ui.recyclerview.GridItemDecoration
-import com.senierr.mortal.support.utils.ScreenUtil
+import com.senierr.base.support.ui.BaseActivity
+import com.senierr.base.support.ui.recyclerview.GridItemDecoration
+import com.senierr.base.support.utils.ScreenUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityCategoryManagerBinding
 import com.senierr.mortal.domain.category.vm.CategoryViewModel
 import com.senierr.mortal.domain.category.wrapper.CategoryWrapper
 import com.senierr.mortal.ext.*
-import com.senierr.mortal.repository.entity.gank.Category
+import com.senierr.repository.entity.gank.Category
 
 /**
  * 标签管理页面

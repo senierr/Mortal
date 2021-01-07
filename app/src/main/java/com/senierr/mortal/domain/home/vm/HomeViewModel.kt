@@ -3,9 +3,9 @@ package com.senierr.mortal.domain.home.vm
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.senierr.mortal.domain.common.vm.StatefulLiveData
-import com.senierr.mortal.repository.Repository
-import com.senierr.mortal.repository.entity.gank.Category
-import com.senierr.mortal.repository.service.api.IGankService
+import com.senierr.repository.Repository
+import com.senierr.repository.entity.gank.Category
+import com.senierr.repository.service.api.IGankService
 import kotlinx.coroutines.launch
 
 /**

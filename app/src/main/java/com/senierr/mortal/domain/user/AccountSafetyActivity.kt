@@ -6,15 +6,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.senierr.mortal.support.ext.click
-import com.senierr.mortal.support.ui.BaseActivity
+import com.senierr.base.support.ext.click
+import com.senierr.base.support.ui.BaseActivity
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityAccountSafetyBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.showToast
-import com.senierr.mortal.repository.entity.bmob.UserInfo
+import com.senierr.repository.entity.bmob.UserInfo
 
 /**
  * 设置页面

@@ -6,15 +6,15 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import com.senierr.mortal.support.ui.BaseActivity
-import com.senierr.mortal.support.utils.RegexUtil
+import com.senierr.base.support.ui.BaseActivity
+import com.senierr.base.support.utils.RegexUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityResetPasswordBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.showToast
-import com.senierr.mortal.repository.entity.bmob.UserInfo
+import com.senierr.repository.entity.bmob.UserInfo
 
 /**
  * 重置密码页面

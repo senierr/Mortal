@@ -2,9 +2,13 @@ package com.senierr.mortal.domain.setting.vm
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.senierr.mortal.support.utils.FileUtil
+import com.senierr.base.support.utils.FileUtil
 import com.senierr.mortal.domain.common.vm.StatefulLiveData
+import com.senierr.repository.Repository
+import com.senierr.repository.entity.gank.Category
+import com.senierr.repository.service.api.IGankService
 import kotlinx.coroutines.launch
 
 /**

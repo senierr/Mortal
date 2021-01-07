@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.work.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.senierr.mortal.repository.Repository
-import com.senierr.mortal.repository.service.api.IGankService
+import com.senierr.repository.Repository
+import com.senierr.repository.service.api.IGankService
 import kotlinx.coroutines.coroutineScope
 import java.util.concurrent.TimeUnit
 

@@ -1,16 +1,20 @@
 package com.senierr.mortal.service
 
+import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
 import androidx.lifecycle.*
-import com.senierr.mortal.support.utils.LogUtil
+import com.senierr.base.support.utils.LogUtil
 import com.senierr.mortal.notification.NotificationManager
-import com.senierr.mortal.repository.Repository
-import com.senierr.mortal.repository.entity.bmob.VersionInfo
-import com.senierr.mortal.repository.service.api.ICommonService
-import com.senierr.mortal.repository.service.api.ISettingService
+import com.senierr.repository.Repository
+import com.senierr.repository.entity.bmob.VersionInfo
+import com.senierr.repository.service.api.ICommonService
+import com.senierr.repository.service.api.ISettingService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.io.File
 

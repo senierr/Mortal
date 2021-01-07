@@ -79,7 +79,7 @@ object FileUtil {
     fun getFormatSize(size: Double): String {
         val kiloByte = size / 1024
         if (kiloByte < 1) {
-            return "0K"
+            return "0B"
         }
 
         val megaByte = kiloByte / 1024

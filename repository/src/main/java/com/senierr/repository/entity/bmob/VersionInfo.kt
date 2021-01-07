@@ -1,8 +1,12 @@
 package com.senierr.repository.entity.bmob
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 /**
  * 版本信息
  */
+@Parcelize
 data class VersionInfo(
     var objectId: String = "",
     var platform: String = "",  // android/ios
@@ -14,4 +18,4 @@ data class VersionInfo(
     var changeLog: String = "",
     var createdAt: String = "",
     var updatedAt: String = ""
-)
+) : Parcelable

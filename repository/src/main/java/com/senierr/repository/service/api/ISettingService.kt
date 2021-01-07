@@ -21,4 +21,14 @@ interface ISettingService {
      * @param versionName 忽略的版本
      */
     suspend fun ignoreUpdateVersion(versionName: String): Boolean
+
+    /**
+     * 获取本地缓存大小
+     */
+    suspend fun getLocalCacheSize(): Long
+
+    /**
+     * 清除本地缓存
+     */
+    suspend fun clearLocalCache()
 }

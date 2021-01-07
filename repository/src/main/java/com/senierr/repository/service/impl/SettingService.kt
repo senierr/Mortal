@@ -1,7 +1,9 @@
 package com.senierr.repository.service.impl
 
+import android.app.Application
 import com.google.gson.Gson
 import com.senierr.base.support.utils.AppUtil
+import com.senierr.base.support.utils.FileUtil
 import com.senierr.repository.Repository
 import com.senierr.repository.entity.bmob.VersionInfo
 import com.senierr.repository.remote.RemoteManager
@@ -64,5 +66,21 @@ class SettingService : ISettingService {
             if (diff != 0) return diff > 0
         }
         return false
+    }
+
+    override suspend fun getLocalCacheSize(): Long {
+        return withContext(Dispatchers.IO) {
+            val cacheDirSize = FileUtil.getFileSize(Repository.getApplication().cacheDir)
+            val externalCacheDirSize = FileUtil.getFileSize(Repository.getApplication().externalCacheDir)
+            return@withContext cacheDirSize + externalCacheDirSize
+        }
+    }
+
+    override suspend fun clearLocalCache() {
+        return withContext(Dispatchers.IO) {
+            FileUtil.deleteFile(Repository.getApplication().cacheDir)
+            FileUtil.deleteFile(Repository.getApplication().externalCacheDir)
+            return@withContext
+        }
     }
 }

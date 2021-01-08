@@ -1,5 +1,7 @@
 package com.senierr.repository.remote.interceptor
 
+import android.content.Intent
+import com.senierr.repository.Repository
 import com.senierr.repository.remote.progress.*
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -29,6 +31,11 @@ class ProgressInterceptor : Interceptor {
                 .method(original.method(),
                     ProgressRequestBody(originalRequestBody, object : OnProgressListener {
                         override fun onProgress(totalSize: Long, currentSize: Long, percent: Int) {
+                            Repository.getApplication()
+                                .sendBroadcast(Intent(UpgradeReceiver.ACTION_UPGRADE_RECEIVER).apply {
+                                putExtra(KEY_ACTION, ACTION_DOWNLOAD_PROGRESS)
+                                putExtra(KEY_DOWNLOAD_PROGRESS, it.percent)
+                            })
                             ProgressBus.uploadProgress.postValue(Progress(uploadTag, totalSize, currentSize, percent))
                         }
                     })

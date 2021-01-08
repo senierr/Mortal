@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'kotlin-android-extensions'  // 暂时使用它的序列化，1.4.X时弃用
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -76,8 +76,13 @@ dependencies {
     // 语言
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$rootProject.ext.kotlin"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.ext.kotlinx_coroutines_android"
-    // android
+    // DEX
     implementation "androidx.multidex:multidex:$rootProject.ext.multidex"
+    // 动态权限
+    implementation "com.senierr.permission:library:$rootProject.ext.permission"
+    // 后台任务
+    implementation "androidx.work:work-runtime-ktx:$rootProject.ext.work_runtime_ktx"
+    // 视图
     implementation "androidx.appcompat:appcompat:$rootProject.ext.appcompat"
     implementation "com.google.android.material:material:$rootProject.ext.material"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.ext.constraintlayout"
@@ -85,22 +90,15 @@ dependencies {
     implementation "androidx.viewpager2:viewpager2:$rootProject.ext.viewpager2"
     implementation "androidx.recyclerview:recyclerview:$rootProject.ext.recyclerview"
     implementation "androidx.cardview:cardview:$rootProject.ext.cardview"
-    // KTX
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.ext.lifecycle"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$rootProject.ext.lifecycle"
-    // 权限
-    implementation "com.senierr.permission:library:$rootProject.ext.permission"
-    // 视图
     implementation "com.github.bumptech.glide:glide:$rootProject.ext.glide"
-    kapt 'com.github.bumptech.glide:compiler:4.11.0'
-    implementation 'com.caverock:androidsvg:1.2.1'
     implementation "com.senierr.adapter:multitype:$rootProject.ext.multitype"
     implementation "com.youth.banner:banner:$rootProject.ext.banner"
     implementation "com.nex3z:flow-layout:$rootProject.ext.flow_layout"
     implementation "com.airbnb.android:lottie:$rootProject.ext.lottie"
     implementation "com.bm.photoview:library:$rootProject.ext.photoview"
-    // 后台任务
-    implementation "androidx.work:work-runtime-ktx:$rootProject.ext.worker_manager"
+    // KTX
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.ext.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$rootProject.ext.lifecycle"
     // 内存泄露
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
 }

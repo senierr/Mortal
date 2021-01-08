@@ -20,7 +20,7 @@ import com.senierr.mortal.domain.common.vm.DownloadViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.showImage
 import com.senierr.mortal.ext.showToast
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.io.File
 
 /**

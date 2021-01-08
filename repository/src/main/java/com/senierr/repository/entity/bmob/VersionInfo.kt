@@ -1,7 +1,7 @@
 package com.senierr.repository.entity.bmob
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * 版本信息

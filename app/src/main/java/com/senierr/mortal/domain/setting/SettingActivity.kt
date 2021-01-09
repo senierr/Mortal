@@ -21,6 +21,7 @@ import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getAndroidViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.showToast
+import com.senierr.mortal.notification.NotificationManager
 import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.entity.bmob.VersionInfo
 
@@ -89,20 +90,32 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
             binding.btnLogOut.setGone(true)
         })
         settingViewModel.cacheSize.observe(this) {
-            it.doOnSuccess { cacheSize ->
-                binding.siClearCache.message = FileUtil.getFormatSize(cacheSize?.toDouble() ?: 0.0)
+            it.data?.let { cacheSize ->
+                binding.siClearCache.message = FileUtil.getFormatSize(cacheSize.toDouble())
             }
         }
         settingViewModel.newVersionInfo.observe(this) {
-            it.doOnSuccess { versionInfo ->
-                if (versionInfo != null) {
-                    showNewVersionDialog(versionInfo)
-                } else {
+            if (it.isSuccess) {
+                val versionInfo = it.data
+                if (versionInfo == null) {
                     showToast(R.string.no_new_version)
+                } else {
+                    showNewVersionDialog(versionInfo)
                 }
-            }
-            it.doOnError {
+            } else {
                 showToast(R.string.network_error)
+            }
+        }
+        settingViewModel.apkDownloadProgress.observe(this) {
+            it.data?.percent?.let { percent ->
+                NotificationManager.sendUpdateNotification(this, percent)
+            }
+        }
+        settingViewModel.apkDownloadCompleted.observe(this) {
+            it.data?.let { file ->
+                // 移除下载通知
+                NotificationManager.cancel(this, NotificationManager.NOTIFY_ID_UPDATE)
+                AppUtil.installApk(this, "${this.packageName}.provider", file)
             }
         }
         accountViewModel.logoutResult.observe(this) {

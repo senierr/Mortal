@@ -20,12 +20,4 @@ data class StatefulData<T>(
             return StatefulData(false, null, throwable)
         }
     }
-
-    fun doOnSuccess(success: (data: T?) -> Unit) {
-        if (isSuccess) success.invoke(data)
-    }
-
-    fun doOnError(error: (throwable: Throwable?) -> Unit) {
-        if (!isSuccess) error.invoke(throwable)
-    }
 }

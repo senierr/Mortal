@@ -27,27 +27,27 @@ class StatefulLiveData<T> {
         liveData.value = StatefulData(state = value)
     }
 
-    fun postState(value: Int) {
-        liveData.postValue(StatefulData(state = value))
-    }
+//    fun postState(value: Int) {
+//        liveData.postValue(StatefulData(state = value))
+//    }
 
     @MainThread
     fun setValue(value: T) {
         liveData.value = StatefulData(data = value)
     }
 
-    fun postValue(value: T) {
-        liveData.postValue(StatefulData(data = value))
-    }
+//    fun postValue(value: T) {
+//        liveData.postValue(StatefulData(data = value))
+//    }
 
     @MainThread
     fun setException(value: Exception) {
         liveData.value = StatefulData(exception = value)
     }
 
-    fun postException(value: Exception) {
-        liveData.postValue(StatefulData(exception = value))
-    }
+//    fun postException(value: Exception) {
+//        liveData.postValue(StatefulData(exception = value))
+//    }
 
     @MainThread
     fun observe(

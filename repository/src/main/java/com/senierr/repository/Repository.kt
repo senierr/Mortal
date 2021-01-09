@@ -1,11 +1,9 @@
 package com.senierr.repository
 
 import android.app.Application
-import android.content.Context
 import com.senierr.repository.db.DatabaseManager
 import com.senierr.repository.disk.DiskManager
 import com.senierr.repository.remote.RemoteManager
-import com.senierr.repository.remote.progress.ProgressBus
 import com.senierr.repository.service.api.ICommonService
 import com.senierr.repository.service.api.IGankService
 import com.senierr.repository.service.api.ISettingService
@@ -52,9 +50,4 @@ object Repository {
         ISettingService::class.java -> SettingService() as T
         else -> throw IllegalArgumentException("Can not find ${T::class.java.simpleName}!")
     }
-
-    /**
-     * 获取进度
-     */
-    fun getProgressBus(): ProgressBus = ProgressBus
 }

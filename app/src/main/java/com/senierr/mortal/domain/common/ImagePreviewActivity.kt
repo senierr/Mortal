@@ -78,7 +78,7 @@ class ImagePreviewActivity : BaseActivity<ActivityImagePreviewBinding>() {
                 binding.btnSave.setGone(false)
                 binding.btnSave.click {
                     showToast(R.string.saving)
-                    downloadViewModel.download(url, url, "${System.currentTimeMillis()}.jpg")
+                    downloadViewModel.download(url, "${System.currentTimeMillis()}.jpg")
                 }
             } else if (file != null) {
                 pvPreview?.showImage(file)

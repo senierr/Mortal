@@ -2,7 +2,6 @@ package com.senierr.mortal.domain.setting
 
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
@@ -22,8 +21,6 @@ import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getAndroidViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.showToast
-import com.senierr.mortal.receiver.UpgradeReceiver
-import com.senierr.mortal.service.UpgradeService
 import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.entity.bmob.VersionInfo
 
@@ -41,15 +38,6 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
 
     private var currentUserInfo: UserInfo? = null
 
-    private val upgradeReceiver = object : UpgradeReceiver(this@SettingActivity) {
-        override fun onNewVersion(versionInfo: VersionInfo?) {
-            super.onNewVersion(versionInfo)
-            if (versionInfo == null) {
-                showToast(R.string.no_new_version)
-            }
-        }
-    }
-
     override fun createViewBinding(layoutInflater: LayoutInflater): ActivitySettingBinding {
         return ActivitySettingBinding.inflate(layoutInflater)
     }
@@ -58,18 +46,12 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
         super.onCreate(savedInstanceState)
         initView()
         initViewModel()
-        registerReceiver(upgradeReceiver, IntentFilter(UpgradeReceiver.ACTION_UPGRADE_RECEIVER))
         settingViewModel.getCacheSize()
     }
 
     override fun onStart() {
         super.onStart()
         userInfoViewModel.getLoggedCacheUserInfo()
-    }
-
-    override fun onDestroy() {
-        unregisterReceiver(upgradeReceiver)
-        super.onDestroy()
     }
 
     private fun initView() {
@@ -87,7 +69,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
 
         binding.siCheckNewVersion.message = AppUtil.getVersionName(this, packageName)
         binding.siCheckNewVersion.click {
-            UpgradeService.checkNewVersion(this)
+            settingViewModel.checkNewVersion()
         }
 
         binding.siAbout.click {
@@ -106,12 +88,26 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
         }, {
             binding.btnLogOut.setGone(true)
         })
+        settingViewModel.cacheSize.observe(this) {
+            it.doOnSuccess { cacheSize ->
+                binding.siClearCache.message = FileUtil.getFormatSize(cacheSize?.toDouble() ?: 0.0)
+            }
+        }
+        settingViewModel.newVersionInfo.observe(this) {
+            it.doOnSuccess { versionInfo ->
+                if (versionInfo != null) {
+                    showNewVersionDialog(versionInfo)
+                } else {
+                    showToast(R.string.no_new_version)
+                }
+            }
+            it.doOnError {
+                showToast(R.string.network_error)
+            }
+        }
         accountViewModel.logoutResult.observe(this) {
             LoginActivity.start(this)
             finish()
-        }
-        settingViewModel.cacheSize.observe(this) {
-            binding.siClearCache.message = FileUtil.getFormatSize(it.toDouble())
         }
     }
 
@@ -137,6 +133,35 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
                 setCanceledOnTouchOutside(false)
                 getButton(DialogInterface.BUTTON_NEGATIVE)
                     .setTextColor(ContextCompat.getColor(this@SettingActivity, R.color.text_hint))
+            }
+    }
+
+    /**
+     * 显示新版本提示
+     */
+    private fun showNewVersionDialog(versionInfo: VersionInfo) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.discover_new_version)
+            .setMessage(versionInfo.changeLog.replace("\\n", "\n")) // 传输时\n被转义成\\n了
+            .setPositiveButton(R.string.upgrade_now) { dialog, _ ->
+                settingViewModel.downloadApk(versionInfo)
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.upgrade_later) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setNeutralButton(R.string.ignore_this_version) { dialog, _ ->
+                settingViewModel.ignoreThisVersion(versionInfo)
+                dialog.dismiss()
+            }
+            .create()
+            .apply {
+                show()
+                setCanceledOnTouchOutside(false)
+                getButton(DialogInterface.BUTTON_NEGATIVE)
+                    .setTextColor(ContextCompat.getColor(context, R.color.text_hint))
+                getButton(DialogInterface.BUTTON_NEUTRAL)
+                    .setTextColor(ContextCompat.getColor(context, R.color.text_warn))
             }
     }
 }

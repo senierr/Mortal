@@ -50,7 +50,7 @@ class ProgressRequestBody(
             val curTime = System.currentTimeMillis()
             if (curTime - lastRefreshTime >= REFRESH_MIN_INTERVAL || bytesWritten == contentLength) {
                 val percent = if (contentLength <= 0) 100 else (bytesWritten * 100 / contentLength).toInt()
-                listener.onProgress(contentLength, bytesWritten, percent)
+                listener.onProgress(Progress(contentLength, bytesWritten, percent))
                 lastRefreshTime = System.currentTimeMillis()
             }
         }

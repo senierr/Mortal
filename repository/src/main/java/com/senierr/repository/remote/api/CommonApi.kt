@@ -1,12 +1,10 @@
 package com.senierr.repository.remote.api
 
-import com.senierr.repository.remote.interceptor.ProgressInterceptor
+import com.senierr.repository.entity.bmob.BmobResponse
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Streaming
-import retrofit2.http.Url
+import retrofit2.http.*
 
 /**
  * 公共模块API
@@ -17,14 +15,19 @@ import retrofit2.http.Url
 interface CommonApi {
 
     /**
+     * 上传文件
+     *
+     * @param url 上传链接
+     */
+    @POST("../")
+    suspend fun uploadFile(@Body requestBody: RequestBody): BmobResponse
+
+    /**
      * 下载文件
      *
      * @param url 下载链接
      */
     @Streaming
     @GET
-    fun downloadFile(
-        @Url url: String?,
-        @Header(ProgressInterceptor.HEADER_TAG_DOWNLOAD) tag: String
-    ): Call<ResponseBody?>
+    fun downloadFile(@Url url: String?): Call<ResponseBody?>
 }

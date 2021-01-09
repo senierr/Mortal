@@ -11,7 +11,6 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class Progress(
-    val tag: String,        // 标签
     val totalSize: Long,    // 文件总大小
     val currentSize: Long,  // 当前下载大小
     val percent: Int        // 当前进度

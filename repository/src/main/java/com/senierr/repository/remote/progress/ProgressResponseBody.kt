@@ -52,7 +52,7 @@ class ProgressResponseBody(
             val curTime = System.currentTimeMillis()
             if (curTime - lastRefreshTime >= REFRESH_MIN_INTERVAL || totalBytesRead == contentLength) {
                 val percent = if (contentLength <= 0) 100 else (totalBytesRead * 100 / contentLength).toInt()
-                listener.onProgress(contentLength, totalBytesRead, percent)
+                listener.onProgress(Progress(contentLength, totalBytesRead, percent))
                 lastRefreshTime = System.currentTimeMillis()
             }
             return bytesRead

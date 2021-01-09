@@ -1,5 +1,6 @@
 package com.senierr.repository.service.api
 
+import com.senierr.repository.remote.progress.OnProgressListener
 import java.io.File
 
 /**
@@ -11,7 +12,16 @@ import java.io.File
 interface ICommonService {
 
     /**
+     * 上传
+     */
+    suspend fun uploadFile(file: File, onUploadListener: OnProgressListener): Boolean
+
+    /**
      * 下载
      */
-    suspend fun downloadFile(tag: String, url: String, destName: String, md5: String = ""): File
+    suspend fun downloadFile(
+        url: String,
+        destName: String, md5: String = "",
+        onDownloadListener: OnProgressListener
+    ): File
 }

@@ -2,7 +2,6 @@ package com.senierr.mortal.domain.main
 
 import android.content.*
 import android.os.Bundle
-import android.os.IBinder
 import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -11,16 +10,15 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.senierr.base.support.ui.BaseActivity
-import com.senierr.base.support.utils.AppUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityMainBinding
 import com.senierr.mortal.domain.home.HomeFragment
 import com.senierr.mortal.domain.recommend.RecommendFragment
+import com.senierr.mortal.domain.setting.vm.SettingViewModel
 import com.senierr.mortal.domain.user.MeFragment
-import com.senierr.mortal.receiver.UpgradeReceiver
-import com.senierr.mortal.service.UpgradeService
+import com.senierr.mortal.ext.getAndroidViewModel
+import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.VersionInfo
-import java.io.File
 
 /**
  * 主页面
@@ -30,13 +28,13 @@ import java.io.File
  */
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 
+    private val settingViewModel by getAndroidViewModel<SettingViewModel>()
+
     companion object {
         fun start(context: Context) {
             context.startActivity(Intent(context, MainActivity::class.java))
         }
     }
-
-    private val upgradeReceiver = UpgradeReceiver(this@MainActivity)
 
     override fun createViewBinding(layoutInflater: LayoutInflater): ActivityMainBinding {
         return ActivityMainBinding.inflate(layoutInflater)
@@ -45,13 +43,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initView()
-        registerReceiver(upgradeReceiver, IntentFilter(UpgradeReceiver.ACTION_UPGRADE_RECEIVER))
-        UpgradeService.checkNewVersion(this)
-    }
-
-    override fun onDestroy() {
-        unregisterReceiver(upgradeReceiver)
-        super.onDestroy()
+        initViewModel()
+        settingViewModel.checkNewVersion()
     }
 
     private fun initView() {
@@ -84,6 +77,48 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         badgeDrawable?.backgroundColor = ContextCompat.getColor(this, R.color.app_warn)
         badgeDrawable?.maxCharacterCount = 2
         badgeDrawable?.number = 999
+    }
+
+    private fun initViewModel() {
+        settingViewModel.newVersionInfo.observe(this) {
+            it.doOnSuccess { versionInfo ->
+                if (versionInfo != null) {
+                    showNewVersionDialog(versionInfo)
+                }
+            }
+            it.doOnError {
+                showToast(R.string.network_error)
+            }
+        }
+    }
+
+    /**
+     * 显示新版本提示
+     */
+    private fun showNewVersionDialog(versionInfo: VersionInfo) {
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.discover_new_version)
+            .setMessage(versionInfo.changeLog.replace("\\n", "\n")) // 传输时\n被转义成\\n了
+            .setPositiveButton(R.string.upgrade_now) { dialog, _ ->
+                settingViewModel.downloadApk(versionInfo)
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.upgrade_later) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setNeutralButton(R.string.ignore_this_version) { dialog, _ ->
+                settingViewModel.ignoreThisVersion(versionInfo)
+                dialog.dismiss()
+            }
+            .create()
+            .apply {
+                show()
+                setCanceledOnTouchOutside(false)
+                getButton(DialogInterface.BUTTON_NEGATIVE)
+                    .setTextColor(ContextCompat.getColor(context, R.color.text_hint))
+                getButton(DialogInterface.BUTTON_NEUTRAL)
+                    .setTextColor(ContextCompat.getColor(context, R.color.text_warn))
+            }
     }
 
     private inner class MainPageAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {

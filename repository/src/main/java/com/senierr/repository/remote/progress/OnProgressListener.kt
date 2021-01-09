@@ -8,5 +8,5 @@ package com.senierr.repository.remote.progress
  */
 interface OnProgressListener {
 
-    fun onProgress(totalSize: Long, currentSize: Long, percent: Int)
+    fun onProgress(progress: Progress)
 }

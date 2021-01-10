@@ -4,16 +4,14 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.senierr.base.support.livedata.StatefulLiveData
-import com.senierr.base.support.utils.LogUtil
+import com.senierr.mortal.notification.NotificationManager
 import com.senierr.repository.Repository
 import com.senierr.repository.entity.bmob.VersionInfo
 import com.senierr.repository.remote.progress.OnProgressListener
 import com.senierr.repository.remote.progress.Progress
 import com.senierr.repository.service.api.ICommonService
 import com.senierr.repository.service.api.ISettingService
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 
 /**
@@ -26,7 +24,6 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
 
     val cacheSize = StatefulLiveData<Long>()
     val newVersionInfo = StatefulLiveData<VersionInfo>()
-    val apkDownloadProgress = StatefulLiveData<Progress>()
     val apkDownloadCompleted = StatefulLiveData<File>()
 
     private val settingService = Repository.getService<ISettingService>()
@@ -96,10 +93,7 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
                     versionInfo.url, versionInfo.fileName, versionInfo.md5,
                     object : OnProgressListener {
                         override fun onProgress(progress: Progress) {
-                            LogUtil.logE("onProgress: $progress")
-//                            launch {
-//                                apkDownloadProgress.setSuccess(progress)
-//                            }
+                            NotificationManager.sendUpdateNotification(getApplication(), progress.percent)
                         }
                     }
                 )

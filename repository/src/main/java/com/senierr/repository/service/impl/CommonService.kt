@@ -1,14 +1,10 @@
 package com.senierr.repository.service.impl
 
 import com.senierr.base.support.utils.CloseUtil
-import com.senierr.base.support.utils.EncryptUtil
 import com.senierr.repository.disk.DiskManager
-import com.senierr.repository.entity.bmob.BmobResponse
 import com.senierr.repository.remote.RemoteManager
 import com.senierr.repository.remote.api.CommonApi
-import com.senierr.repository.remote.progress.OnProgressListener
-import com.senierr.repository.remote.progress.ProgressRequestBody
-import com.senierr.repository.remote.progress.ProgressResponseBody
+import com.senierr.repository.remote.progress.*
 import com.senierr.repository.service.api.ICommonService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
@@ -51,10 +47,10 @@ class CommonService : ICommonService {
     override suspend fun downloadFile(
         url: String, destName:
         String, md5: String,
-        onDownloadListener: OnProgressListener
+        onProgressListener: OnProgressListener?
     ): File {
         return withContext(Dispatchers.IO) {
-            suspendCancellableCoroutine<File> { continuation ->
+            suspendCancellableCoroutine { continuation ->
                 try {
                     val call = commonApi.downloadFile(url)
                     continuation.invokeOnCancellation {
@@ -62,7 +58,11 @@ class CommonService : ICommonService {
                     }
 
                     val rawResponseBody = call.execute().body()?: throw IOException("ResponseBody is null.")
-                    val realResponseBody = ProgressResponseBody(rawResponseBody, onDownloadListener)
+                    val realResponseBody = if (onProgressListener != null) {
+                        ProgressResponseBody(rawResponseBody, onProgressListener)
+                    } else {
+                        rawResponseBody
+                    }
 
                     val destDir = DiskManager.getDownloadDir()
                     // 判断路径是否存在

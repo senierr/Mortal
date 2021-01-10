@@ -1,9 +1,7 @@
 package com.senierr.mortal.domain.user.vm
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.senierr.base.support.utils.LogUtil
 import com.senierr.mortal.domain.common.vm.StatefulLiveData
 import com.senierr.repository.Repository
 import com.senierr.repository.entity.bmob.UserInfo
@@ -46,7 +44,6 @@ class UserInfoViewModel : ViewModel() {
                 val cacheUserInfo = userService.getLoggedCacheUserInfo()
                 loggedCacheUserInfo.setValue(cacheUserInfo)
             } catch (e: Exception) {
-                LogUtil.logE(Log.getStackTraceString(e))
                 loggedCacheUserInfo.setException(e)
             }
         }

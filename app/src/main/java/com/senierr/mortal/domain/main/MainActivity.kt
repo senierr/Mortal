@@ -94,11 +94,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 showToast(R.string.network_error)
             }
         }
-        settingViewModel.apkDownloadProgress.observe(this) {
-            it.data?.percent?.let { percent ->
-                NotificationManager.sendUpdateNotification(this, percent)
-            }
-        }
         settingViewModel.apkDownloadCompleted.observe(this) {
             it.data?.let { file ->
                 // 移除下载通知

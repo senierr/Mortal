@@ -21,7 +21,8 @@ interface ICommonService {
      */
     suspend fun downloadFile(
         url: String,
-        destName: String, md5: String = "",
-        onDownloadListener: OnProgressListener
+        destName: String,
+        md5: String = "",
+        onProgressListener: OnProgressListener? = null
     ): File
 }

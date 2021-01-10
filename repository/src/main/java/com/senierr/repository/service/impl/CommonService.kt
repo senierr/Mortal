@@ -1,6 +1,7 @@
 package com.senierr.repository.service.impl
 
 import com.senierr.base.support.utils.CloseUtil
+import com.senierr.base.support.utils.EncryptUtil
 import com.senierr.repository.disk.DiskManager
 import com.senierr.repository.remote.RemoteManager
 import com.senierr.repository.remote.api.CommonApi

@@ -19,7 +19,6 @@ import com.senierr.mortal.domain.setting.vm.SettingViewModel
 import com.senierr.mortal.domain.user.MeFragment
 import com.senierr.mortal.ext.getAndroidViewModel
 import com.senierr.mortal.ext.showToast
-import com.senierr.mortal.notification.NotificationManager
 import com.senierr.repository.entity.bmob.VersionInfo
 
 /**
@@ -85,9 +84,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         settingViewModel.newVersionInfo.observe(this) {
             if (it.isSuccess) {
                 val versionInfo = it.data
-                if (versionInfo == null) {
-                    showToast(R.string.no_new_version)
-                } else {
+                if (versionInfo != null) {
                     showNewVersionDialog(versionInfo)
                 }
             } else {
@@ -96,8 +93,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         }
         settingViewModel.apkDownloadCompleted.observe(this) {
             it.data?.let { file ->
-                // 移除下载通知
-                NotificationManager.cancel(this, NotificationManager.NOTIFY_ID_UPDATE)
                 AppUtil.installApk(this, "${this.packageName}.provider", file)
             }
         }

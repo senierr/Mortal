@@ -1,5 +1,6 @@
 package com.senierr.repository.service.api
 
+import com.senierr.repository.entity.bmob.Feedback
 import com.senierr.repository.entity.bmob.VersionInfo
 
 /**
@@ -31,4 +32,9 @@ interface ISettingService {
      * 清除本地缓存
      */
     suspend fun clearLocalCache()
+
+    /**
+     * 意见反馈
+     */
+    suspend fun feedback(content: String, userId: String): Feedback
 }

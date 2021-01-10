@@ -21,7 +21,6 @@ import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.getAndroidViewModel
 import com.senierr.mortal.ext.getViewModel
 import com.senierr.mortal.ext.showToast
-import com.senierr.mortal.notification.NotificationManager
 import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.entity.bmob.VersionInfo
 
@@ -73,6 +72,10 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
             settingViewModel.checkNewVersion()
         }
 
+        binding.siFeedback.click {
+            startActivity(Intent(this, FeedbackActivity::class.java))
+        }
+
         binding.siAbout.click {
             startActivity(Intent(this, AboutActivity::class.java))
         }
@@ -108,9 +111,14 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
         }
         settingViewModel.apkDownloadCompleted.observe(this) {
             it.data?.let { file ->
-                // 移除下载通知
-                NotificationManager.cancel(this, NotificationManager.NOTIFY_ID_UPDATE)
                 AppUtil.installApk(this, "${this.packageName}.provider", file)
+            }
+        }
+        settingViewModel.feedbackResult.observe(this) {
+            if (it.isSuccess) {
+                showToast(R.string.feedback_success)
+            } else {
+                showToast(R.string.network_error)
             }
         }
         accountViewModel.logoutResult.observe(this) {

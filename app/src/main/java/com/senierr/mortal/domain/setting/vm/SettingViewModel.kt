@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.senierr.base.support.livedata.StatefulLiveData
 import com.senierr.mortal.notification.NotificationManager
 import com.senierr.repository.Repository
+import com.senierr.repository.entity.bmob.Feedback
 import com.senierr.repository.entity.bmob.VersionInfo
 import com.senierr.repository.remote.progress.OnProgressListener
 import com.senierr.repository.remote.progress.Progress
@@ -25,6 +26,7 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
     val cacheSize = StatefulLiveData<Long>()
     val newVersionInfo = StatefulLiveData<VersionInfo>()
     val apkDownloadCompleted = StatefulLiveData<File>()
+    val feedbackResult = StatefulLiveData<Feedback>()
 
     private val settingService = Repository.getService<ISettingService>()
     private val commonService = Repository.getService<ICommonService>()
@@ -93,13 +95,30 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
                     versionInfo.url, versionInfo.fileName, versionInfo.md5,
                     object : OnProgressListener {
                         override fun onProgress(progress: Progress) {
+                            // 发送进度通知
                             NotificationManager.sendUpdateNotification(getApplication(), progress.percent)
                         }
                     }
                 )
+                // 移除下载通知
+                NotificationManager.cancel(getApplication(), NotificationManager.NOTIFY_ID_UPDATE)
                 apkDownloadCompleted.setSuccess(apkFile)
             } catch (e: Exception) {
                 apkDownloadCompleted.setError(e)
+            }
+        }
+    }
+
+    /**
+     * 意见反馈
+     */
+    fun feedback(content: String, userId: String) {
+        viewModelScope.launch {
+            try {
+                val feedback = settingService.feedback(content, userId)
+                feedbackResult.setSuccess(feedback)
+            } catch (e: Exception) {
+                feedbackResult.setError(e)
             }
         }
     }

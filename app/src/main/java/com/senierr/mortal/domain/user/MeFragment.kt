@@ -50,6 +50,10 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
     private fun initView() {
         binding?.llUser?.isClickable = false
 
+        binding?.siViewHistory?.click {
+            startActivity(Intent(context, ViewHistoryActivity::class.java))
+        }
+
         binding?.siCategoryManager?.click {
             startActivity(Intent(context, CategoryManagerActivity::class.java))
         }

@@ -18,7 +18,9 @@ import com.senierr.mortal.domain.home.vm.GanHuoViewModel
 import com.senierr.mortal.domain.home.wrapper.GanHuoMoreImageWrapper
 import com.senierr.mortal.domain.home.wrapper.GanHuoNoImageWrapper
 import com.senierr.mortal.domain.home.wrapper.GanHuoOneImageWrapper
+import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.*
+import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.entity.gank.GanHuo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -52,9 +54,12 @@ class GanHuoFragment : BaseFragment<FragmentHomeGanhuoBinding>() {
     private val loadMoreWrapper = LoadMoreWrapper()
 
     private val ganHuoViewModel by getViewModel<GanHuoViewModel>()
+    private val userInfoViewModel by getViewModel<UserInfoViewModel>()
 
     private var page = 1
     private val pageSize = 10
+
+    private var currentUserInfo: UserInfo? = null
 
     override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentHomeGanhuoBinding {
         return FragmentHomeGanhuoBinding.inflate(inflater, container, false)
@@ -72,6 +77,7 @@ class GanHuoFragment : BaseFragment<FragmentHomeGanhuoBinding>() {
                 doRefresh()
             }
         }
+        userInfoViewModel.getLoggedCacheUserInfo()
     }
 
     private fun initParam() {
@@ -85,13 +91,13 @@ class GanHuoFragment : BaseFragment<FragmentHomeGanhuoBinding>() {
         binding?.rvList?.addItemDecoration(LinearItemDecoration(dividerSize = ScreenUtil.dp2px(context, 4F)))
         // 列表
         moreImageWrapper.setOnItemClickListener { _, _, item ->
-            WebViewActivity.start(context, item.url, item.title)
+            viewArticle(context, item)
         }
         oneImageWrapper.setOnItemClickListener { _, _, item ->
-            WebViewActivity.start(context, item.url, item.title)
+            viewArticle(context, item)
         }
         noImageWrapper.setOnItemClickListener { _, _, item ->
-            WebViewActivity.start(context, item.url, item.title)
+            viewArticle(context, item)
         }
         multiTypeAdapter.register(moreImageWrapper, oneImageWrapper, noImageWrapper) { item ->
             return@register when (item.images.size) {
@@ -107,6 +113,9 @@ class GanHuoFragment : BaseFragment<FragmentHomeGanhuoBinding>() {
     }
 
     private fun initViewModel() {
+        userInfoViewModel.loggedCacheUserInfo.observe(this, {
+            currentUserInfo = it
+        })
         ganHuoViewModel.fetchGanHuosResult.observe(this, {
             if (page == 1) {
                 renderRefresh(it)
@@ -169,6 +178,17 @@ class GanHuoFragment : BaseFragment<FragmentHomeGanhuoBinding>() {
             multiTypeAdapter.notifyItemRangeInserted(startPosition, ganHuos.size)
             loadMoreWrapper.loadCompleted()
             page++
+        }
+    }
+
+    /**
+     * 查看文章
+     */
+    private fun viewArticle(context: Context, ganHuo: GanHuo) {
+        WebViewActivity.start(context, ganHuo.url, ganHuo.title)
+        currentUserInfo?.let {
+            // 发送浏览记录
+            ganHuoViewModel.sendViewHistory(it.objectId, ganHuo.id, ganHuo.title, ganHuo.url)
         }
     }
 }

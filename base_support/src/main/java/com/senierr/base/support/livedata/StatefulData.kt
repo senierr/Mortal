@@ -1,23 +1,24 @@
 package com.senierr.base.support.livedata
 
 /**
- * 带异常状态的数据
+ * 带状态的数据
  *
  * @author zhouchunjie
  * @date 2021/1/9 20:12
  */
-data class StatefulData<T>(
-    val isSuccess: Boolean = true,
-    val data: T? = null,
-    val throwable: Throwable? = null
-) {
-    companion object {
-        fun <T> success(data: T?): StatefulData<T> {
-            return StatefulData(true, data, null)
-        }
+sealed class StatefulData<out T> {
 
-        fun <T> error(throwable: Throwable?): StatefulData<T> {
-            return StatefulData(false, null, throwable)
-        }
-    }
+    /**
+     * 加载成功
+     *
+     * @param value 返回数据
+     */
+    data class Success<out T>(val value: T?): StatefulData<T>()
+
+    /**
+     * 加载失败
+     *
+     * @param throwable 异常
+     */
+    data class Failure(val throwable: Throwable?): StatefulData<Nothing>()
 }

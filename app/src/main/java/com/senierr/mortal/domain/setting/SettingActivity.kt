@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.senierr.base.support.ext.click
+import com.senierr.base.support.ext.doFailure
+import com.senierr.base.support.ext.doSuccess
 import com.senierr.base.support.ext.setGone
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.AppUtil
@@ -18,8 +20,8 @@ import com.senierr.mortal.domain.user.AccountSafetyActivity
 import com.senierr.mortal.domain.user.LoginActivity
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
-import com.senierr.mortal.ext.getAndroidViewModel
-import com.senierr.mortal.ext.getViewModel
+import com.senierr.base.support.ext.getAndroidViewModel
+import com.senierr.base.support.ext.getViewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.entity.bmob.VersionInfo
@@ -93,31 +95,34 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
             binding.btnLogOut.setGone(true)
         })
         settingViewModel.cacheSize.observe(this) {
-            it.data?.let { cacheSize ->
-                binding.siClearCache.message = FileUtil.getFormatSize(cacheSize.toDouble())
+            it.doSuccess { cacheSize ->
+                binding.siClearCache.message = FileUtil.getFormatSize(cacheSize?.toDouble()?: 0.0)
             }
         }
         settingViewModel.newVersionInfo.observe(this) {
-            if (it.isSuccess) {
-                val versionInfo = it.data
+            it.doSuccess { versionInfo ->
                 if (versionInfo == null) {
                     showToast(R.string.no_new_version)
                 } else {
                     showNewVersionDialog(versionInfo)
                 }
-            } else {
+            }
+            it.doFailure {
                 showToast(R.string.network_error)
             }
         }
         settingViewModel.apkDownloadCompleted.observe(this) {
-            it.data?.let { file ->
-                AppUtil.installApk(this, "${this.packageName}.provider", file)
+            it.doSuccess { file ->
+                if (file != null) {
+                    AppUtil.installApk(this, "${this.packageName}.provider", file)
+                }
             }
         }
         settingViewModel.feedbackResult.observe(this) {
-            if (it.isSuccess) {
+            it.doSuccess {
                 showToast(R.string.feedback_success)
-            } else {
+            }
+            it.doFailure {
                 showToast(R.string.network_error)
             }
         }

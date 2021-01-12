@@ -17,7 +17,7 @@ import com.senierr.base.support.ui.BaseActivity
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityImagePreviewBinding
 import com.senierr.mortal.domain.common.vm.DownloadViewModel
-import com.senierr.mortal.ext.getViewModel
+import com.senierr.base.support.ext.getViewModel
 import com.senierr.mortal.ext.showImage
 import com.senierr.mortal.ext.showToast
 import kotlinx.parcelize.Parcelize

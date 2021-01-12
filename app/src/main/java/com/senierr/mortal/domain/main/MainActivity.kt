@@ -17,7 +17,7 @@ import com.senierr.mortal.domain.home.HomeFragment
 import com.senierr.mortal.domain.recommend.RecommendFragment
 import com.senierr.mortal.domain.setting.vm.SettingViewModel
 import com.senierr.mortal.domain.user.MeFragment
-import com.senierr.mortal.ext.getAndroidViewModel
+import com.senierr.base.support.ext.getAndroidViewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.VersionInfo
 

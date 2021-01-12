@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.recyclerview.widget.GridLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
+import com.senierr.base.support.ext.getViewModel
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.ui.recyclerview.GridItemDecoration
 import com.senierr.base.support.utils.ScreenUtil

@@ -13,7 +13,7 @@ import com.senierr.base.support.utils.RegexUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityRegisterBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
-import com.senierr.mortal.ext.getViewModel
+import com.senierr.base.support.ext.getViewModel
 import com.senierr.mortal.ext.showToast
 
 /**

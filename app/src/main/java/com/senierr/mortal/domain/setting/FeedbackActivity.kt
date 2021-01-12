@@ -6,15 +6,14 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import com.senierr.base.support.ext.setGone
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityFeedbackBinding
 import com.senierr.mortal.domain.setting.vm.SettingViewModel
 import com.senierr.mortal.domain.user.LoginActivity
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
-import com.senierr.mortal.ext.getAndroidViewModel
-import com.senierr.mortal.ext.getViewModel
+import com.senierr.base.support.ext.getAndroidViewModel
+import com.senierr.base.support.ext.getViewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
 

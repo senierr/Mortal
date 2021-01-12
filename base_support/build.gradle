@@ -33,4 +33,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$rootProject.ext.appcompat"
     implementation "com.jakewharton:disklrucache:$rootProject.ext.disklrucache"
     implementation "androidx.recyclerview:recyclerview:$rootProject.ext.recyclerview"
+    // KTX
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.ext.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$rootProject.ext.lifecycle"
 }

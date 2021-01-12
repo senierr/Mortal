@@ -39,7 +39,7 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
             try {
                 cacheSize.setSuccess(settingService.getLocalCacheSize())
             } catch (e: Exception) {
-                cacheSize.setError(e)
+                cacheSize.setFailure(e)
             }
         }
     }
@@ -53,7 +53,7 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
                 settingService.clearLocalCache()
                 cacheSize.setSuccess(settingService.getLocalCacheSize())
             } catch (e: Exception) {
-                cacheSize.setError(e)
+                cacheSize.setFailure(e)
             }
         }
     }
@@ -67,7 +67,7 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
                 val versionInfo = settingService.checkNewVersion()
                 newVersionInfo.setSuccess(versionInfo)
             } catch (e: Exception) {
-                newVersionInfo.setError(e)
+                newVersionInfo.setFailure(e)
             }
         }
     }
@@ -104,7 +104,7 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
                 NotificationManager.cancel(getApplication(), NotificationManager.NOTIFY_ID_UPDATE)
                 apkDownloadCompleted.setSuccess(apkFile)
             } catch (e: Exception) {
-                apkDownloadCompleted.setError(e)
+                apkDownloadCompleted.setFailure(e)
             }
         }
     }
@@ -118,7 +118,7 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
                 val feedback = settingService.feedback(content, userId)
                 feedbackResult.setSuccess(feedback)
             } catch (e: Exception) {
-                feedbackResult.setError(e)
+                feedbackResult.setFailure(e)
             }
         }
     }

@@ -3,6 +3,7 @@ package com.senierr.base.support.livedata
 import androidx.lifecycle.MutableLiveData
 
 /**
+ * 带状态的LiveData
  *
  * @author zhouchunjie
  * @date 2021/1/9 19:40
@@ -10,10 +11,10 @@ import androidx.lifecycle.MutableLiveData
 class StatefulLiveData<T> : MutableLiveData<StatefulData<T>>() {
 
     fun setSuccess(value: T?) {
-        setValue(StatefulData.success(value))
+        setValue(StatefulData.Success(value))
     }
 
-    fun setError(throwable: Throwable?) {
-        value = StatefulData.error(throwable)
+    fun setFailure(throwable: Throwable?) {
+        value = StatefulData.Failure(throwable)
     }
 }

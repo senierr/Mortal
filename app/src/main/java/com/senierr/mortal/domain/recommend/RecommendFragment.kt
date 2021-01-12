@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
+import com.senierr.base.support.ext.getViewModel
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.ui.recyclerview.GridItemDecoration
 import com.senierr.base.support.utils.ScreenUtil

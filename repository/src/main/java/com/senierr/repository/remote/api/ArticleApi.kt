@@ -2,7 +2,6 @@ package com.senierr.repository.remote.api
 
 import com.senierr.repository.entity.bmob.BmobArray
 import com.senierr.repository.entity.bmob.BmobResponse
-import com.senierr.repository.entity.bmob.Pointer
 import com.senierr.repository.entity.bmob.ViewHistory
 import retrofit2.http.*
 
@@ -17,11 +16,13 @@ interface ArticleApi {
     /**
      * 发送浏览记录
      *
-     * @param viewHistory   "article": Pointer() 文章
-     *                      "user": Pointer() 用户
+     * @param viewHistory   "articleId":"xxx" 文章ID
+     *                      "articleTitle":"xxx" 文章标题
+     *                      "articleUrl":"xxx" 文章链接
+     *                      "userId":"xxx" 用户ID
      */
     @POST("1/classes/view_history")
-    suspend fun sendViewHistory(@Body viewHistory: MutableMap<String, Pointer>): ViewHistory
+    suspend fun sendViewHistory(@Body viewHistory: MutableMap<String, String>): ViewHistory
 
     /**
      * 获取浏览记录

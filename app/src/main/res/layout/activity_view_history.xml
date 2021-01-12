@@ -23,6 +23,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_list"
             android:scrollbars="vertical"
+            android:paddingTop="@dimen/dp_4"
+            android:clipToPadding="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </com.senierr.mortal.widget.MultiStateView>

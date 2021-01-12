@@ -24,6 +24,6 @@
         android:ellipsize="end"
         android:gravity="end"
         android:maxLines="1"
-        android:textColor="@color/text_content"
+        android:textColor="@color/text_content_sub"
         android:textSize="@dimen/sp_12" />
 </LinearLayout>

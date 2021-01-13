@@ -15,6 +15,7 @@ import com.senierr.base.support.ext.*
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.AppUtil
 import com.senierr.base.support.utils.FileUtil
+import com.senierr.base.support.utils.LogUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivitySettingBinding
 import com.senierr.mortal.domain.setting.vm.SettingViewModel
@@ -22,7 +23,6 @@ import com.senierr.mortal.domain.user.AccountSafetyActivity
 import com.senierr.mortal.domain.user.LoginActivity
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
-import com.senierr.base.support.utils.LogUtil
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.entity.bmob.VersionInfo
@@ -42,6 +42,8 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
 
     private var currentUserInfo: UserInfo? = null
 
+    private val downloadApkReceiver = DownloadApkReceiver()
+
     override fun createViewBinding(layoutInflater: LayoutInflater): ActivitySettingBinding {
         return ActivitySettingBinding.inflate(layoutInflater)
     }
@@ -51,6 +53,12 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
         initView()
         initViewModel()
         settingViewModel.getCacheSize()
+//        registerReceiver(downloadApkReceiver, IntentFilter(ProgressReceiver.ACTION_REMOTE_PROGRESS_RECEIVER))
+    }
+
+    override fun onDestroy() {
+//        unregisterReceiver(downloadApkReceiver)
+        super.onDestroy()
     }
 
     override fun onStart() {
@@ -98,12 +106,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
         })
 
         lifecycleScope.launchWhenStarted {
-            settingViewModel.cacheSize
-                    .doOnSuccess {
-                        binding.siClearCache.message = FileUtil.getFormatSize(it.toDouble())
-                    }
-                    .collect()
-
+            LogUtil.logE("newVersionInfo")
             settingViewModel.newVersionInfo
                     .doOnSuccess {
                         showNewVersionDialog(it)
@@ -111,13 +114,13 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
                     .doOnFailure {
                         showToast(R.string.network_error)
                     }
-                    .collect()
-
+                    .collect {}
+            LogUtil.logE("noNewVersionInfo")
             settingViewModel.noNewVersionInfo.doOnSuccess {
                 showToast(R.string.no_new_version)
             }
                     .collect()
-
+            LogUtil.logE("apkDownloadCompleted")
             settingViewModel.apkDownloadCompleted
                     .doOnSuccess {
                         AppUtil.installApk(
@@ -127,6 +130,12 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
                         )
                     }
                     .collect()
+            LogUtil.logE("cacheSize")
+            settingViewModel.cacheSize
+                .doOnSuccess {
+                    binding.siClearCache.message = FileUtil.getFormatSize(it.toDouble())
+                }
+                .collect {}
         }
 
         accountViewModel.logoutResult.observe(this) {

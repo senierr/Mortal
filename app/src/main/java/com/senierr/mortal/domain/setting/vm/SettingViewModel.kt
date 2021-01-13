@@ -1,17 +1,17 @@
 package com.senierr.mortal.domain.setting.vm
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.senierr.base.support.arch.StatefulData
 import com.senierr.base.support.arch.ext.emitFailure
 import com.senierr.base.support.arch.ext.emitSuccess
+import com.senierr.base.support.utils.LogUtil
 import com.senierr.mortal.notification.NotificationManager
 import com.senierr.repository.Repository
 import com.senierr.repository.entity.bmob.Feedback
 import com.senierr.repository.entity.bmob.VersionInfo
-import com.senierr.repository.remote.progress.OnProgressListener
-import com.senierr.repository.remote.progress.Progress
 import com.senierr.repository.service.api.ICommonService
 import com.senierr.repository.service.api.ISettingService
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -85,6 +85,7 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
                     _newVersionInfo.emitSuccess(versionInfo)
                 }
             } catch (e: Exception) {
+                LogUtil.logE("_newVersionInfo: ${Log.getStackTraceString(e)}")
                 _newVersionInfo.emitFailure(e)
             }
         }
@@ -110,13 +111,7 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             try {
                 val apkFile = commonService.downloadFile(
-                    versionInfo.url, versionInfo.fileName, versionInfo.md5,
-                    object : OnProgressListener {
-                        override fun onProgress(progress: Progress) {
-                            // 发送进度通知
-                            NotificationManager.sendUpdateNotification(getApplication(), progress.percent)
-                        }
-                    }
+                        versionInfo.url, versionInfo.fileName, versionInfo.md5, "downloadApk"
                 )
                 // 移除下载通知
                 NotificationManager.cancel(getApplication(), NotificationManager.NOTIFY_ID_UPDATE)

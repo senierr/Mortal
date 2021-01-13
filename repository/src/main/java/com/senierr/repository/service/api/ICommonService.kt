@@ -23,6 +23,6 @@ interface ICommonService {
         url: String,
         destName: String,
         md5: String = "",
-        onProgressListener: OnProgressListener? = null
+        tag: String? = null
     ): File
 }

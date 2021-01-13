@@ -32,7 +32,7 @@ suspend inline fun <reified T> MutableSharedFlow<StatefulData<T>>.emitFailure(th
 suspend inline fun <reified T> Flow<StatefulData<T>>.doOnSuccess(
         noinline collector: suspend (T) -> Unit
 ) = onEach {
-    if (it is StatefulData.Success && it.value != null) {
+    if (it is StatefulData.Success) {
         collector.invoke(it.value)
     }
 }

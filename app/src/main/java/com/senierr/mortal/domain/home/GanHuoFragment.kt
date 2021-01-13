@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
-import com.senierr.base.support.ext.getViewModel
+import com.senierr.base.support.arch.ext.getViewModel
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.ui.recyclerview.LinearItemDecoration
 import com.senierr.base.support.utils.ScreenUtil

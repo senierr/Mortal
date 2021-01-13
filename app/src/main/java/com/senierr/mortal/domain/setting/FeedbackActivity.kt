@@ -6,16 +6,20 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.lifecycleScope
+import com.senierr.base.support.arch.ext.doOnFailure
+import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.getAndroidViewModel
+import com.senierr.base.support.arch.ext.getViewModel
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityFeedbackBinding
 import com.senierr.mortal.domain.setting.vm.SettingViewModel
 import com.senierr.mortal.domain.user.LoginActivity
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
-import com.senierr.base.support.ext.getAndroidViewModel
-import com.senierr.base.support.ext.getViewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
+import kotlinx.coroutines.flow.collect
 
 /**
  * 设置页面
@@ -101,13 +105,16 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding>() {
             LoginActivity.start(this)
             finish()
         })
-        settingViewModel.feedbackResult.observe(this) {
-            if (it.isSuccess) {
-                showToast(R.string.feedback_success)
-                finish()
-            } else {
-                showToast(R.string.network_error)
-            }
+
+        lifecycleScope.launchWhenStarted {
+            settingViewModel.feedbackResult
+                    .doOnSuccess {
+                        showToast(R.string.feedback_success)
+                    }
+                    .doOnFailure {
+                        showToast(R.string.network_error)
+                    }
+                    .collect()
         }
     }
 }

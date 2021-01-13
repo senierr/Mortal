@@ -6,9 +6,13 @@ import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.senierr.base.support.arch.ext.doOnFailure
+import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.getAndroidViewModel
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.AppUtil
 import com.senierr.mortal.R
@@ -17,9 +21,9 @@ import com.senierr.mortal.domain.home.HomeFragment
 import com.senierr.mortal.domain.recommend.RecommendFragment
 import com.senierr.mortal.domain.setting.vm.SettingViewModel
 import com.senierr.mortal.domain.user.MeFragment
-import com.senierr.base.support.ext.getAndroidViewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.VersionInfo
+import kotlinx.coroutines.flow.collect
 
 /**
  * 主页面
@@ -81,20 +85,25 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     private fun initViewModel() {
-        settingViewModel.newVersionInfo.observe(this) {
-            if (it.isSuccess) {
-                val versionInfo = it.data
-                if (versionInfo != null) {
-                    showNewVersionDialog(versionInfo)
-                }
-            } else {
-                showToast(R.string.network_error)
-            }
-        }
-        settingViewModel.apkDownloadCompleted.observe(this) {
-            it.data?.let { file ->
-                AppUtil.installApk(this, "${this.packageName}.provider", file)
-            }
+        lifecycleScope.launchWhenStarted {
+            settingViewModel.newVersionInfo
+                    .doOnSuccess {
+                        showNewVersionDialog(it)
+                    }
+                    .doOnFailure {
+                        showToast(R.string.network_error)
+                    }
+                    .collect()
+
+            settingViewModel.apkDownloadCompleted
+                    .doOnSuccess {
+                        AppUtil.installApk(
+                                this@MainActivity,
+                                "${this@MainActivity.packageName}.provider",
+                                it
+                        )
+                    }
+                    .collect()
         }
     }
 

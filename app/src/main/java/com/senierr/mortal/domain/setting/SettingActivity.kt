@@ -5,11 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.senierr.base.support.ext.click
-import com.senierr.base.support.ext.doFailure
-import com.senierr.base.support.ext.doSuccess
-import com.senierr.base.support.ext.setGone
+import com.senierr.base.support.arch.ext.doOnFailure
+import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.getAndroidViewModel
+import com.senierr.base.support.arch.ext.getViewModel
+import com.senierr.base.support.ext.*
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.AppUtil
 import com.senierr.base.support.utils.FileUtil
@@ -20,11 +22,11 @@ import com.senierr.mortal.domain.user.AccountSafetyActivity
 import com.senierr.mortal.domain.user.LoginActivity
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
-import com.senierr.base.support.ext.getAndroidViewModel
-import com.senierr.base.support.ext.getViewModel
+import com.senierr.base.support.utils.LogUtil
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.entity.bmob.VersionInfo
+import kotlinx.coroutines.flow.collect
 
 /**
  * 设置页面
@@ -94,38 +96,39 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
         }, {
             binding.btnLogOut.setGone(true)
         })
-        settingViewModel.cacheSize.observe(this) {
-            it.doSuccess { cacheSize ->
-                binding.siClearCache.message = FileUtil.getFormatSize(cacheSize?.toDouble()?: 0.0)
+
+        lifecycleScope.launchWhenStarted {
+            settingViewModel.cacheSize
+                    .doOnSuccess {
+                        binding.siClearCache.message = FileUtil.getFormatSize(it.toDouble())
+                    }
+                    .collect()
+
+            settingViewModel.newVersionInfo
+                    .doOnSuccess {
+                        showNewVersionDialog(it)
+                    }
+                    .doOnFailure {
+                        showToast(R.string.network_error)
+                    }
+                    .collect()
+
+            settingViewModel.noNewVersionInfo.doOnSuccess {
+                showToast(R.string.no_new_version)
             }
+                    .collect()
+
+            settingViewModel.apkDownloadCompleted
+                    .doOnSuccess {
+                        AppUtil.installApk(
+                                this@SettingActivity,
+                                "${this@SettingActivity.packageName}.provider",
+                                it
+                        )
+                    }
+                    .collect()
         }
-        settingViewModel.newVersionInfo.observe(this) {
-            it.doSuccess { versionInfo ->
-                if (versionInfo == null) {
-                    showToast(R.string.no_new_version)
-                } else {
-                    showNewVersionDialog(versionInfo)
-                }
-            }
-            it.doFailure {
-                showToast(R.string.network_error)
-            }
-        }
-        settingViewModel.apkDownloadCompleted.observe(this) {
-            it.doSuccess { file ->
-                if (file != null) {
-                    AppUtil.installApk(this, "${this.packageName}.provider", file)
-                }
-            }
-        }
-        settingViewModel.feedbackResult.observe(this) {
-            it.doSuccess {
-                showToast(R.string.feedback_success)
-            }
-            it.doFailure {
-                showToast(R.string.network_error)
-            }
-        }
+
         accountViewModel.logoutResult.observe(this) {
             LoginActivity.start(this)
             finish()

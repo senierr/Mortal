@@ -12,7 +12,7 @@ import com.senierr.mortal.R
 import com.senierr.mortal.databinding.FragmentHomeBinding
 import com.senierr.mortal.domain.category.CategoryManagerActivity
 import com.senierr.mortal.domain.home.vm.HomeViewModel
-import com.senierr.base.support.ext.getViewModel
+import com.senierr.base.support.arch.ext.getViewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.gank.Category
 

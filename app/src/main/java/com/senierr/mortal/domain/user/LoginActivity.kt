@@ -16,7 +16,7 @@ import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityLoginBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
-import com.senierr.base.support.ext.getViewModel
+import com.senierr.base.support.arch.ext.getViewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.mortal.widget.CircularAnim
 import com.senierr.repository.entity.bmob.BmobException

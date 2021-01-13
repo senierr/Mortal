@@ -1,4 +1,4 @@
-package com.senierr.base.support.ext
+package com.senierr.base.support.arch.ext
 
 import androidx.activity.ComponentActivity
 import androidx.annotation.MainThread
@@ -13,28 +13,6 @@ import androidx.lifecycle.ViewModelProvider
  * @author chunjiezhou
  * @date 2020/12/25
  */
-
-/**
- * TODO 测试初始化
- */
-@MainThread
-inline fun <reified VM : ViewModel> ComponentActivity.getTestViewModel(): Lazy<VM> {
-    return object : Lazy<VM> {
-        private var cached: VM? = null
-
-        override val value: VM
-            get() {
-                val viewModel = cached
-                return viewModel ?: ViewModelProvider(this@getTestViewModel)
-                        .get(VM::class.java).also {
-                            cached = it
-                        }
-            }
-
-        override fun isInitialized() = cached != null
-    }
-}
-
 
 @MainThread
 inline fun <reified VM : ViewModel> ComponentActivity.getViewModel(): Lazy<VM> {

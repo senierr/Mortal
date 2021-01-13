@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
-import com.senierr.base.support.ext.getViewModel
+import com.senierr.base.support.arch.ext.getViewModel
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.ui.recyclerview.LinearItemDecoration
 import com.senierr.base.support.utils.ScreenUtil

@@ -1,4 +1,4 @@
-package com.senierr.base.support.livedata
+package com.senierr.base.support.arch
 
 /**
  * 带状态的数据
@@ -13,7 +13,7 @@ sealed class StatefulData<out T> {
      *
      * @param value 返回数据
      */
-    data class Success<out T>(val value: T?): StatefulData<T>()
+    data class Success<out T>(val value: T): StatefulData<T>()
 
     /**
      * 加载失败

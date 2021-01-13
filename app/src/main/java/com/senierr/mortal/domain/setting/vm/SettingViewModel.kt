@@ -3,7 +3,9 @@ package com.senierr.mortal.domain.setting.vm
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.senierr.base.support.livedata.StatefulLiveData
+import com.senierr.base.support.arch.StatefulData
+import com.senierr.base.support.arch.ext.emitFailure
+import com.senierr.base.support.arch.ext.emitSuccess
 import com.senierr.mortal.notification.NotificationManager
 import com.senierr.repository.Repository
 import com.senierr.repository.entity.bmob.Feedback
@@ -12,6 +14,8 @@ import com.senierr.repository.remote.progress.OnProgressListener
 import com.senierr.repository.remote.progress.Progress
 import com.senierr.repository.service.api.ICommonService
 import com.senierr.repository.service.api.ISettingService
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -23,10 +27,20 @@ import java.io.File
  */
 class SettingViewModel(application: Application) : AndroidViewModel(application) {
 
-    val cacheSize = StatefulLiveData<Long>()
-    val newVersionInfo = StatefulLiveData<VersionInfo>()
-    val apkDownloadCompleted = StatefulLiveData<File>()
-    val feedbackResult = StatefulLiveData<Feedback>()
+    private val _cacheSize = MutableSharedFlow<StatefulData<Long>>()
+    val cacheSize: SharedFlow<StatefulData<Long>> = _cacheSize
+
+    private val _newVersionInfo = MutableSharedFlow<StatefulData<VersionInfo>>()
+    val newVersionInfo: SharedFlow<StatefulData<VersionInfo>> = _newVersionInfo
+
+    private val _noNewVersionInfo = MutableSharedFlow<StatefulData<Unit>>()
+    val noNewVersionInfo: SharedFlow<StatefulData<Unit>> = _noNewVersionInfo
+
+    private val _apkDownloadCompleted = MutableSharedFlow<StatefulData<File>>()
+    val apkDownloadCompleted: SharedFlow<StatefulData<File>> = _apkDownloadCompleted
+
+    private val _feedbackResult = MutableSharedFlow<StatefulData<Feedback>>()
+    val feedbackResult: SharedFlow<StatefulData<Feedback>> = _feedbackResult
 
     private val settingService = Repository.getService<ISettingService>()
     private val commonService = Repository.getService<ICommonService>()
@@ -37,9 +51,9 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
     fun getCacheSize() {
         viewModelScope.launch {
             try {
-                cacheSize.setSuccess(settingService.getLocalCacheSize())
+                _cacheSize.emitSuccess(settingService.getLocalCacheSize())
             } catch (e: Exception) {
-                cacheSize.setFailure(e)
+                _cacheSize.emitFailure(e)
             }
         }
     }
@@ -51,9 +65,9 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             try {
                 settingService.clearLocalCache()
-                cacheSize.setSuccess(settingService.getLocalCacheSize())
+                _cacheSize.emitSuccess(settingService.getLocalCacheSize())
             } catch (e: Exception) {
-                cacheSize.setFailure(e)
+                _cacheSize.emitFailure(e)
             }
         }
     }
@@ -65,9 +79,13 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             try {
                 val versionInfo = settingService.checkNewVersion()
-                newVersionInfo.setSuccess(versionInfo)
+                if (versionInfo == null) {
+                    _noNewVersionInfo.emitSuccess(Unit)
+                } else {
+                    _newVersionInfo.emitSuccess(versionInfo)
+                }
             } catch (e: Exception) {
-                newVersionInfo.setFailure(e)
+                _newVersionInfo.emitFailure(e)
             }
         }
     }
@@ -102,9 +120,9 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
                 )
                 // 移除下载通知
                 NotificationManager.cancel(getApplication(), NotificationManager.NOTIFY_ID_UPDATE)
-                apkDownloadCompleted.setSuccess(apkFile)
+                _apkDownloadCompleted.emitSuccess(apkFile)
             } catch (e: Exception) {
-                apkDownloadCompleted.setFailure(e)
+                _apkDownloadCompleted.emitFailure(e)
             }
         }
     }
@@ -116,9 +134,9 @@ class SettingViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             try {
                 val feedback = settingService.feedback(content, userId)
-                feedbackResult.setSuccess(feedback)
+                _feedbackResult.emitSuccess(feedback)
             } catch (e: Exception) {
-                feedbackResult.setFailure(e)
+                _feedbackResult.emitFailure(e)
             }
         }
     }

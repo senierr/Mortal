@@ -76,7 +76,7 @@ object NotificationManager {
     /**
      * 发送更新通知
      */
-    fun sendUpdateNotification(context: Context, progress: Int) {
+    fun sendDownloadNotification(context: Context, percent: Int) {
         createNotificationChannel(context)
         val builder = NotificationCompat.Builder(context, CHANNEL_ID_UPDATE).apply {
             setContentTitle(context.getString(R.string.app_name))
@@ -86,10 +86,10 @@ object NotificationManager {
             setAutoCancel(true)
             setOnlyAlertOnce(true)
         }
-        if (progress in 0 until 100) {
+        if (percent in 0 until 100) {
             builder.setContentText(context.getString(R.string.download_ing))
             // 设置为false，表示刻度，设置为true，表示流动
-            builder.setProgress(100, progress, false)
+            builder.setProgress(100, percent, false)
         } else {
             builder.setContentText(context.getString(R.string.download_completed))
             // 0,0,false,可以将进度条隐藏

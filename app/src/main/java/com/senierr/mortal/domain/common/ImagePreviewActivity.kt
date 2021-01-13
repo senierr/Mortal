@@ -9,17 +9,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.DrawableRes
+import androidx.lifecycle.lifecycleScope
 import com.bm.library.PhotoView
 import com.senierr.adapter.internal.ViewHolder
+import com.senierr.base.support.arch.ext.doOnFailure
+import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ext.setGone
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityImagePreviewBinding
 import com.senierr.mortal.domain.common.vm.DownloadViewModel
-import com.senierr.base.support.arch.ext.getViewModel
 import com.senierr.mortal.ext.showImage
 import com.senierr.mortal.ext.showToast
+import kotlinx.coroutines.flow.collect
 import kotlinx.parcelize.Parcelize
 import java.io.File
 
@@ -49,7 +53,7 @@ class ImagePreviewActivity : BaseActivity<ActivityImagePreviewBinding>() {
         }
     }
 
-    private val downloadViewModel by getViewModel<DownloadViewModel>()
+    private val downloadViewModel: DownloadViewModel by viewModel()
 
     private val imageItems = mutableListOf<ImageItem>()
     private val imagePreviewAdapter = object : androidx.viewpager.widget.PagerAdapter() {
@@ -64,7 +68,8 @@ class ImagePreviewActivity : BaseActivity<ActivityImagePreviewBinding>() {
             pvPreview?.click { finish() }
             pvPreview?.enable()
             // 索引
-            binding.tvIndex.text = getString(R.string.format_index_normal, position+1, imageItems.size)
+            binding.tvIndex.text =
+                getString(R.string.format_index_normal, position + 1, imageItems.size)
             // 保存
             binding.btnSave.setGone(true)
             // 图片显示
@@ -73,7 +78,7 @@ class ImagePreviewActivity : BaseActivity<ActivityImagePreviewBinding>() {
             val file = imageItems[position].file
             if (resId != null) {
                 pvPreview?.showImage(resId)
-            }else if (url != null) {
+            } else if (url != null) {
                 pvPreview?.showImage(url)
                 binding.btnSave.setGone(false)
                 binding.btnSave.click {
@@ -114,10 +119,18 @@ class ImagePreviewActivity : BaseActivity<ActivityImagePreviewBinding>() {
     }
 
     private fun initViewModel() {
-        downloadViewModel.downloadResult.observe(this, {
-            showToast(getString(R.string.format_download_success, it.absolutePath), Toast.LENGTH_LONG)
-        }, {
-            showToast(getString(R.string.format_download_success, it.message), Toast.LENGTH_LONG)
-        })
+        lifecycleScope.launchWhenStarted {
+            downloadViewModel.downloadCompleted
+                .doOnSuccess {
+                    showToast(
+                        getString(R.string.format_download_success, it.absolutePath),
+                        Toast.LENGTH_LONG
+                    )
+                }
+                .doOnFailure {
+                    showToast(getString(R.string.format_download_failure, it?.message))
+                }
+                .collect()
+        }
     }
 }

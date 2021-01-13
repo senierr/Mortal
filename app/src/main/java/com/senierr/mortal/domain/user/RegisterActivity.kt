@@ -13,7 +13,7 @@ import com.senierr.base.support.utils.RegexUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityRegisterBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
-import com.senierr.base.support.arch.ext.getViewModel
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.mortal.ext.showToast
 
 /**
@@ -38,7 +38,7 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>() {
 
     private lateinit var loadingDialog: AlertDialog
 
-    private val accountViewModel by getViewModel<AccountViewModel>()
+    private val accountViewModel by viewModel<AccountViewModel>()
 
     override fun createViewBinding(layoutInflater: LayoutInflater): ActivityRegisterBinding {
         return ActivityRegisterBinding.inflate(layoutInflater)

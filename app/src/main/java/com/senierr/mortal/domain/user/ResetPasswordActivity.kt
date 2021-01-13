@@ -12,7 +12,7 @@ import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityResetPasswordBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
-import com.senierr.base.support.arch.ext.getViewModel
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
 
@@ -31,8 +31,8 @@ class ResetPasswordActivity : BaseActivity<ActivityResetPasswordBinding>() {
         private const val REGEX_PASSWORD = "^[a-zA-Z0-9]{6,16}$"
     }
 
-    private val accountViewModel by getViewModel<AccountViewModel>()
-    private val userInfoViewModel by getViewModel<UserInfoViewModel>()
+    private val accountViewModel by viewModel<AccountViewModel>()
+    private val userInfoViewModel by viewModel<UserInfoViewModel>()
 
     private var currentUserInfo: UserInfo? = null
 

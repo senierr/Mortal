@@ -3,7 +3,6 @@ package com.senierr.repository.remote.progress
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.senierr.base.support.utils.LogUtil
 import com.senierr.repository.Repository
 
 /**
@@ -35,15 +34,21 @@ abstract class ProgressReceiver: BroadcastReceiver() {
         }
     }
 
-    abstract fun onProgress(tag: String, progress: Progress)
+    /**
+     * 进度回调
+     *
+     * @param context 上下文
+     * @param tag 标签
+     * @param progress 进度
+     */
+    abstract fun onProgress(context: Context, tag: String, progress: Progress)
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        LogUtil.logE("onReceive")
-        if (intent != null && intent.action == ACTION_REMOTE_PROGRESS_RECEIVER) {
+        if (context != null && intent != null && intent.action == ACTION_REMOTE_PROGRESS_RECEIVER) {
             val tag = intent.getStringExtra(KEY_TAG)
             val progress = intent.getParcelableExtra<Progress>(KEY_PROGRESS)
             if (tag != null && progress != null) {
-                onProgress(tag, progress)
+                onProgress(context, tag, progress)
             }
         }
     }

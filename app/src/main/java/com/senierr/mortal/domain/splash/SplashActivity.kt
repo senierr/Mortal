@@ -9,7 +9,7 @@ import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivitySplashBinding
 import com.senierr.mortal.domain.main.MainActivity
 import com.senierr.mortal.domain.splash.vm.SplashViewModel
-import com.senierr.base.support.arch.ext.getAndroidViewModel
+import com.senierr.base.support.arch.ext.androidViewModel
 import com.senierr.mortal.ext.showImage
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
  */
 class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
-    private val splashViewModel by getAndroidViewModel<SplashViewModel>()
+    private val splashViewModel by androidViewModel<SplashViewModel>()
 
     override fun createViewBinding(layoutInflater: LayoutInflater): ActivitySplashBinding {
         return ActivitySplashBinding.inflate(layoutInflater)

@@ -2,11 +2,15 @@ package com.senierr.mortal.domain.common.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.senierr.base.support.arch.StatefulData
+import com.senierr.base.support.arch.ext.emitFailure
+import com.senierr.base.support.arch.ext.emitSuccess
 import com.senierr.repository.Repository
 import com.senierr.repository.service.api.ICommonService
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import java.io.File
-
 
 /**
  * 下载
@@ -16,7 +20,8 @@ import java.io.File
  */
 class DownloadViewModel : ViewModel() {
 
-    val downloadResult = StatefulLiveData<File>()
+    private val _downloadCompleted = MutableSharedFlow<StatefulData<File>>()
+    val downloadCompleted: SharedFlow<StatefulData<File>> = _downloadCompleted
 
     private val commonService = Repository.getService<ICommonService>()
 
@@ -24,9 +29,9 @@ class DownloadViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val destFile = commonService.downloadFile(url, destName, "")
-                downloadResult.setValue(destFile)
+                _downloadCompleted.emitSuccess(destFile)
             } catch (e: Exception) {
-                downloadResult.setException(e)
+                _downloadCompleted.emitFailure(e)
             }
         }
     }

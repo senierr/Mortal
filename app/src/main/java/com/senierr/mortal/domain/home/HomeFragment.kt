@@ -12,7 +12,7 @@ import com.senierr.mortal.R
 import com.senierr.mortal.databinding.FragmentHomeBinding
 import com.senierr.mortal.domain.category.CategoryManagerActivity
 import com.senierr.mortal.domain.home.vm.HomeViewModel
-import com.senierr.base.support.arch.ext.getViewModel
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.gank.Category
 
@@ -24,7 +24,7 @@ import com.senierr.repository.entity.gank.Category
  */
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
-    private val homeViewModel by getViewModel<HomeViewModel>()
+    private val homeViewModel by viewModel<HomeViewModel>()
 
     // 当前加载的分类标签
     private val currentCategories = mutableListOf<Category>()

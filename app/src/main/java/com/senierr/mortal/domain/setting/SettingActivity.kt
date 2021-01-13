@@ -1,21 +1,22 @@
 package com.senierr.mortal.domain.setting
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.senierr.base.support.arch.ext.androidViewModel
 import com.senierr.base.support.arch.ext.doOnFailure
 import com.senierr.base.support.arch.ext.doOnSuccess
-import com.senierr.base.support.arch.ext.getAndroidViewModel
-import com.senierr.base.support.arch.ext.getViewModel
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ext.*
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.AppUtil
 import com.senierr.base.support.utils.FileUtil
-import com.senierr.base.support.utils.LogUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivitySettingBinding
 import com.senierr.mortal.domain.setting.vm.SettingViewModel
@@ -24,8 +25,12 @@ import com.senierr.mortal.domain.user.LoginActivity
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.showToast
+import com.senierr.mortal.notification.NotificationManager
 import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.entity.bmob.VersionInfo
+import com.senierr.repository.remote.progress.Progress
+import com.senierr.repository.remote.progress.ProgressReceiver
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 
 /**
@@ -36,13 +41,24 @@ import kotlinx.coroutines.flow.collect
  */
 class SettingActivity : BaseActivity<ActivitySettingBinding>() {
 
-    private val accountViewModel by getViewModel<AccountViewModel>()
-    private val userInfoViewModel by getViewModel<UserInfoViewModel>()
-    private val settingViewModel by getAndroidViewModel<SettingViewModel>()
+    companion object {
+        private const val TAG_DOWNLOAD = "tag_download_apk_setting"
+    }
+
+    private val accountViewModel: AccountViewModel by viewModel()
+    private val userInfoViewModel: UserInfoViewModel by viewModel()
+    private val settingViewModel: SettingViewModel by androidViewModel()
 
     private var currentUserInfo: UserInfo? = null
 
-    private val downloadApkReceiver = DownloadApkReceiver()
+    // 下载进度监听
+    private val downloadApkReceiver = object : ProgressReceiver() {
+        override fun onProgress(context: Context, tag: String, progress: Progress) {
+            if (tag == TAG_DOWNLOAD) {
+                NotificationManager.sendDownloadNotification(context, progress.percent)
+            }
+        }
+    }
 
     override fun createViewBinding(layoutInflater: LayoutInflater): ActivitySettingBinding {
         return ActivitySettingBinding.inflate(layoutInflater)
@@ -52,12 +68,12 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
         super.onCreate(savedInstanceState)
         initView()
         initViewModel()
+        registerReceiver(downloadApkReceiver, IntentFilter(ProgressReceiver.ACTION_REMOTE_PROGRESS_RECEIVER))
         settingViewModel.getCacheSize()
-//        registerReceiver(downloadApkReceiver, IntentFilter(ProgressReceiver.ACTION_REMOTE_PROGRESS_RECEIVER))
     }
 
     override fun onDestroy() {
-//        unregisterReceiver(downloadApkReceiver)
+        unregisterReceiver(downloadApkReceiver)
         super.onDestroy()
     }
 
@@ -106,36 +122,42 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
         })
 
         lifecycleScope.launchWhenStarted {
-            LogUtil.logE("newVersionInfo")
             settingViewModel.newVersionInfo
-                    .doOnSuccess {
-                        showNewVersionDialog(it)
-                    }
-                    .doOnFailure {
-                        showToast(R.string.network_error)
-                    }
-                    .collect {}
-            LogUtil.logE("noNewVersionInfo")
+                .doOnSuccess {
+                    showNewVersionDialog(it)
+                }
+                .doOnFailure {
+                    showToast(R.string.network_error)
+                }
+                .collect()
+        }
+
+        lifecycleScope.launchWhenStarted {
             settingViewModel.noNewVersionInfo.doOnSuccess {
                 showToast(R.string.no_new_version)
             }
-                    .collect()
-            LogUtil.logE("apkDownloadCompleted")
+                .collect()
+        }
+
+        lifecycleScope.launchWhenStarted {
             settingViewModel.apkDownloadCompleted
-                    .doOnSuccess {
-                        AppUtil.installApk(
-                                this@SettingActivity,
-                                "${this@SettingActivity.packageName}.provider",
-                                it
-                        )
-                    }
-                    .collect()
-            LogUtil.logE("cacheSize")
+                .doOnSuccess {
+                    // 延迟，防止通知后发
+                    delay(100)
+                    // 移除下载通知
+                    NotificationManager.cancel(this@SettingActivity, NotificationManager.NOTIFY_ID_UPDATE)
+                    // 安装APK
+                    AppUtil.installApk(this@SettingActivity, "${this@SettingActivity.packageName}.provider", it)
+                }
+                .collect()
+        }
+
+        lifecycleScope.launchWhenStarted {
             settingViewModel.cacheSize
                 .doOnSuccess {
                     binding.siClearCache.message = FileUtil.getFormatSize(it.toDouble())
                 }
-                .collect {}
+                .collect()
         }
 
         accountViewModel.logoutResult.observe(this) {
@@ -177,7 +199,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
             .setTitle(R.string.discover_new_version)
             .setMessage(versionInfo.changeLog.replace("\\n", "\n")) // 传输时\n被转义成\\n了
             .setPositiveButton(R.string.upgrade_now) { dialog, _ ->
-                settingViewModel.downloadApk(versionInfo)
+                settingViewModel.downloadApk(TAG_DOWNLOAD, versionInfo)
                 dialog.dismiss()
             }
             .setNegativeButton(R.string.upgrade_later) { dialog, _ ->

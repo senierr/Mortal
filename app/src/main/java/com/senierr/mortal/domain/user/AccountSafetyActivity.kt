@@ -12,7 +12,7 @@ import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityAccountSafetyBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
-import com.senierr.base.support.arch.ext.getViewModel
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
 
@@ -24,8 +24,8 @@ import com.senierr.repository.entity.bmob.UserInfo
  */
 class AccountSafetyActivity : BaseActivity<ActivityAccountSafetyBinding>() {
 
-    private val accountViewModel by getViewModel<AccountViewModel>()
-    private val userInfoViewModel by getViewModel<UserInfoViewModel>()
+    private val accountViewModel by viewModel<AccountViewModel>()
+    private val userInfoViewModel by viewModel<UserInfoViewModel>()
 
     private var currentUserInfo: UserInfo? = null
 

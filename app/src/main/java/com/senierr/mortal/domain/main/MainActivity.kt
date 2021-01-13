@@ -10,9 +10,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.senierr.base.support.arch.ext.androidViewModel
 import com.senierr.base.support.arch.ext.doOnFailure
 import com.senierr.base.support.arch.ext.doOnSuccess
-import com.senierr.base.support.arch.ext.getAndroidViewModel
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.AppUtil
 import com.senierr.mortal.R
@@ -22,7 +22,11 @@ import com.senierr.mortal.domain.recommend.RecommendFragment
 import com.senierr.mortal.domain.setting.vm.SettingViewModel
 import com.senierr.mortal.domain.user.MeFragment
 import com.senierr.mortal.ext.showToast
+import com.senierr.mortal.notification.NotificationManager
 import com.senierr.repository.entity.bmob.VersionInfo
+import com.senierr.repository.remote.progress.Progress
+import com.senierr.repository.remote.progress.ProgressReceiver
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 
 /**
@@ -33,11 +37,22 @@ import kotlinx.coroutines.flow.collect
  */
 class MainActivity : BaseActivity<ActivityMainBinding>() {
 
-    private val settingViewModel by getAndroidViewModel<SettingViewModel>()
+    private val settingViewModel by androidViewModel<SettingViewModel>()
 
     companion object {
+        private const val TAG_DOWNLOAD = "tag_download_apk_main"
+
         fun start(context: Context) {
             context.startActivity(Intent(context, MainActivity::class.java))
+        }
+    }
+
+    // 下载进度监听
+    private val downloadApkReceiver = object : ProgressReceiver() {
+        override fun onProgress(context: Context, tag: String, progress: Progress) {
+            if (tag == TAG_DOWNLOAD) {
+                NotificationManager.sendDownloadNotification(context, progress.percent)
+            }
         }
     }
 
@@ -49,7 +64,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         super.onCreate(savedInstanceState)
         initView()
         initViewModel()
+        registerReceiver(downloadApkReceiver, IntentFilter(ProgressReceiver.ACTION_REMOTE_PROGRESS_RECEIVER))
         settingViewModel.checkNewVersion()
+    }
+
+    override fun onStop() {
+        // 只要离开此页面，即关闭广播监听
+        unregisterReceiver(downloadApkReceiver)
+        super.onStop()
     }
 
     private fun initView() {
@@ -87,23 +109,26 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             settingViewModel.newVersionInfo
-                    .doOnSuccess {
-                        showNewVersionDialog(it)
-                    }
-                    .doOnFailure {
-                        showToast(R.string.network_error)
-                    }
-                    .collect()
+                .doOnSuccess {
+                    showNewVersionDialog(it)
+                }
+                .doOnFailure {
+                    showToast(R.string.network_error)
+                }
+                .collect()
+        }
 
+        lifecycleScope.launchWhenStarted {
             settingViewModel.apkDownloadCompleted
-                    .doOnSuccess {
-                        AppUtil.installApk(
-                                this@MainActivity,
-                                "${this@MainActivity.packageName}.provider",
-                                it
-                        )
-                    }
-                    .collect()
+                .doOnSuccess {
+                    // 延迟，防止通知后发
+                    delay(100)
+                    // 移除下载通知
+                    NotificationManager.cancel(this@MainActivity, NotificationManager.NOTIFY_ID_UPDATE)
+                    // 安装APK
+                    AppUtil.installApk(this@MainActivity, "${this@MainActivity.packageName}.provider", it)
+                }
+                .collect()
         }
     }
 
@@ -115,7 +140,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             .setTitle(R.string.discover_new_version)
             .setMessage(versionInfo.changeLog.replace("\\n", "\n")) // 传输时\n被转义成\\n了
             .setPositiveButton(R.string.upgrade_now) { dialog, _ ->
-                settingViewModel.downloadApk(versionInfo)
+                settingViewModel.downloadApk(TAG_DOWNLOAD, versionInfo)
                 dialog.dismiss()
             }
             .setNegativeButton(R.string.upgrade_later) { dialog, _ ->

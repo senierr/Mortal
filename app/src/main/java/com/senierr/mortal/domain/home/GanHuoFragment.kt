@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
-import com.senierr.base.support.arch.ext.getViewModel
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.ui.recyclerview.LinearItemDecoration
 import com.senierr.base.support.utils.ScreenUtil
@@ -54,8 +54,8 @@ class GanHuoFragment : BaseFragment<FragmentHomeGanhuoBinding>() {
     private val noImageWrapper = GanHuoNoImageWrapper()
     private val loadMoreWrapper = LoadMoreWrapper()
 
-    private val ganHuoViewModel by getViewModel<GanHuoViewModel>()
-    private val userInfoViewModel by getViewModel<UserInfoViewModel>()
+    private val ganHuoViewModel by viewModel<GanHuoViewModel>()
+    private val userInfoViewModel by viewModel<UserInfoViewModel>()
 
     private var page = 1
     private val pageSize = 10

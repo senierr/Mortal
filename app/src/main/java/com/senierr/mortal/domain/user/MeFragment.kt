@@ -12,7 +12,7 @@ import com.senierr.mortal.databinding.FragmentMeBinding
 import com.senierr.mortal.domain.category.CategoryManagerActivity
 import com.senierr.mortal.domain.setting.SettingActivity
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
-import com.senierr.base.support.arch.ext.getViewModel
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.mortal.ext.showImage
 import com.senierr.repository.entity.bmob.UserInfo
 
@@ -28,7 +28,7 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         const val REQUEST_CODE_LOGIN = 100
     }
 
-    private val userInfoViewModel by getViewModel<UserInfoViewModel>()
+    private val userInfoViewModel by viewModel<UserInfoViewModel>()
 
     private var currentUserInfo: UserInfo? = null
 

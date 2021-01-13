@@ -9,8 +9,8 @@ import android.view.MenuItem
 import androidx.lifecycle.lifecycleScope
 import com.senierr.base.support.arch.ext.doOnFailure
 import com.senierr.base.support.arch.ext.doOnSuccess
-import com.senierr.base.support.arch.ext.getAndroidViewModel
-import com.senierr.base.support.arch.ext.getViewModel
+import com.senierr.base.support.arch.ext.androidViewModel
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityFeedbackBinding
@@ -29,8 +29,8 @@ import kotlinx.coroutines.flow.collect
  */
 class FeedbackActivity : BaseActivity<ActivityFeedbackBinding>() {
 
-    private val userInfoViewModel by getViewModel<UserInfoViewModel>()
-    private val settingViewModel by getAndroidViewModel<SettingViewModel>()
+    private val userInfoViewModel by viewModel<UserInfoViewModel>()
+    private val settingViewModel by androidViewModel<SettingViewModel>()
 
     private var currentUserInfo: UserInfo? = null
 

@@ -10,7 +10,7 @@ import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityUserInfoBinding
 import com.senierr.mortal.domain.common.EditTextActivity
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
-import com.senierr.base.support.arch.ext.getViewModel
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.mortal.ext.showImage
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
@@ -28,7 +28,7 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
         private const val REQUEST_CODE_EDIT_EMAIL = 101
     }
 
-    private val userInfoViewModel by getViewModel<UserInfoViewModel>()
+    private val userInfoViewModel by viewModel<UserInfoViewModel>()
 
     private var currentUserInfo: UserInfo? = null
 

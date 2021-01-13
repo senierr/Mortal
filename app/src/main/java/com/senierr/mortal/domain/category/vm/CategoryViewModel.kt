@@ -2,10 +2,14 @@ package com.senierr.mortal.domain.category.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.senierr.mortal.domain.common.vm.StatefulLiveData
+import com.senierr.base.support.arch.StatefulData
+import com.senierr.base.support.arch.ext.emitFailure
+import com.senierr.base.support.arch.ext.emitSuccess
 import com.senierr.repository.Repository
 import com.senierr.repository.entity.gank.Category
 import com.senierr.repository.service.api.IGankService
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -16,8 +20,11 @@ import kotlinx.coroutines.launch
  */
 class CategoryViewModel : ViewModel() {
 
-    val ganHuoCategories = StatefulLiveData<MutableList<Category>>()
-    val saveCategories = StatefulLiveData<Boolean>()
+    private val _ganHuoCategories = MutableSharedFlow<StatefulData<MutableList<Category>>>()
+    val ganHuoCategories: SharedFlow<StatefulData<MutableList<Category>>> = _ganHuoCategories
+
+    private val _saveCategoryResult = MutableSharedFlow<StatefulData<Boolean>>()
+    val saveCategoryResult: SharedFlow<StatefulData<Boolean>> = _saveCategoryResult
 
     private val gankService = Repository.getService<IGankService>()
 
@@ -28,9 +35,9 @@ class CategoryViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val categories = gankService.getGanHuoCategories()
-                ganHuoCategories.setValue(categories)
+                _ganHuoCategories.emitSuccess(categories)
             } catch (e: Exception) {
-                ganHuoCategories.setException(e)
+                _ganHuoCategories.emitFailure(e)
             }
         }
     }
@@ -42,9 +49,9 @@ class CategoryViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val result = gankService.saveGanHuoCategories(categories)
-                saveCategories.setValue(result)
+                _saveCategoryResult.emitSuccess(result)
             } catch (e: Exception) {
-                saveCategories.setException(e)
+                _saveCategoryResult.emitFailure(e)
             }
         }
     }

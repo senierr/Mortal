@@ -15,14 +15,14 @@ import androidx.lifecycle.ViewModelProvider
  */
 
 @MainThread
-inline fun <reified VM : ViewModel> ComponentActivity.getViewModel(): Lazy<VM> {
+inline fun <reified VM : ViewModel> ComponentActivity.viewModel(): Lazy<VM> {
     return object : Lazy<VM> {
         private var cached: VM? = null
 
         override val value: VM
             get() {
                 val viewModel = cached
-                return viewModel ?: ViewModelProvider(this@getViewModel)
+                return viewModel ?: ViewModelProvider(this@viewModel)
                     .get(VM::class.java).also {
                         cached = it
                     }
@@ -33,14 +33,14 @@ inline fun <reified VM : ViewModel> ComponentActivity.getViewModel(): Lazy<VM> {
 }
 
 @MainThread
-inline fun <reified VM : AndroidViewModel> ComponentActivity.getAndroidViewModel(): Lazy<VM> {
+inline fun <reified VM : AndroidViewModel> ComponentActivity.androidViewModel(): Lazy<VM> {
     return object : Lazy<VM> {
         private var cached: VM? = null
 
         override val value: VM
             get() {
                 val viewModel = cached
-                return viewModel ?: ViewModelProvider(this@getAndroidViewModel,
+                return viewModel ?: ViewModelProvider(this@androidViewModel,
                     ViewModelProvider.AndroidViewModelFactory.getInstance(application)
                 ).get(VM::class.java).also {
                     cached = it
@@ -52,14 +52,14 @@ inline fun <reified VM : AndroidViewModel> ComponentActivity.getAndroidViewModel
 }
 
 @MainThread
-inline fun <reified VM : ViewModel> Fragment.getViewModel(): Lazy<VM> {
+inline fun <reified VM : ViewModel> Fragment.viewModel(): Lazy<VM> {
     return object : Lazy<VM> {
         private var cached: VM? = null
 
         override val value: VM
             get() {
                 val viewModel = cached
-                return viewModel ?: ViewModelProvider(this@getViewModel)
+                return viewModel ?: ViewModelProvider(this@viewModel)
                     .get(VM::class.java).also {
                         cached = it
                     }
@@ -70,14 +70,14 @@ inline fun <reified VM : ViewModel> Fragment.getViewModel(): Lazy<VM> {
 }
 
 @MainThread
-inline fun <reified VM : AndroidViewModel> Fragment.getAndroidViewModel(): Lazy<VM> {
+inline fun <reified VM : AndroidViewModel> Fragment.androidViewModel(): Lazy<VM> {
     return object : Lazy<VM> {
         private var cached: VM? = null
 
         override val value: VM
             get() {
                 val viewModel = cached
-                return viewModel ?: ViewModelProvider(this@getAndroidViewModel,
+                return viewModel ?: ViewModelProvider(this@androidViewModel,
                     ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
                 ).get(VM::class.java).also {
                     cached = it

@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
-import com.senierr.base.support.arch.ext.getViewModel
+import com.senierr.base.support.arch.ext.doOnFailure
+import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.ui.recyclerview.GridItemDecoration
 import com.senierr.base.support.utils.ScreenUtil
@@ -14,8 +17,12 @@ import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityCategoryManagerBinding
 import com.senierr.mortal.domain.category.vm.CategoryViewModel
 import com.senierr.mortal.domain.category.wrapper.CategoryWrapper
-import com.senierr.mortal.ext.*
+import com.senierr.mortal.ext.openItemDrag
+import com.senierr.mortal.ext.showContentView
+import com.senierr.mortal.ext.showEmptyView
+import com.senierr.mortal.ext.showNetworkErrorView
 import com.senierr.repository.entity.gank.Category
+import kotlinx.coroutines.flow.collect
 
 /**
  * 标签管理页面
@@ -25,7 +32,7 @@ import com.senierr.repository.entity.gank.Category
  */
 class CategoryManagerActivity : BaseActivity<ActivityCategoryManagerBinding>() {
 
-    private val categoryViewModel by getViewModel<CategoryViewModel>()
+    private val categoryViewModel: CategoryViewModel by viewModel()
 
     private val multiTypeAdapter = MultiTypeAdapter()
     private val categoryWrapper = CategoryWrapper()
@@ -69,20 +76,28 @@ class CategoryManagerActivity : BaseActivity<ActivityCategoryManagerBinding>() {
     }
 
     private fun initViewModel() {
-        categoryViewModel.ganHuoCategories.observe(this, {
-            if (it.isEmpty()) {
-                binding.msvState.showEmptyView()
-            } else {
-                binding.msvState.showContentView()
-                multiTypeAdapter.data.clear()
-                multiTypeAdapter.data.addAll(it)
-                multiTypeAdapter.notifyDataSetChanged()
-            }
-        }, {
-            binding.msvState.showNetworkErrorView { doRefresh() }
-        })
-        categoryViewModel.saveCategories.observe(this) {
-            finish()
+        lifecycleScope.launchWhenStarted {
+            categoryViewModel.ganHuoCategories
+                .doOnSuccess {
+                    if (it.isEmpty()) {
+                        binding.msvState.showEmptyView()
+                    } else {
+                        binding.msvState.showContentView()
+                        multiTypeAdapter.data.clear()
+                        multiTypeAdapter.data.addAll(it)
+                        multiTypeAdapter.notifyDataSetChanged()
+                    }
+                }
+                .doOnFailure {
+                    binding.msvState.showNetworkErrorView { doRefresh() }
+                }
+                .collect()
+        }
+
+        lifecycleScope.launchWhenStarted {
+            categoryViewModel.saveCategoryResult
+                .doOnSuccess { finish() }
+                .collect()
         }
     }
 

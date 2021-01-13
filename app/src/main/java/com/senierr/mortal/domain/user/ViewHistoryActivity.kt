@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
-import com.senierr.base.support.arch.ext.getViewModel
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.ui.recyclerview.LinearItemDecoration
 import com.senierr.base.support.utils.ScreenUtil
@@ -31,8 +31,8 @@ class ViewHistoryActivity : BaseActivity<ActivityViewHistoryBinding>() {
     private val viewHistoryWrapper = ViewHistoryWrapper()
     private val loadMoreWrapper = LoadMoreWrapper()
 
-    private val ganHuoViewModel by getViewModel<GanHuoViewModel>()
-    private val userInfoViewModel by getViewModel<UserInfoViewModel>()
+    private val ganHuoViewModel by viewModel<GanHuoViewModel>()
+    private val userInfoViewModel by viewModel<UserInfoViewModel>()
 
     private var page = 0
     private val pageSize = 10

@@ -114,12 +114,17 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
     }
 
     private fun initViewModel() {
-        userInfoViewModel.loggedCacheUserInfo.observe(this, {
-            currentUserInfo = it
-            binding.btnLogOut.setGone(false)
-        }, {
-            binding.btnLogOut.setGone(true)
-        })
+        lifecycleScope.launchWhenStarted {
+            userInfoViewModel.loggedCacheUserInfo
+                    .doOnSuccess {
+                        currentUserInfo = it
+                        binding.btnLogOut.setGone(false)
+                    }
+                    .doOnFailure {
+                        binding.btnLogOut.setGone(true)
+                    }
+                    .collect()
+        }
 
         lifecycleScope.launchWhenStarted {
             settingViewModel.newVersionInfo
@@ -160,9 +165,13 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
                 .collect()
         }
 
-        accountViewModel.logoutResult.observe(this) {
-            LoginActivity.start(this)
-            finish()
+        lifecycleScope.launchWhenStarted {
+            accountViewModel.logoutResult
+                    .doOnSuccess {
+                        LoginActivity.start(this@SettingActivity)
+                        finish()
+                    }
+                    .collect()
         }
     }
 

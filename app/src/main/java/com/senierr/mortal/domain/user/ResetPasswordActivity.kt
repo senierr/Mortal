@@ -6,15 +6,19 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.lifecycleScope
+import com.senierr.base.support.arch.ext.doOnFailure
+import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.RegexUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityResetPasswordBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
-import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
+import kotlinx.coroutines.flow.collect
 
 /**
  * 重置密码页面
@@ -31,8 +35,8 @@ class ResetPasswordActivity : BaseActivity<ActivityResetPasswordBinding>() {
         private const val REGEX_PASSWORD = "^[a-zA-Z0-9]{6,16}$"
     }
 
-    private val accountViewModel by viewModel<AccountViewModel>()
-    private val userInfoViewModel by viewModel<UserInfoViewModel>()
+    private val accountViewModel: AccountViewModel by viewModel()
+    private val userInfoViewModel: UserInfoViewModel by viewModel()
 
     private var currentUserInfo: UserInfo? = null
 
@@ -119,19 +123,30 @@ class ResetPasswordActivity : BaseActivity<ActivityResetPasswordBinding>() {
     }
 
     private fun initViewModel() {
-        userInfoViewModel.loggedCacheUserInfo.observe(this, {
-            currentUserInfo = it
-        }, {
-            // 未登录，跳转至登录页
-            LoginActivity.start(this)
-            finish()
-        })
-        accountViewModel.resetPasswordResult.observe(this, {
-            showToast(R.string.reset_password_success)
-            finish()
-        }, {
-            showToast(it.message)
-        })
+        lifecycleScope.launchWhenStarted {
+            userInfoViewModel.loggedCacheUserInfo
+                    .doOnSuccess {
+                        currentUserInfo = it
+                    }
+                    .doOnFailure {
+                        // 未登录，跳转至登录页
+                        LoginActivity.start(this@ResetPasswordActivity)
+                        finish()
+                    }
+                    .collect()
+        }
+
+        lifecycleScope.launchWhenStarted {
+            accountViewModel.resetPasswordResult
+                    .doOnSuccess {
+                        showToast(R.string.reset_password_success)
+                        finish()
+                    }
+                    .doOnFailure {
+                        showToast(it?.message)
+                    }
+                    .collect()
+        }
     }
 
     /**

@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
+import com.senierr.base.support.arch.ext.doOnFailure
+import com.senierr.base.support.arch.ext.doOnSuccess
 import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseFragment
@@ -15,6 +18,7 @@ import com.senierr.mortal.domain.setting.SettingActivity
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.showImage
 import com.senierr.repository.entity.bmob.UserInfo
+import kotlinx.coroutines.flow.collect
 
 /**
  * 我的页面
@@ -28,7 +32,7 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
         const val REQUEST_CODE_LOGIN = 100
     }
 
-    private val userInfoViewModel by viewModel<UserInfoViewModel>()
+    private val userInfoViewModel: UserInfoViewModel by viewModel()
 
     private var currentUserInfo: UserInfo? = null
 
@@ -59,16 +63,26 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
     }
 
     private fun initViewModel() {
-        userInfoViewModel.loggedCacheUserInfo.observe(this, {
-            currentUserInfo = it
-            renderUserInfo(it)
-            userInfoViewModel.fetchUserInfo(it.objectId)
-        }, {
-            renderUserInfo(null)
-        })
-        userInfoViewModel.userinfo.observe(this) {
-            currentUserInfo = it
-            renderUserInfo(it)
+        lifecycleScope.launchWhenStarted {
+            userInfoViewModel.loggedCacheUserInfo
+                    .doOnSuccess {
+                        currentUserInfo = it
+                        renderUserInfo(it)
+                        userInfoViewModel.fetchUserInfo(it.objectId)
+                    }
+                    .doOnFailure {
+                        renderUserInfo(null)
+                    }
+                    .collect()
+        }
+
+        lifecycleScope.launchWhenStarted {
+            userInfoViewModel.userInfo
+                    .doOnSuccess {
+                        currentUserInfo = it
+                        renderUserInfo(it)
+                    }
+                    .collect()
         }
     }
 

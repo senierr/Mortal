@@ -68,10 +68,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         settingViewModel.checkNewVersion()
     }
 
-    override fun onStop() {
-        // 只要离开此页面，即关闭广播监听
+    override fun onDestroy() {
         unregisterReceiver(downloadApkReceiver)
-        super.onStop()
+        super.onDestroy()
     }
 
     private fun initView() {

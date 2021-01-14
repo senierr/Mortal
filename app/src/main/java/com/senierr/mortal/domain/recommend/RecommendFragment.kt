@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
+import com.senierr.base.support.arch.ext.doOnFailure
+import com.senierr.base.support.arch.ext.doOnSuccess
 import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.ui.recyclerview.GridItemDecoration
@@ -16,8 +19,12 @@ import com.senierr.mortal.domain.common.ImagePreviewActivity
 import com.senierr.mortal.domain.common.wrapper.LoadMoreWrapper
 import com.senierr.mortal.domain.recommend.vm.RecommendViewModel
 import com.senierr.mortal.domain.recommend.wrapper.RecommendWrapper
-import com.senierr.mortal.ext.*
+import com.senierr.mortal.ext.showContentView
+import com.senierr.mortal.ext.showEmptyView
+import com.senierr.mortal.ext.showLoadingView
+import com.senierr.mortal.ext.showNetworkErrorView
 import com.senierr.repository.entity.gank.Girl
+import kotlinx.coroutines.flow.collect
 
 /**
  * 精选页面
@@ -31,7 +38,7 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>() {
     private val recommendWrapper = RecommendWrapper()
     private val loadMoreWrapper = LoadMoreWrapper()
 
-    private val recommendViewModel by viewModel<RecommendViewModel>()
+    private val recommendViewModel: RecommendViewModel by viewModel()
 
     private var page = 1
     private val pageSize = 10
@@ -70,22 +77,27 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>() {
     }
 
     private fun initViewModel() {
-        recommendViewModel.fetchGirlsResult.observe(this, {
-            if (page == 1) {
-                renderRefresh(it)
-            } else {
-                renderLoadMore(it)
-            }
-        }, {
-            if (page == 1) {
-                binding?.msvState?.showNetworkErrorView {
-                    binding?.msvState?.showLoadingView()
-                    doRefresh()
-                }
-            } else {
-                loadMoreWrapper.loadFailure()
-            }
-        })
+        lifecycleScope.launchWhenStarted {
+            recommendViewModel.girls
+                    .doOnSuccess {
+                        if (page == 1) {
+                            renderRefresh(it)
+                        } else {
+                            renderLoadMore(it)
+                        }
+                    }
+                    .doOnFailure {
+                        if (page == 1) {
+                            binding?.msvState?.showNetworkErrorView {
+                                binding?.msvState?.showLoadingView()
+                                doRefresh()
+                            }
+                        } else {
+                            loadMoreWrapper.loadFailure()
+                        }
+                    }
+                    .collect()
+        }
     }
 
     /**

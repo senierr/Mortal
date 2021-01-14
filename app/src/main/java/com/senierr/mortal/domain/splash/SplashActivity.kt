@@ -3,16 +3,18 @@ package com.senierr.mortal.domain.splash
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.lifecycle.lifecycleScope
+import com.senierr.base.support.arch.ext.androidViewModel
+import com.senierr.base.support.arch.ext.doOnSuccess
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivitySplashBinding
 import com.senierr.mortal.domain.main.MainActivity
 import com.senierr.mortal.domain.splash.vm.SplashViewModel
-import com.senierr.base.support.arch.ext.androidViewModel
 import com.senierr.mortal.ext.showImage
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -23,7 +25,7 @@ import kotlinx.coroutines.launch
  */
 class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
-    private val splashViewModel by androidViewModel<SplashViewModel>()
+    private val splashViewModel: SplashViewModel by androidViewModel()
 
     override fun createViewBinding(layoutInflater: LayoutInflater): ActivitySplashBinding {
         return ActivitySplashBinding.inflate(layoutInflater)
@@ -44,8 +46,12 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     }
 
     private fun initViewModel() {
-        splashViewModel.randomGil.observe(this) {
-            binding.ivSplash.showImage(it.url)
+        lifecycleScope.launchWhenStarted {
+            splashViewModel.randomGil
+                    .doOnSuccess {
+                        binding.ivSplash.showImage(it.url)
+                    }
+                    .collect()
         }
     }
 

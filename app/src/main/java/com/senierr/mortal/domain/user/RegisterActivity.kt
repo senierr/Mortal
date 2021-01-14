@@ -7,14 +7,18 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.senierr.base.support.arch.ext.doOnFailure
+import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.RegexUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityRegisterBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
-import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.mortal.ext.showToast
+import kotlinx.coroutines.flow.collect
 
 /**
  * 注册页面
@@ -38,7 +42,7 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>() {
 
     private lateinit var loadingDialog: AlertDialog
 
-    private val accountViewModel by viewModel<AccountViewModel>()
+    private val accountViewModel: AccountViewModel by viewModel()
 
     override fun createViewBinding(layoutInflater: LayoutInflater): ActivityRegisterBinding {
         return ActivityRegisterBinding.inflate(layoutInflater)
@@ -140,12 +144,17 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>() {
     }
 
     private fun initViewModel() {
-        accountViewModel.registerResult.observe(this, {
-            showToast(R.string.register_success)
-            finish()
-        }, {
-            showToast(it.message)
-        })
+        lifecycleScope.launchWhenStarted {
+            accountViewModel.registerResult
+                    .doOnSuccess {
+                        showToast(R.string.register_success)
+                        finish()
+                    }
+                    .doOnFailure {
+                        showToast(it?.message)
+                    }
+                    .collect()
+        }
     }
 
     /**

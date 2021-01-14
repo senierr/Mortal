@@ -2,25 +2,38 @@ package com.senierr.mortal.domain.user.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.senierr.mortal.domain.common.vm.StatefulLiveData
+import com.senierr.base.support.arch.StatefulData
+import com.senierr.base.support.arch.ext.emitFailure
+import com.senierr.base.support.arch.ext.emitSuccess
 import com.senierr.repository.Repository
 import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.service.api.IUserService
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
 /**
- * 登录
+ * 帐号模块
  *
  * @author zhouchunjie
  * @date 2019/7/9
  */
 class AccountViewModel : ViewModel() {
 
-    val loginResult = StatefulLiveData<UserInfo>()
-    val registerResult = StatefulLiveData<UserInfo>()
-    val logoutResult = StatefulLiveData<Boolean>()
-    val deleteResult = StatefulLiveData<Boolean>()
-    val resetPasswordResult = StatefulLiveData<Boolean>()
+    private val _loginResult = MutableSharedFlow<StatefulData<UserInfo>>()
+    val loginResult: SharedFlow<StatefulData<UserInfo>> = _loginResult
+
+    private val _registerResult = MutableSharedFlow<StatefulData<UserInfo>>()
+    val registerResult: SharedFlow<StatefulData<UserInfo>> = _registerResult
+
+    private val _logoutResult = MutableSharedFlow<StatefulData<Boolean>>()
+    val logoutResult: SharedFlow<StatefulData<Boolean>> = _logoutResult
+
+    private val _deleteResult = MutableSharedFlow<StatefulData<Boolean>>()
+    val deleteResult: SharedFlow<StatefulData<Boolean>> = _deleteResult
+
+    private val _resetPasswordResult = MutableSharedFlow<StatefulData<Boolean>>()
+    val resetPasswordResult: SharedFlow<StatefulData<Boolean>> = _resetPasswordResult
 
     private val userService = Repository.getService<IUserService>()
 
@@ -31,9 +44,9 @@ class AccountViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val userInfo = userService.login(account, password)
-                loginResult.setValue(userInfo)
+                _loginResult.emitSuccess(userInfo)
             } catch (e: Exception) {
-                loginResult.setException(e)
+                _loginResult.emitFailure(e)
             }
         }
     }
@@ -45,9 +58,9 @@ class AccountViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val userInfo = userService.register(account, password)
-                registerResult.setValue(userInfo)
+                _registerResult.emitSuccess(userInfo)
             } catch (e: Exception) {
-                registerResult.setException(e)
+                _registerResult.emitFailure(e)
             }
         }
     }
@@ -59,9 +72,9 @@ class AccountViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val result = userService.logout(objectId)
-                logoutResult.setValue(result)
+                _logoutResult.emitSuccess(result)
             } catch (e: Exception) {
-                logoutResult.setException(e)
+                _logoutResult.emitFailure(e)
             }
         }
     }
@@ -73,9 +86,9 @@ class AccountViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val result = userService.delete(objectId, sessionToken)
-                deleteResult.setValue(result)
+                _deleteResult.emitSuccess(result)
             } catch (e: Exception) {
-                deleteResult.setException(e)
+                _deleteResult.emitFailure(e)
             }
         }
     }
@@ -90,9 +103,9 @@ class AccountViewModel : ViewModel() {
                     userInfo.objectId, userInfo.sessionToken,
                     oldPassword, newPassword
                 )
-                resetPasswordResult.setValue(response)
+                _resetPasswordResult.emitSuccess(response)
             } catch (e: Exception) {
-                resetPasswordResult.setException(e)
+                _resetPasswordResult.emitFailure(e)
             }
         }
     }

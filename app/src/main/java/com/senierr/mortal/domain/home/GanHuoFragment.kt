@@ -21,9 +21,7 @@ import com.senierr.mortal.domain.home.vm.GanHuoViewModel
 import com.senierr.mortal.domain.home.wrapper.GanHuoMoreImageWrapper
 import com.senierr.mortal.domain.home.wrapper.GanHuoNoImageWrapper
 import com.senierr.mortal.domain.home.wrapper.GanHuoOneImageWrapper
-import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.*
-import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.entity.gank.GanHuo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -57,13 +55,10 @@ class GanHuoFragment : BaseFragment<FragmentHomeGanhuoBinding>() {
     private val noImageWrapper = GanHuoNoImageWrapper()
     private val loadMoreWrapper = LoadMoreWrapper()
 
-    private val ganHuoViewModel by viewModel<GanHuoViewModel>()
-    private val userInfoViewModel by viewModel<UserInfoViewModel>()
+    private val ganHuoViewModel: GanHuoViewModel by viewModel()
 
     private var page = 1
     private val pageSize = 10
-
-    private var currentUserInfo: UserInfo? = null
 
     override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentHomeGanhuoBinding {
         return FragmentHomeGanhuoBinding.inflate(inflater, container, false)
@@ -81,7 +76,6 @@ class GanHuoFragment : BaseFragment<FragmentHomeGanhuoBinding>() {
                 doRefresh()
             }
         }
-        userInfoViewModel.getLoggedCacheUserInfo()
     }
 
     private fun initParam() {
@@ -117,10 +111,6 @@ class GanHuoFragment : BaseFragment<FragmentHomeGanhuoBinding>() {
     }
 
     private fun initViewModel() {
-        userInfoViewModel.loggedCacheUserInfo.observe(this, {
-            currentUserInfo = it
-        })
-
         lifecycleScope.launchWhenStarted {
             ganHuoViewModel.ganHuos
                     .doOnSuccess {

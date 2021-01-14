@@ -8,7 +8,11 @@ import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.senierr.base.support.arch.ext.doOnFailure
+import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.KeyboardUtil
@@ -16,11 +20,11 @@ import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityLoginBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
-import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.mortal.widget.CircularAnim
 import com.senierr.repository.entity.bmob.BmobException
 import com.senierr.repository.entity.bmob.UserInfo
+import kotlinx.coroutines.flow.collect
 
 /**
  * 登录页面
@@ -56,8 +60,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
 
     private lateinit var loadingDialog: AlertDialog
 
-    private val accountViewModel by viewModel<AccountViewModel>()
-    private val userInfoViewModel by viewModel<UserInfoViewModel>()
+    private val accountViewModel: AccountViewModel by viewModel()
+    private val userInfoViewModel: UserInfoViewModel by viewModel()
 
     private val allCacheUserInfo = mutableListOf<UserInfo>()
 
@@ -98,17 +102,29 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     }
 
     private fun initViewModel() {
-        userInfoViewModel.allCacheUserInfo.observe(this) {
-            allCacheUserInfo.clear()
-            allCacheUserInfo.addAll(it)
-            allCacheUserInfo.first().let { info ->
-                binding.etAccount.text = SpannableStringBuilder(info.username)
-                binding.etPassword.text = SpannableStringBuilder(info.password)
-            }
+        lifecycleScope.launchWhenStarted {
+            userInfoViewModel.allCacheUserInfo
+                    .doOnSuccess {
+                        allCacheUserInfo.clear()
+                        allCacheUserInfo.addAll(it)
+                        allCacheUserInfo.first().let { info ->
+                            binding.etAccount.text = SpannableStringBuilder(info.username)
+                            binding.etPassword.text = SpannableStringBuilder(info.password)
+                        }
+                    }
+                    .collect()
         }
-        accountViewModel.loginResult.observe(this,
-            { showLoginSuccess() },
-            { showLoginFailure(it) })
+
+        lifecycleScope.launchWhenStarted {
+            accountViewModel.loginResult
+                    .doOnSuccess {
+                        showLoginSuccess()
+                    }
+                    .doOnFailure {
+                        showLoginFailure(it)
+                    }
+                    .collect()
+        }
     }
 
     /**
@@ -171,7 +187,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     /**
      * 展现登录失败
      */
-    private fun showLoginFailure(exception: Exception) {
+    private fun showLoginFailure(exception: Throwable?) {
         loadingDialog.dismiss()
         if (exception is BmobException) {
             showToast(exception.error)

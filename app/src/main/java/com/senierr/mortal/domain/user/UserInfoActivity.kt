@@ -3,6 +3,10 @@ package com.senierr.mortal.domain.user
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import androidx.lifecycle.lifecycleScope
+import com.senierr.base.support.arch.ext.doOnFailure
+import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.RegexUtil
@@ -10,10 +14,10 @@ import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityUserInfoBinding
 import com.senierr.mortal.domain.common.EditTextActivity
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
-import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.mortal.ext.showImage
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
+import kotlinx.coroutines.flow.collect
 
 /**
  * 用户详情页面
@@ -28,7 +32,7 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
         private const val REQUEST_CODE_EDIT_EMAIL = 101
     }
 
-    private val userInfoViewModel by viewModel<UserInfoViewModel>()
+    private val userInfoViewModel: UserInfoViewModel by viewModel()
 
     private var currentUserInfo: UserInfo? = null
 
@@ -95,21 +99,32 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
     }
 
     private fun initViewModel() {
-        userInfoViewModel.loggedCacheUserInfo.observe(this, {
-            currentUserInfo = it
-            renderUserInfo(it)
-            userInfoViewModel.fetchUserInfo(it.objectId)
-        }, {
-            // 未登录，跳转至登录页
-            LoginActivity.start(this)
-            finish()
-        })
-        userInfoViewModel.userinfo.observe(this, {
-            currentUserInfo = it
-            renderUserInfo(it)
-        }, {
-            showToast(it.message)
-        })
+        lifecycleScope.launchWhenStarted {
+            userInfoViewModel.loggedCacheUserInfo
+                    .doOnSuccess {
+                        currentUserInfo = it
+                        renderUserInfo(it)
+                        userInfoViewModel.fetchUserInfo(it.objectId)
+                    }
+                    .doOnFailure {
+                        // 未登录，跳转至登录页
+                        LoginActivity.start(this@UserInfoActivity)
+                        finish()
+                    }
+                    .collect()
+        }
+
+        lifecycleScope.launchWhenStarted {
+            userInfoViewModel.userInfo
+                    .doOnSuccess {
+                        currentUserInfo = it
+                        renderUserInfo(it)
+                    }
+                    .doOnFailure {
+                        showToast(it?.message)
+                    }
+                    .collect()
+        }
     }
 
     /**

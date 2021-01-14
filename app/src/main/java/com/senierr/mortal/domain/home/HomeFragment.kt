@@ -5,16 +5,20 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.senierr.base.support.arch.ext.doOnFailure
+import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.FragmentHomeBinding
 import com.senierr.mortal.domain.category.CategoryManagerActivity
 import com.senierr.mortal.domain.home.vm.HomeViewModel
-import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.gank.Category
+import kotlinx.coroutines.flow.collect
 
 /**
  * 首页
@@ -24,7 +28,7 @@ import com.senierr.repository.entity.gank.Category
  */
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
-    private val homeViewModel by viewModel<HomeViewModel>()
+    private val homeViewModel: HomeViewModel by viewModel()
 
     // 当前加载的分类标签
     private val currentCategories = mutableListOf<Category>()
@@ -89,16 +93,21 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     private fun initViewModel() {
-        homeViewModel.fetchCategoriesResult.observe(this, {
-            // 判断是否数据变动
-            if (isChanged(it)) {
-                currentCategories.clear()
-                currentCategories.addAll(it)
-                binding?.vpPage?.adapter?.notifyDataSetChanged()
-            }
-        }, {
-            context?.showToast(R.string.network_error)
-        })
+        lifecycleScope.launchWhenStarted {
+            homeViewModel.categories
+                    .doOnSuccess {
+                        // 判断是否数据变动
+                        if (isChanged(it)) {
+                            currentCategories.clear()
+                            currentCategories.addAll(it)
+                            binding?.vpPage?.adapter?.notifyDataSetChanged()
+                        }
+                    }
+                    .doOnFailure {
+                        context?.showToast(R.string.network_error)
+                    }
+                    .collect()
+        }
     }
 
     /**

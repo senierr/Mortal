@@ -2,10 +2,14 @@ package com.senierr.mortal.domain.user.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.senierr.mortal.domain.common.vm.StatefulLiveData
+import com.senierr.base.support.arch.StatefulData
+import com.senierr.base.support.arch.ext.emitFailure
+import com.senierr.base.support.arch.ext.emitSuccess
 import com.senierr.repository.Repository
 import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.service.api.IUserService
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -15,9 +19,14 @@ import kotlinx.coroutines.launch
  */
 class UserInfoViewModel : ViewModel() {
 
-    val allCacheUserInfo = StatefulLiveData<MutableList<UserInfo>>()
-    val loggedCacheUserInfo = StatefulLiveData<UserInfo>()
-    val userinfo = StatefulLiveData<UserInfo>()
+    private val _allCacheUserInfo = MutableSharedFlow<StatefulData<MutableList<UserInfo>>>()
+    val allCacheUserInfo: SharedFlow<StatefulData<MutableList<UserInfo>>> = _allCacheUserInfo
+
+    private val _loggedCacheUserInfo = MutableSharedFlow<StatefulData<UserInfo>>()
+    val loggedCacheUserInfo: SharedFlow<StatefulData<UserInfo>> = _loggedCacheUserInfo
+
+    private val _userInfo = MutableSharedFlow<StatefulData<UserInfo>>()
+    val userInfo: SharedFlow<StatefulData<UserInfo>> = _userInfo
 
     private val userService = Repository.getService<IUserService>()
 
@@ -28,9 +37,9 @@ class UserInfoViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val caches = userService.getAllCacheUserInfo()
-                allCacheUserInfo.setValue(caches)
+                _allCacheUserInfo.emitSuccess(caches)
             } catch (e: Exception) {
-                allCacheUserInfo.setException(e)
+                _allCacheUserInfo.emitFailure(e)
             }
         }
     }
@@ -42,9 +51,9 @@ class UserInfoViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val cacheUserInfo = userService.getLoggedCacheUserInfo()
-                loggedCacheUserInfo.setValue(cacheUserInfo)
+                _loggedCacheUserInfo.emitSuccess(cacheUserInfo)
             } catch (e: Exception) {
-                loggedCacheUserInfo.setException(e)
+                _loggedCacheUserInfo.emitFailure(e)
             }
         }
     }
@@ -56,9 +65,9 @@ class UserInfoViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val userInfo = userService.fetchUserInfo(objectId)
-                userinfo.setValue(userInfo)
+                _userInfo.emitSuccess(userInfo)
             } catch (e: Exception) {
-                userinfo.setException(e)
+                _userInfo.emitFailure(e)
             }
         }
     }
@@ -75,9 +84,9 @@ class UserInfoViewModel : ViewModel() {
                     mutableMapOf(Pair("nickname", newNickname))
                 )
                 userInfo.nickname = newNickname
-                userinfo.setValue(userInfo)
+                _userInfo.emitSuccess(userInfo)
             } catch (e: Exception) {
-                userinfo.setException(e)
+                _userInfo.emitFailure(e)
             }
         }
     }
@@ -94,9 +103,9 @@ class UserInfoViewModel : ViewModel() {
                     mutableMapOf(Pair("email", newEmail))
                 )
                 userInfo.email = newEmail
-                userinfo.setValue(userInfo)
+                _userInfo.emitSuccess(userInfo)
             } catch (e: Exception) {
-                userinfo.setException(e)
+                _userInfo.emitFailure(e)
             }
         }
     }

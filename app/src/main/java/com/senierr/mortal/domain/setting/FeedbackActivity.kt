@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.lifecycleScope
+import com.senierr.base.support.arch.ext.androidViewModel
 import com.senierr.base.support.arch.ext.doOnFailure
 import com.senierr.base.support.arch.ext.doOnSuccess
-import com.senierr.base.support.arch.ext.androidViewModel
 import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.mortal.R
@@ -29,8 +29,8 @@ import kotlinx.coroutines.flow.collect
  */
 class FeedbackActivity : BaseActivity<ActivityFeedbackBinding>() {
 
-    private val userInfoViewModel by viewModel<UserInfoViewModel>()
-    private val settingViewModel by androidViewModel<SettingViewModel>()
+    private val userInfoViewModel: UserInfoViewModel by viewModel()
+    private val settingViewModel: SettingViewModel by androidViewModel()
 
     private var currentUserInfo: UserInfo? = null
 
@@ -98,13 +98,18 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding>() {
     }
 
     private fun initViewModel() {
-        userInfoViewModel.loggedCacheUserInfo.observe(this, {
-            currentUserInfo = it
-        }, {
-            // 未登录，跳转至登录页
-            LoginActivity.start(this)
-            finish()
-        })
+        lifecycleScope.launchWhenStarted {
+            userInfoViewModel.loggedCacheUserInfo
+                    .doOnSuccess {
+                        currentUserInfo = it
+                    }
+                    .doOnFailure {
+                        // 未登录，跳转至登录页
+                        LoginActivity.start(this@FeedbackActivity)
+                        finish()
+                    }
+                    .collect()
+        }
 
         lifecycleScope.launchWhenStarted {
             settingViewModel.feedbackResult

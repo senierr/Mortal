@@ -2,10 +2,14 @@ package com.senierr.mortal.domain.recommend.vm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.senierr.mortal.domain.common.vm.StatefulLiveData
+import com.senierr.base.support.arch.StatefulData
+import com.senierr.base.support.arch.ext.emitFailure
+import com.senierr.base.support.arch.ext.emitSuccess
 import com.senierr.repository.Repository
 import com.senierr.repository.entity.gank.Girl
 import com.senierr.repository.service.api.IGankService
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -16,7 +20,8 @@ import kotlinx.coroutines.launch
  */
 class RecommendViewModel : ViewModel() {
 
-    val fetchGirlsResult = StatefulLiveData<MutableList<Girl>>()
+    private val _girls = MutableSharedFlow<StatefulData<MutableList<Girl>>>()
+    val girls: SharedFlow<StatefulData<MutableList<Girl>>> = _girls
 
     private val gankService = Repository.getService<IGankService>()
 
@@ -26,10 +31,10 @@ class RecommendViewModel : ViewModel() {
     fun fetchGirls(page: Int, count: Int) {
         viewModelScope.launch {
             try {
-                val ganHuos = gankService.getGirls(page, count)
-                fetchGirlsResult.setValue(ganHuos)
+                val girls = gankService.getGirls(page, count)
+                _girls.emitSuccess(girls)
             } catch (e: Exception) {
-                fetchGirlsResult.setException(e)
+                _girls.emitFailure(e)
             }
         }
     }

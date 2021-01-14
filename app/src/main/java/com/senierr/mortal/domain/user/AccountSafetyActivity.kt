@@ -5,16 +5,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.senierr.base.support.arch.ext.doOnFailure
+import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityAccountSafetyBinding
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
-import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
+import kotlinx.coroutines.flow.collect
 
 /**
  * 设置页面
@@ -24,8 +28,8 @@ import com.senierr.repository.entity.bmob.UserInfo
  */
 class AccountSafetyActivity : BaseActivity<ActivityAccountSafetyBinding>() {
 
-    private val accountViewModel by viewModel<AccountViewModel>()
-    private val userInfoViewModel by viewModel<UserInfoViewModel>()
+    private val accountViewModel: AccountViewModel by viewModel()
+    private val userInfoViewModel: UserInfoViewModel by viewModel()
 
     private var currentUserInfo: UserInfo? = null
 
@@ -58,19 +62,30 @@ class AccountSafetyActivity : BaseActivity<ActivityAccountSafetyBinding>() {
     }
 
     private fun initViewModel() {
-        userInfoViewModel.loggedCacheUserInfo.observe(this, {
-            currentUserInfo = it
-        }, {
-            // 未登录，跳转至登录页
-            LoginActivity.start(this)
-            finish()
-        })
-        accountViewModel.deleteResult.observe(this, {
-            showToast(R.string.account_cancellation_success)
-            finish()
-        }, {
-            showToast(it.message)
-        })
+        lifecycleScope.launchWhenStarted {
+            userInfoViewModel.loggedCacheUserInfo
+                    .doOnSuccess {
+                        currentUserInfo = it
+                    }
+                    .doOnFailure {
+                        // 未登录，跳转至登录页
+                        LoginActivity.start(this@AccountSafetyActivity)
+                        finish()
+                    }
+                    .collect()
+        }
+
+        lifecycleScope.launchWhenStarted {
+            accountViewModel.deleteResult
+                    .doOnSuccess {
+                        showToast(R.string.account_cancellation_success)
+                        finish()
+                    }
+                    .doOnFailure {
+                        showToast(it?.message)
+                    }
+                    .collect()
+        }
     }
 
     /**

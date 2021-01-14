@@ -42,7 +42,6 @@ object Repository {
         IUserService::class.java -> UserService() as T
         ICommonService::class.java -> CommonService() as T
         ISettingService::class.java -> SettingService() as T
-        IArticleService::class.java -> ArticleService() as T
         else -> throw IllegalArgumentException("Can not find ${T::class.java.simpleName}!")
     }
 }

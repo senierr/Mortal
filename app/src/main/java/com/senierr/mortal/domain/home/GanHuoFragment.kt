@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
+import com.senierr.base.support.arch.ext.doOnFailure
+import com.senierr.base.support.arch.ext.doOnSuccess
 import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.ui.recyclerview.LinearItemDecoration
@@ -24,6 +26,7 @@ import com.senierr.mortal.ext.*
 import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.entity.gank.GanHuo
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -117,22 +120,28 @@ class GanHuoFragment : BaseFragment<FragmentHomeGanhuoBinding>() {
         userInfoViewModel.loggedCacheUserInfo.observe(this, {
             currentUserInfo = it
         })
-        ganHuoViewModel.fetchGanHuosResult.observe(this, {
-            if (page == 1) {
-                renderRefresh(it)
-            } else {
-                renderLoadMore(it)
-            }
-        }, {
-            if (page == 1) {
-                binding?.msvState?.showNetworkErrorView {
-                    binding?.msvState?.showLoadingView()
-                    doRefresh()
-                }
-            } else {
-                loadMoreWrapper.loadFailure()
-            }
-        })
+
+        lifecycleScope.launchWhenStarted {
+            ganHuoViewModel.ganHuos
+                    .doOnSuccess {
+                        if (page == 1) {
+                            renderRefresh(it)
+                        } else {
+                            renderLoadMore(it)
+                        }
+                    }
+                    .doOnFailure {
+                        if (page == 1) {
+                            binding?.msvState?.showNetworkErrorView {
+                                binding?.msvState?.showLoadingView()
+                                doRefresh()
+                            }
+                        } else {
+                            loadMoreWrapper.loadFailure()
+                        }
+                    }
+                    .collect()
+        }
     }
 
     /**
@@ -187,9 +196,5 @@ class GanHuoFragment : BaseFragment<FragmentHomeGanhuoBinding>() {
      */
     private fun viewArticle(context: Context, ganHuo: GanHuo) {
         WebViewActivity.start(context, ganHuo.url, ganHuo.title)
-        currentUserInfo?.let {
-            // 发送浏览记录
-            ganHuoViewModel.sendViewHistory(it.objectId, ganHuo.id, ganHuo.title, ganHuo.url)
-        }
     }
 }

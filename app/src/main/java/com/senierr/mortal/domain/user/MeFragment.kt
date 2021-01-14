@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.mortal.R
@@ -12,7 +13,6 @@ import com.senierr.mortal.databinding.FragmentMeBinding
 import com.senierr.mortal.domain.category.CategoryManagerActivity
 import com.senierr.mortal.domain.setting.SettingActivity
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
-import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.mortal.ext.showImage
 import com.senierr.repository.entity.bmob.UserInfo
 
@@ -49,10 +49,6 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
 
     private fun initView() {
         binding?.llUser?.isClickable = false
-
-        binding?.siViewHistory?.click {
-            startActivity(Intent(context, ViewHistoryActivity::class.java))
-        }
 
         binding?.siCategoryManager?.click {
             startActivity(Intent(context, CategoryManagerActivity::class.java))

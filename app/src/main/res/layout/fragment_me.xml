@@ -48,24 +48,6 @@
 	</LinearLayout>
 
 	<com.senierr.mortal.widget.SettingItem
-		android:id="@+id/si_message_center"
-		android:layout_marginTop="@dimen/dp_8"
-		app:si_icon="@drawable/ic_notifications"
-		app:si_title="@string/message_center"
-		app:si_chevron_enabled="true"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"/>
-
-	<com.senierr.mortal.widget.SettingItem
-		android:id="@+id/si_view_history"
-		android:layout_marginTop="@dimen/dp_8"
-		app:si_icon="@drawable/ic_visibility"
-		app:si_title="@string/view_history"
-		app:si_chevron_enabled="true"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"/>
-
-	<com.senierr.mortal.widget.SettingItem
 		android:id="@+id/si_category_manager"
 		android:layout_marginTop="@dimen/dp_8"
 		app:si_icon="@drawable/ic_category_tag"

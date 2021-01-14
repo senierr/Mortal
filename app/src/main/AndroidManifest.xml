@@ -62,8 +62,6 @@
 
         <activity android:name=".domain.user.RegisterActivity" />
 
-        <activity android:name=".domain.user.ViewHistoryActivity" />
-
 
 
         <provider

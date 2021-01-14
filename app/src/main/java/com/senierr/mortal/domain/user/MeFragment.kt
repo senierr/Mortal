@@ -18,7 +18,7 @@ import com.senierr.mortal.domain.setting.SettingActivity
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.showImage
 import com.senierr.repository.entity.bmob.UserInfo
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
 
 /**
  * 我的页面
@@ -36,7 +36,10 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
 
     private var currentUserInfo: UserInfo? = null
 
-    override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentMeBinding {
+    override fun createViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentMeBinding {
         return FragmentMeBinding.inflate(inflater, container, false)
     }
 
@@ -65,24 +68,22 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             userInfoViewModel.loggedCacheUserInfo
-                    .doOnSuccess {
-                        currentUserInfo = it
-                        renderUserInfo(it)
-                        userInfoViewModel.fetchUserInfo(it.objectId)
-                    }
-                    .doOnFailure {
-                        renderUserInfo(null)
-                    }
-                    .collect()
-        }
+                .doOnSuccess {
+                    currentUserInfo = it
+                    renderUserInfo(it)
+                    userInfoViewModel.fetchUserInfo(it.objectId)
+                }
+                .doOnFailure {
+                    renderUserInfo(null)
+                }
+                .launchIn(this)
 
-        lifecycleScope.launchWhenStarted {
             userInfoViewModel.userInfo
-                    .doOnSuccess {
-                        currentUserInfo = it
-                        renderUserInfo(it)
-                    }
-                    .collect()
+                .doOnSuccess {
+                    currentUserInfo = it
+                    renderUserInfo(it)
+                }
+                .launchIn(this)
         }
     }
 

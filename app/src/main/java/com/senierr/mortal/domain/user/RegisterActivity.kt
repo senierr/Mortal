@@ -6,9 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.senierr.base.support.arch.ext.doOnFailure
 import com.senierr.base.support.arch.ext.doOnSuccess
 import com.senierr.base.support.arch.ext.viewModel
@@ -16,9 +14,11 @@ import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.RegexUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityRegisterBinding
+import com.senierr.mortal.domain.dialog.createLoadingDialog
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.ext.showToast
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 /**
  * 注册页面
@@ -40,7 +40,7 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>() {
         const val REGEX_PASSWORD = "^[a-zA-Z0-9]{6,16}$"
     }
 
-    private lateinit var loadingDialog: AlertDialog
+    private val loadingDialog by lazy { createLoadingDialog(this) }
 
     private val accountViewModel: AccountViewModel by viewModel()
 
@@ -70,11 +70,6 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>() {
             R.id.tab_done -> doRegister()
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onDestroy() {
-        loadingDialog.dismiss()
-        super.onDestroy()
     }
 
     private fun initView() {
@@ -133,27 +128,22 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>() {
                 invalidateOptionsMenu()
             }
         })
-
-        loadingDialog = MaterialAlertDialogBuilder(this)
-            .setView(R.layout.layout_status_loading)
-            .create()
-            .apply {
-                setCancelable(false)
-                setCanceledOnTouchOutside(false)
-            }
     }
 
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             accountViewModel.registerResult
-                    .doOnSuccess {
-                        showToast(R.string.register_success)
-                        finish()
-                    }
-                    .doOnFailure {
-                        showToast(it?.message)
-                    }
-                    .collect()
+                .doOnSuccess {
+                    showToast(R.string.register_success)
+                    finish()
+                }
+                .doOnFailure {
+                    showToast(it?.message)
+                }
+                .onEach {
+                    loadingDialog.dismiss()
+                }
+                .launchIn(this)
         }
     }
 

@@ -22,12 +22,13 @@ import com.senierr.mortal.domain.recommend.RecommendFragment
 import com.senierr.mortal.domain.setting.vm.SettingViewModel
 import com.senierr.mortal.domain.user.MeFragment
 import com.senierr.mortal.ext.showToast
-import com.senierr.mortal.notification.NotificationManager
+import com.senierr.mortal.domain.notification.NotificationManager
 import com.senierr.repository.entity.bmob.VersionInfo
 import com.senierr.repository.remote.progress.Progress
 import com.senierr.repository.remote.progress.ProgressReceiver
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
 
 /**
  * 主页面
@@ -114,7 +115,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 .doOnFailure {
                     showToast(R.string.network_error)
                 }
-                .collect()
+                .launchIn(this)
         }
 
         lifecycleScope.launchWhenStarted {

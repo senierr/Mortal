@@ -14,12 +14,15 @@ import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityFeedbackBinding
+import com.senierr.mortal.domain.dialog.createLoadingDialog
 import com.senierr.mortal.domain.setting.vm.SettingViewModel
 import com.senierr.mortal.domain.user.LoginActivity
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 /**
  * 设置页面
@@ -28,6 +31,8 @@ import kotlinx.coroutines.flow.collect
  * @date 2019/7/6
  */
 class FeedbackActivity : BaseActivity<ActivityFeedbackBinding>() {
+
+    private val loadingDialog by lazy { createLoadingDialog(this) }
 
     private val userInfoViewModel: UserInfoViewModel by viewModel()
     private val settingViewModel: SettingViewModel by androidViewModel()
@@ -72,6 +77,7 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding>() {
             R.id.tab_done -> {
                 val newValue = binding.etText.text.toString()
                 currentUserInfo?.let {
+                    loadingDialog.show()
                     settingViewModel.feedback(newValue, it.objectId)
                 }
             }
@@ -100,26 +106,27 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding>() {
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             userInfoViewModel.loggedCacheUserInfo
-                    .doOnSuccess {
-                        currentUserInfo = it
-                    }
-                    .doOnFailure {
-                        // 未登录，跳转至登录页
-                        LoginActivity.start(this@FeedbackActivity)
-                        finish()
-                    }
-                    .collect()
-        }
+                .doOnSuccess {
+                    currentUserInfo = it
+                }
+                .doOnFailure {
+                    // 未登录，跳转至登录页
+                    LoginActivity.start(this@FeedbackActivity)
+                    finish()
+                }
+                .launchIn(this)
 
-        lifecycleScope.launchWhenStarted {
             settingViewModel.feedbackResult
-                    .doOnSuccess {
-                        showToast(R.string.feedback_success)
-                    }
-                    .doOnFailure {
-                        showToast(R.string.network_error)
-                    }
-                    .collect()
+                .doOnSuccess {
+                    showToast(R.string.feedback_success)
+                }
+                .doOnFailure {
+                    showToast(R.string.network_error)
+                }
+                .onEach {
+                    loadingDialog.dismiss()
+                }
+                .launchIn(this)
         }
     }
 }

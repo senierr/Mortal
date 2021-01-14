@@ -1,4 +1,4 @@
-package com.senierr.mortal.worker
+package com.senierr.mortal.domain.worker
 
 import android.content.Context
 import androidx.work.*

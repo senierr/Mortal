@@ -19,19 +19,20 @@ import com.senierr.base.support.utils.AppUtil
 import com.senierr.base.support.utils.FileUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivitySettingBinding
+import com.senierr.mortal.domain.dialog.createLoadingDialog
 import com.senierr.mortal.domain.setting.vm.SettingViewModel
 import com.senierr.mortal.domain.user.AccountSafetyActivity
 import com.senierr.mortal.domain.user.LoginActivity
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.showToast
-import com.senierr.mortal.notification.NotificationManager
+import com.senierr.mortal.domain.notification.NotificationManager
 import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.entity.bmob.VersionInfo
 import com.senierr.repository.remote.progress.Progress
 import com.senierr.repository.remote.progress.ProgressReceiver
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 
 /**
  * 设置页面
@@ -44,6 +45,8 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
     companion object {
         private const val TAG_DOWNLOAD = "tag_download_apk_setting"
     }
+
+    private val loadingDialog by lazy { createLoadingDialog(this) }
 
     private val accountViewModel: AccountViewModel by viewModel()
     private val userInfoViewModel: UserInfoViewModel by viewModel()
@@ -68,7 +71,10 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
         super.onCreate(savedInstanceState)
         initView()
         initViewModel()
-        registerReceiver(downloadApkReceiver, IntentFilter(ProgressReceiver.ACTION_REMOTE_PROGRESS_RECEIVER))
+        registerReceiver(
+            downloadApkReceiver,
+            IntentFilter(ProgressReceiver.ACTION_REMOTE_PROGRESS_RECEIVER)
+        )
         settingViewModel.getCacheSize()
     }
 
@@ -92,11 +98,13 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
         }
 
         binding.siClearCache.click {
+            loadingDialog.show()
             settingViewModel.clearCache()
         }
 
         binding.siCheckNewVersion.message = AppUtil.getVersionName(this, packageName)
         binding.siCheckNewVersion.click {
+            loadingDialog.show()
             settingViewModel.checkNewVersion()
         }
 
@@ -116,62 +124,72 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             userInfoViewModel.loggedCacheUserInfo
-                    .doOnSuccess {
-                        currentUserInfo = it
-                        binding.btnLogOut.setGone(false)
-                    }
-                    .doOnFailure {
-                        binding.btnLogOut.setGone(true)
-                    }
-                    .collect()
-        }
+                .doOnSuccess {
+                    currentUserInfo = it
+                    binding.btnLogOut.setGone(false)
+                }
+                .doOnFailure {
+                    binding.btnLogOut.setGone(true)
+                }
+                .launchIn(this)
 
-        lifecycleScope.launchWhenStarted {
             settingViewModel.newVersionInfo
+                .onEach {
+                    loadingDialog.dismiss()
+                }
                 .doOnSuccess {
                     showNewVersionDialog(it)
                 }
                 .doOnFailure {
                     showToast(R.string.network_error)
                 }
-                .collect()
-        }
+                .launchIn(this)
 
-        lifecycleScope.launchWhenStarted {
-            settingViewModel.noNewVersionInfo.doOnSuccess {
-                showToast(R.string.no_new_version)
-            }
-                .collect()
-        }
+            settingViewModel.noNewVersionInfo
+                .onEach {
+                    loadingDialog.dismiss()
+                }
+                .doOnSuccess {
+                    showToast(R.string.no_new_version)
+                }
+                .launchIn(this)
 
-        lifecycleScope.launchWhenStarted {
             settingViewModel.apkDownloadCompleted
                 .doOnSuccess {
                     // 延迟，防止通知后发
                     delay(100)
                     // 移除下载通知
-                    NotificationManager.cancel(this@SettingActivity, NotificationManager.NOTIFY_ID_UPDATE)
+                    NotificationManager.cancel(
+                        this@SettingActivity,
+                        NotificationManager.NOTIFY_ID_UPDATE
+                    )
                     // 安装APK
-                    AppUtil.installApk(this@SettingActivity, "${this@SettingActivity.packageName}.provider", it)
+                    AppUtil.installApk(
+                        this@SettingActivity,
+                        "${this@SettingActivity.packageName}.provider",
+                        it
+                    )
                 }
-                .collect()
-        }
+                .launchIn(this)
 
-        lifecycleScope.launchWhenStarted {
             settingViewModel.cacheSize
                 .doOnSuccess {
                     binding.siClearCache.message = FileUtil.getFormatSize(it.toDouble())
                 }
-                .collect()
-        }
+                .onEach {
+                    loadingDialog.dismiss()
+                }
+                .launchIn(this)
 
-        lifecycleScope.launchWhenStarted {
             accountViewModel.logoutResult
-                    .doOnSuccess {
-                        LoginActivity.start(this@SettingActivity)
-                        finish()
-                    }
-                    .collect()
+                .onStart {
+                    loadingDialog.dismiss()
+                }
+                .doOnSuccess {
+                    LoginActivity.start(this@SettingActivity)
+                    finish()
+                }
+                .launchIn(this)
         }
     }
 
@@ -184,6 +202,7 @@ class SettingActivity : BaseActivity<ActivitySettingBinding>() {
             .setMessage(R.string.log_out_confirm)
             .setPositiveButton(R.string.done) { dialog, _ ->
                 currentUserInfo?.let {
+                    loadingDialog.show()
                     accountViewModel.logout(it.objectId)
                 }
                 dialog.dismiss()

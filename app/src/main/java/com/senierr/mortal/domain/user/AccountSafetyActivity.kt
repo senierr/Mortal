@@ -14,11 +14,13 @@ import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityAccountSafetyBinding
+import com.senierr.mortal.domain.dialog.createLoadingDialog
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 /**
  * 设置页面
@@ -27,6 +29,8 @@ import kotlinx.coroutines.flow.collect
  * @date 2019/7/6
  */
 class AccountSafetyActivity : BaseActivity<ActivityAccountSafetyBinding>() {
+
+    private val loadingDialog by lazy { createLoadingDialog(this) }
 
     private val accountViewModel: AccountViewModel by viewModel()
     private val userInfoViewModel: UserInfoViewModel by viewModel()
@@ -64,27 +68,28 @@ class AccountSafetyActivity : BaseActivity<ActivityAccountSafetyBinding>() {
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             userInfoViewModel.loggedCacheUserInfo
-                    .doOnSuccess {
-                        currentUserInfo = it
-                    }
-                    .doOnFailure {
-                        // 未登录，跳转至登录页
-                        LoginActivity.start(this@AccountSafetyActivity)
-                        finish()
-                    }
-                    .collect()
-        }
+                .doOnSuccess {
+                    currentUserInfo = it
+                }
+                .doOnFailure {
+                    // 未登录，跳转至登录页
+                    LoginActivity.start(this@AccountSafetyActivity)
+                    finish()
+                }
+                .launchIn(this)
 
-        lifecycleScope.launchWhenStarted {
             accountViewModel.deleteResult
-                    .doOnSuccess {
-                        showToast(R.string.account_cancellation_success)
-                        finish()
-                    }
-                    .doOnFailure {
-                        showToast(it?.message)
-                    }
-                    .collect()
+                .doOnSuccess {
+                    showToast(R.string.account_cancellation_success)
+                    finish()
+                }
+                .doOnFailure {
+                    showToast(it?.message)
+                }
+                .onEach {
+                    loadingDialog.dismiss()
+                }
+                .launchIn(this)
         }
     }
 
@@ -97,6 +102,7 @@ class AccountSafetyActivity : BaseActivity<ActivityAccountSafetyBinding>() {
             .setMessage(R.string.account_cancellation_confirm)
             .setPositiveButton(R.string.done) { dialog, _ ->
                 currentUserInfo?.let {
+                    loadingDialog.show()
                     accountViewModel.delete(it.objectId, it.sessionToken)
                 }
                 dialog.dismiss()
@@ -109,7 +115,12 @@ class AccountSafetyActivity : BaseActivity<ActivityAccountSafetyBinding>() {
                 show()
                 setCanceledOnTouchOutside(false)
                 getButton(DialogInterface.BUTTON_POSITIVE)
-                    .setTextColor(ContextCompat.getColor(this@AccountSafetyActivity, R.color.text_warn))
+                    .setTextColor(
+                        ContextCompat.getColor(
+                            this@AccountSafetyActivity,
+                            R.color.text_warn
+                        )
+                    )
             }
     }
 }

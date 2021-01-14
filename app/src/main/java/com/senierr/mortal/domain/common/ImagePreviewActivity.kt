@@ -24,6 +24,7 @@ import com.senierr.mortal.domain.common.vm.DownloadViewModel
 import com.senierr.mortal.ext.showImage
 import com.senierr.mortal.ext.showToast
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.parcelize.Parcelize
 import java.io.File
 
@@ -130,7 +131,7 @@ class ImagePreviewActivity : BaseActivity<ActivityImagePreviewBinding>() {
                 .doOnFailure {
                     showToast(getString(R.string.format_download_failure, it?.message))
                 }
-                .collect()
+                .launchIn(this)
         }
     }
 }

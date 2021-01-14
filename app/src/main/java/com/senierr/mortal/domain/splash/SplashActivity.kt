@@ -15,6 +15,7 @@ import com.senierr.mortal.ext.showImage
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 
 /**
@@ -48,10 +49,10 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             splashViewModel.randomGil
-                    .doOnSuccess {
-                        binding.ivSplash.showImage(it.url)
-                    }
-                    .collect()
+                .doOnSuccess {
+                    binding.ivSplash.showImage(it.url)
+                }
+                .launchIn(this)
         }
     }
 

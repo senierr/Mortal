@@ -19,6 +19,7 @@ import com.senierr.mortal.domain.home.vm.HomeViewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.gank.Category
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
 
 /**
  * 首页
@@ -106,7 +107,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                     .doOnFailure {
                         context?.showToast(R.string.network_error)
                     }
-                    .collect()
+                    .launchIn(this)
         }
     }
 

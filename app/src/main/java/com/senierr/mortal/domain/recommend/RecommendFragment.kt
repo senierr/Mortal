@@ -25,6 +25,7 @@ import com.senierr.mortal.ext.showLoadingView
 import com.senierr.mortal.ext.showNetworkErrorView
 import com.senierr.repository.entity.gank.Girl
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
 
 /**
  * 精选页面
@@ -96,7 +97,7 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>() {
                             loadMoreWrapper.loadFailure()
                         }
                     }
-                    .collect()
+                    .launchIn(this)
         }
     }
 

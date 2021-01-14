@@ -5,11 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.senierr.base.support.arch.ext.doOnFailure
 import com.senierr.base.support.arch.ext.doOnSuccess
 import com.senierr.base.support.arch.ext.viewModel
@@ -18,13 +16,14 @@ import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.KeyboardUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityLoginBinding
+import com.senierr.mortal.domain.dialog.createLoadingDialog
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.mortal.widget.CircularAnim
 import com.senierr.repository.entity.bmob.BmobException
 import com.senierr.repository.entity.bmob.UserInfo
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
 
 /**
  * 登录页面
@@ -58,7 +57,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         }
     }
 
-    private lateinit var loadingDialog: AlertDialog
+    private val loadingDialog by lazy { createLoadingDialog(this) }
 
     private val accountViewModel: AccountViewModel by viewModel()
     private val userInfoViewModel: UserInfoViewModel by viewModel()
@@ -91,39 +90,29 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         binding.btnRegister.click {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
-
-        loadingDialog = MaterialAlertDialogBuilder(this)
-            .setView(R.layout.layout_status_loading)
-            .create()
-            .apply {
-                setCancelable(false)
-                setCanceledOnTouchOutside(false)
-            }
     }
 
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             userInfoViewModel.allCacheUserInfo
-                    .doOnSuccess {
-                        allCacheUserInfo.clear()
-                        allCacheUserInfo.addAll(it)
-                        allCacheUserInfo.first().let { info ->
-                            binding.etAccount.text = SpannableStringBuilder(info.username)
-                            binding.etPassword.text = SpannableStringBuilder(info.password)
-                        }
+                .doOnSuccess {
+                    allCacheUserInfo.clear()
+                    allCacheUserInfo.addAll(it)
+                    allCacheUserInfo.firstOrNull()?.let { info ->
+                        binding.etAccount.text = SpannableStringBuilder(info.username)
+                        binding.etPassword.text = SpannableStringBuilder(info.password)
                     }
-                    .collect()
-        }
+                }
+                .launchIn(this)
 
-        lifecycleScope.launchWhenStarted {
             accountViewModel.loginResult
-                    .doOnSuccess {
-                        showLoginSuccess()
-                    }
-                    .doOnFailure {
-                        showLoginFailure(it)
-                    }
-                    .collect()
+                .doOnSuccess {
+                    showLoginSuccess()
+                }
+                .doOnFailure {
+                    showLoginFailure(it)
+                }
+                .launchIn(this)
         }
     }
 

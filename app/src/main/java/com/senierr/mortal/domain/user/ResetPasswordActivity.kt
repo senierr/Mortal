@@ -14,11 +14,13 @@ import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.RegexUtil
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityResetPasswordBinding
+import com.senierr.mortal.domain.dialog.createLoadingDialog
 import com.senierr.mortal.domain.user.vm.AccountViewModel
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 /**
  * 重置密码页面
@@ -34,6 +36,8 @@ class ResetPasswordActivity : BaseActivity<ActivityResetPasswordBinding>() {
          */
         private const val REGEX_PASSWORD = "^[a-zA-Z0-9]{6,16}$"
     }
+
+    private val loadingDialog by lazy { createLoadingDialog(this) }
 
     private val accountViewModel: AccountViewModel by viewModel()
     private val userInfoViewModel: UserInfoViewModel by viewModel()
@@ -125,27 +129,28 @@ class ResetPasswordActivity : BaseActivity<ActivityResetPasswordBinding>() {
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             userInfoViewModel.loggedCacheUserInfo
-                    .doOnSuccess {
-                        currentUserInfo = it
-                    }
-                    .doOnFailure {
-                        // 未登录，跳转至登录页
-                        LoginActivity.start(this@ResetPasswordActivity)
-                        finish()
-                    }
-                    .collect()
-        }
+                .doOnSuccess {
+                    currentUserInfo = it
+                }
+                .doOnFailure {
+                    // 未登录，跳转至登录页
+                    LoginActivity.start(this@ResetPasswordActivity)
+                    finish()
+                }
+                .launchIn(this)
 
-        lifecycleScope.launchWhenStarted {
             accountViewModel.resetPasswordResult
-                    .doOnSuccess {
-                        showToast(R.string.reset_password_success)
-                        finish()
-                    }
-                    .doOnFailure {
-                        showToast(it?.message)
-                    }
-                    .collect()
+                .doOnSuccess {
+                    showToast(R.string.reset_password_success)
+                    finish()
+                }
+                .doOnFailure {
+                    showToast(it?.message)
+                }
+                .onEach {
+                    loadingDialog.dismiss()
+                }
+                .launchIn(this)
         }
     }
 
@@ -163,6 +168,7 @@ class ResetPasswordActivity : BaseActivity<ActivityResetPasswordBinding>() {
         val newPassword = binding.etNewPassword.text.toString().trim()
         if (verifyPassword(password) && verifyPassword(newPassword)) {
             currentUserInfo?.let {
+                loadingDialog.show()
                 accountViewModel.resetPassword(it, password, newPassword)
             }
         }

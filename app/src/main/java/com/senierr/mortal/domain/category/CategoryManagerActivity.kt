@@ -23,6 +23,7 @@ import com.senierr.mortal.ext.showEmptyView
 import com.senierr.mortal.ext.showNetworkErrorView
 import com.senierr.repository.entity.gank.Category
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
 
 /**
  * 标签管理页面
@@ -91,13 +92,15 @@ class CategoryManagerActivity : BaseActivity<ActivityCategoryManagerBinding>() {
                 .doOnFailure {
                     binding.msvState.showNetworkErrorView { doRefresh() }
                 }
-                .collect()
+                .launchIn(this)
+
+            categoryViewModel.saveCategoryResult
+                .doOnSuccess { finish() }
+                .launchIn(this)
         }
 
         lifecycleScope.launchWhenStarted {
-            categoryViewModel.saveCategoryResult
-                .doOnSuccess { finish() }
-                .collect()
+
         }
     }
 

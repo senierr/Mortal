@@ -25,6 +25,7 @@ import com.senierr.mortal.ext.*
 import com.senierr.repository.entity.gank.GanHuo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 
 /**
@@ -130,7 +131,7 @@ class GanHuoFragment : BaseFragment<FragmentHomeGanhuoBinding>() {
                             loadMoreWrapper.loadFailure()
                         }
                     }
-                    .collect()
+                    .launchIn(this)
         }
     }
 

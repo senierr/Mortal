@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.senierr.base.support.arch.StatefulData
 import com.senierr.base.support.arch.ext.emitFailure
 import com.senierr.base.support.arch.ext.emitSuccess
-import com.senierr.mortal.worker.SplashWorker
+import com.senierr.mortal.domain.worker.SplashWorker
 import com.senierr.repository.Repository
 import com.senierr.repository.entity.gank.Girl
 import com.senierr.repository.service.api.IGankService

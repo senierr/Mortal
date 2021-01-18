@@ -1,12 +1,12 @@
 package com.senierr.repository
 
 import android.app.Application
-import com.senierr.repository.db.DatabaseManager
-import com.senierr.repository.disk.DiskManager
-import com.senierr.repository.remote.RemoteManager
+import com.senierr.repository.store.db.DatabaseManager
+import com.senierr.repository.store.disk.DiskManager
+import com.senierr.repository.store.remote.RemoteManager
 import com.senierr.repository.service.api.*
 import com.senierr.repository.service.impl.*
-import com.senierr.repository.sp.SPManager
+import com.senierr.repository.store.sp.SPManager
 
 /**
  * 数据仓库

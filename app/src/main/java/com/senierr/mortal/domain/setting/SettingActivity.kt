@@ -29,8 +29,8 @@ import com.senierr.mortal.ext.showToast
 import com.senierr.mortal.domain.notification.NotificationManager
 import com.senierr.repository.entity.bmob.UserInfo
 import com.senierr.repository.entity.bmob.VersionInfo
-import com.senierr.repository.remote.progress.Progress
-import com.senierr.repository.remote.progress.ProgressReceiver
+import com.senierr.repository.store.remote.progress.Progress
+import com.senierr.repository.store.remote.progress.ProgressReceiver
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 

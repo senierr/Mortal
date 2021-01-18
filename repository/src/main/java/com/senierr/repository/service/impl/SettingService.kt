@@ -6,11 +6,11 @@ import com.senierr.base.support.utils.FileUtil
 import com.senierr.repository.Repository
 import com.senierr.repository.entity.bmob.Feedback
 import com.senierr.repository.entity.bmob.VersionInfo
-import com.senierr.repository.remote.RemoteManager
-import com.senierr.repository.remote.api.SettingApi
+import com.senierr.repository.store.remote.RemoteManager
+import com.senierr.repository.store.remote.api.SettingApi
 import com.senierr.repository.service.api.ISettingService
-import com.senierr.repository.sp.SPKey
-import com.senierr.repository.sp.SPManager
+import com.senierr.repository.store.sp.SPKey
+import com.senierr.repository.store.sp.SPManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

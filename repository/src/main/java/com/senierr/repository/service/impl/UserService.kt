@@ -1,14 +1,14 @@
 package com.senierr.repository.service.impl
 
-import com.senierr.repository.db.DatabaseManager
+import com.senierr.repository.store.db.DatabaseManager
 import com.senierr.repository.entity.bmob.UserInfo
-import com.senierr.repository.exception.NotLoggedException
-import com.senierr.repository.remote.RemoteManager
-import com.senierr.repository.remote.api.UserApi
+import com.senierr.repository.store.remote.RemoteManager
+import com.senierr.repository.store.remote.api.UserApi
 import com.senierr.repository.service.api.IUserService
-import com.senierr.repository.sp.SPManager
+import com.senierr.repository.store.sp.SPManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.IOException
 
 /**
  *
@@ -90,7 +90,7 @@ class UserService : IUserService {
             val result = caches.firstOrNull {
                 return@firstOrNull it.logged
             }
-            return@withContext result?: throw NotLoggedException()
+            return@withContext result?: throw IOException()
         }
     }
 

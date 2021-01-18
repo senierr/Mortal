@@ -55,8 +55,6 @@ interface IUserService {
 
     /**
      * 获取已登录的缓存用户信息
-     *
-     * @throws NotLoggedException
      */
     suspend fun getLoggedCacheUserInfo(): UserInfo
 

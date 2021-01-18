@@ -2,10 +2,10 @@ package com.senierr.repository.service.impl
 
 import com.senierr.base.support.utils.CloseUtil
 import com.senierr.base.support.utils.EncryptUtil
-import com.senierr.repository.disk.DiskManager
-import com.senierr.repository.remote.RemoteManager
-import com.senierr.repository.remote.api.CommonApi
-import com.senierr.repository.remote.progress.*
+import com.senierr.repository.store.disk.DiskManager
+import com.senierr.repository.store.remote.RemoteManager
+import com.senierr.repository.store.remote.api.CommonApi
+import com.senierr.repository.store.remote.progress.*
 import com.senierr.repository.service.api.ICommonService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive

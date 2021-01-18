@@ -1,6 +1,6 @@
 package com.senierr.repository.service.api
 
-import com.senierr.repository.remote.progress.OnProgressListener
+import com.senierr.repository.store.remote.progress.OnProgressListener
 import java.io.File
 
 /**

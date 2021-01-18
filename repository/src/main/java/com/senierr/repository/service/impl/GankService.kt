@@ -2,14 +2,14 @@ package com.senierr.repository.service.impl
 
 import com.google.gson.Gson
 import com.senierr.base.support.utils.TypeUtil
-import com.senierr.repository.disk.DiskLruKey
-import com.senierr.repository.disk.DiskManager
+import com.senierr.repository.store.disk.DiskLruKey
+import com.senierr.repository.store.disk.DiskManager
 import com.senierr.repository.entity.gank.*
-import com.senierr.repository.remote.RemoteManager
-import com.senierr.repository.remote.api.GankApi
+import com.senierr.repository.store.remote.RemoteManager
+import com.senierr.repository.store.remote.api.GankApi
 import com.senierr.repository.service.api.IGankService
-import com.senierr.repository.sp.SPKey
-import com.senierr.repository.sp.SPManager
+import com.senierr.repository.store.sp.SPKey
+import com.senierr.repository.store.sp.SPManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

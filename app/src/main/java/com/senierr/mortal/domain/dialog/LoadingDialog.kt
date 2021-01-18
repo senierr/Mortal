@@ -14,7 +14,7 @@ import com.senierr.mortal.R
 
 fun createLoadingDialog(context: Context): AlertDialog {
     return MaterialAlertDialogBuilder(context)
-            .setView(R.layout.layout_status_loading)
+            .setView(R.layout.layout_status_loading_simple)
             .create()
             .apply {
                 setCancelable(false)

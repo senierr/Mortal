@@ -6,9 +6,9 @@ import com.senierr.base.support.arch.StatefulData
 import com.senierr.base.support.arch.ext.emitFailure
 import com.senierr.base.support.arch.ext.emitSuccess
 import com.senierr.repository.Repository
+import com.senierr.repository.entity.DataSource
 import com.senierr.repository.service.api.ICommonService
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -27,12 +27,14 @@ class DownloadViewModel : ViewModel() {
 
     fun download(url: String, destName: String) {
         viewModelScope.launch {
-            try {
-                val destFile = commonService.downloadFile(url, destName, "")
-                _downloadCompleted.emitSuccess(destFile)
-            } catch (e: Exception) {
-                _downloadCompleted.emitFailure(e)
-            }
+            commonService.downloadFile(url, destName, "")
+                .onEach {
+                    if (it is DataSource.Success) {
+                        _downloadCompleted.emitSuccess(it.value)
+                    }
+                }
+                .catch { _downloadCompleted.emitFailure(it) }
+                .collect()
         }
     }
 }

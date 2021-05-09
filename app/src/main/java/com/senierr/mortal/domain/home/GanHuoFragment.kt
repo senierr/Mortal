@@ -8,8 +8,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
-import com.senierr.base.support.arch.ext.doOnFailure
-import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.launchWhenStartedIn
+import com.senierr.base.support.arch.ext.onFailure
+import com.senierr.base.support.arch.ext.onSuccess
 import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.ui.recyclerview.LinearItemDecoration
@@ -24,7 +25,6 @@ import com.senierr.mortal.domain.home.wrapper.GanHuoOneImageWrapper
 import com.senierr.mortal.ext.*
 import com.senierr.repository.entity.gank.GanHuo
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 
@@ -112,27 +112,25 @@ class GanHuoFragment : BaseFragment<FragmentHomeGanhuoBinding>() {
     }
 
     private fun initViewModel() {
-        lifecycleScope.launchWhenStarted {
-            ganHuoViewModel.ganHuos
-                    .doOnSuccess {
-                        if (page == 1) {
-                            renderRefresh(it)
-                        } else {
-                            renderLoadMore(it)
-                        }
+        ganHuoViewModel.ganHuos
+            .onSuccess {
+                if (page == 1) {
+                    renderRefresh(it)
+                } else {
+                    renderLoadMore(it)
+                }
+            }
+            .onFailure {
+                if (page == 1) {
+                    binding?.msvState?.showNetworkErrorView {
+                        binding?.msvState?.showLoadingView()
+                        doRefresh()
                     }
-                    .doOnFailure {
-                        if (page == 1) {
-                            binding?.msvState?.showNetworkErrorView {
-                                binding?.msvState?.showLoadingView()
-                                doRefresh()
-                            }
-                        } else {
-                            loadMoreWrapper.loadFailure()
-                        }
-                    }
-                    .launchIn(this)
-        }
+                } else {
+                    loadMoreWrapper.loadFailure()
+                }
+            }
+            .launchWhenStartedIn(lifecycleScope)
     }
 
     /**

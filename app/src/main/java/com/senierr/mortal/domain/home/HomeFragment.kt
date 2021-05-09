@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
-import com.senierr.base.support.arch.ext.doOnFailure
-import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.onFailure
+import com.senierr.base.support.arch.ext.onSuccess
 import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.mortal.R
@@ -18,7 +18,6 @@ import com.senierr.mortal.domain.category.CategoryManagerActivity
 import com.senierr.mortal.domain.home.vm.HomeViewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.gank.Category
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 
 /**
@@ -96,7 +95,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             homeViewModel.categories
-                    .doOnSuccess {
+                    .onSuccess {
                         // 判断是否数据变动
                         if (isChanged(it)) {
                             currentCategories.clear()
@@ -104,7 +103,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                             binding?.vpPage?.adapter?.notifyDataSetChanged()
                         }
                     }
-                    .doOnFailure {
+                    .onFailure {
                         context?.showToast(R.string.network_error)
                     }
                     .launchIn(this)

@@ -12,8 +12,8 @@ import androidx.annotation.DrawableRes
 import androidx.lifecycle.lifecycleScope
 import com.bm.library.PhotoView
 import com.senierr.adapter.internal.ViewHolder
-import com.senierr.base.support.arch.ext.doOnFailure
-import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.onFailure
+import com.senierr.base.support.arch.ext.onSuccess
 import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ext.setGone
@@ -122,13 +122,13 @@ class ImagePreviewActivity : BaseActivity<ActivityImagePreviewBinding>() {
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             downloadViewModel.downloadCompleted
-                .doOnSuccess {
+                .onSuccess {
                     showToast(
                         getString(R.string.format_download_success, it.absolutePath),
                         Toast.LENGTH_LONG
                     )
                 }
-                .doOnFailure {
+                .onFailure {
                     showToast(getString(R.string.format_download_failure, it?.message))
                 }
                 .launchIn(this)

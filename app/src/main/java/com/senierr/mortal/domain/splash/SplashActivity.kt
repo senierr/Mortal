@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.lifecycle.lifecycleScope
 import com.senierr.base.support.arch.ext.androidViewModel
-import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.onSuccess
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.mortal.R
@@ -14,7 +14,6 @@ import com.senierr.mortal.domain.splash.vm.SplashViewModel
 import com.senierr.mortal.ext.showImage
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 
@@ -49,7 +48,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             splashViewModel.randomGil
-                .doOnSuccess {
+                .onSuccess {
                     binding.ivSplash.showImage(it.url)
                 }
                 .launchIn(this)

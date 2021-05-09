@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.lifecycleScope
-import com.senierr.base.support.arch.ext.doOnFailure
-import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.onFailure
+import com.senierr.base.support.arch.ext.onSuccess
 import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.utils.RegexUtil
@@ -133,11 +133,11 @@ class RegisterActivity : BaseActivity<ActivityRegisterBinding>() {
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             accountViewModel.registerResult
-                .doOnSuccess {
+                .onSuccess {
                     showToast(R.string.register_success)
                     finish()
                 }
-                .doOnFailure {
+                .onFailure {
                     showToast(it?.message)
                 }
                 .onEach {

@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
-import com.senierr.base.support.arch.ext.doOnFailure
-import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.onFailure
+import com.senierr.base.support.arch.ext.onSuccess
 import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
@@ -95,7 +95,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             userInfoViewModel.allCacheUserInfo
-                .doOnSuccess {
+                .onSuccess {
                     allCacheUserInfo.clear()
                     allCacheUserInfo.addAll(it)
                     allCacheUserInfo.firstOrNull()?.let { info ->
@@ -106,10 +106,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
                 .launchIn(this)
 
             accountViewModel.loginResult
-                .doOnSuccess {
+                .onSuccess {
                     showLoginSuccess()
                 }
-                .doOnFailure {
+                .onFailure {
                     showLoginFailure(it)
                 }
                 .launchIn(this)

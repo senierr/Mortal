@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.senierr.base.support.arch.ext.doOnFailure
-import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.onFailure
+import com.senierr.base.support.arch.ext.onSuccess
 import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
@@ -68,10 +68,10 @@ class AccountSafetyActivity : BaseActivity<ActivityAccountSafetyBinding>() {
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             userInfoViewModel.loggedCacheUserInfo
-                .doOnSuccess {
+                .onSuccess {
                     currentUserInfo = it
                 }
-                .doOnFailure {
+                .onFailure {
                     // 未登录，跳转至登录页
                     LoginActivity.start(this@AccountSafetyActivity)
                     finish()
@@ -79,11 +79,11 @@ class AccountSafetyActivity : BaseActivity<ActivityAccountSafetyBinding>() {
                 .launchIn(this)
 
             accountViewModel.deleteResult
-                .doOnSuccess {
+                .onSuccess {
                     showToast(R.string.account_cancellation_success)
                     finish()
                 }
-                .doOnFailure {
+                .onFailure {
                     showToast(it?.message)
                 }
                 .onEach {

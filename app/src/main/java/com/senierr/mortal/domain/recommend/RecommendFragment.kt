@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
-import com.senierr.base.support.arch.ext.doOnFailure
-import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.onFailure
+import com.senierr.base.support.arch.ext.onSuccess
 import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ui.BaseFragment
 import com.senierr.base.support.ui.recyclerview.GridItemDecoration
@@ -80,14 +80,14 @@ class RecommendFragment : BaseFragment<FragmentRecommendBinding>() {
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             recommendViewModel.girls
-                    .doOnSuccess {
+                    .onSuccess {
                         if (page == 1) {
                             renderRefresh(it)
                         } else {
                             renderLoadMore(it)
                         }
                     }
-                    .doOnFailure {
+                    .onFailure {
                         if (page == 1) {
                             binding?.msvState?.showNetworkErrorView {
                                 binding?.msvState?.showLoadingView()

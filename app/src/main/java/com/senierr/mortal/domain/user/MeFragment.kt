@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
-import com.senierr.base.support.arch.ext.doOnFailure
-import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.onFailure
+import com.senierr.base.support.arch.ext.onSuccess
 import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseFragment
@@ -68,18 +68,18 @@ class MeFragment : BaseFragment<FragmentMeBinding>() {
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             userInfoViewModel.loggedCacheUserInfo
-                .doOnSuccess {
+                .onSuccess {
                     currentUserInfo = it
                     renderUserInfo(it)
                     userInfoViewModel.fetchUserInfo(it.objectId)
                 }
-                .doOnFailure {
+                .onFailure {
                     renderUserInfo(null)
                 }
                 .launchIn(this)
 
             userInfoViewModel.userInfo
-                .doOnSuccess {
+                .onSuccess {
                     currentUserInfo = it
                     renderUserInfo(it)
                 }

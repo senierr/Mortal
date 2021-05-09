@@ -7,8 +7,8 @@ import android.view.MenuItem
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.senierr.adapter.internal.MultiTypeAdapter
-import com.senierr.base.support.arch.ext.doOnFailure
-import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.onFailure
+import com.senierr.base.support.arch.ext.onSuccess
 import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.base.support.ui.recyclerview.GridItemDecoration
@@ -79,7 +79,7 @@ class CategoryManagerActivity : BaseActivity<ActivityCategoryManagerBinding>() {
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             categoryViewModel.ganHuoCategories
-                .doOnSuccess {
+                .onSuccess {
                     if (it.isEmpty()) {
                         binding.msvState.showEmptyView()
                     } else {
@@ -89,18 +89,16 @@ class CategoryManagerActivity : BaseActivity<ActivityCategoryManagerBinding>() {
                         multiTypeAdapter.notifyDataSetChanged()
                     }
                 }
-                .doOnFailure {
+                .onFailure {
                     binding.msvState.showNetworkErrorView { doRefresh() }
                 }
-                .launchIn(this)
-
-            categoryViewModel.saveCategoryResult
-                .doOnSuccess { finish() }
-                .launchIn(this)
+                .collect()
         }
 
         lifecycleScope.launchWhenStarted {
-
+            categoryViewModel.saveCategoryResult
+                .onSuccess { finish() }
+                .collect()
         }
     }
 

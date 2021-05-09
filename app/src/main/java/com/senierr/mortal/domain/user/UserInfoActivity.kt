@@ -4,8 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.lifecycle.lifecycleScope
-import com.senierr.base.support.arch.ext.doOnFailure
-import com.senierr.base.support.arch.ext.doOnSuccess
+import com.senierr.base.support.arch.ext.onFailure
+import com.senierr.base.support.arch.ext.onSuccess
 import com.senierr.base.support.arch.ext.viewModel
 import com.senierr.base.support.ext.click
 import com.senierr.base.support.ui.BaseActivity
@@ -107,12 +107,12 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
     private fun initViewModel() {
         lifecycleScope.launchWhenStarted {
             userInfoViewModel.loggedCacheUserInfo
-                .doOnSuccess {
+                .onSuccess {
                     currentUserInfo = it
                     renderUserInfo(it)
                     userInfoViewModel.fetchUserInfo(it.objectId)
                 }
-                .doOnFailure {
+                .onFailure {
                     // 未登录，跳转至登录页
                     LoginActivity.start(this@UserInfoActivity)
                     finish()
@@ -120,11 +120,11 @@ class UserInfoActivity : BaseActivity<ActivityUserInfoBinding>() {
                 .launchIn(this)
 
             userInfoViewModel.userInfo
-                .doOnSuccess {
+                .onSuccess {
                     currentUserInfo = it
                     renderUserInfo(it)
                 }
-                .doOnFailure {
+                .onFailure {
                     showToast(it?.message)
                 }
                 .onEach {

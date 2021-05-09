@@ -1,9 +1,14 @@
 package com.senierr.base.support.arch.ext
 
+import androidx.lifecycle.LifecycleCoroutineScope
 import com.senierr.base.support.arch.StatefulData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 /**
  * Flow扩展函数
@@ -29,8 +34,8 @@ suspend inline fun <reified T> MutableSharedFlow<StatefulData<T>>.emitFailure(th
 /**
  * 成功数据时执行
  */
-suspend inline fun <reified T> Flow<StatefulData<T>>.doOnSuccess(
-        noinline collector: suspend (T) -> Unit
+fun <T> Flow<StatefulData<T>>.onSuccess(
+        collector: suspend (T) -> Unit
 ) = onEach {
     if (it is StatefulData.Success) {
         collector.invoke(it.value)
@@ -40,10 +45,17 @@ suspend inline fun <reified T> Flow<StatefulData<T>>.doOnSuccess(
 /**
  * 失败数据时执行
  */
-suspend inline fun <reified T> Flow<StatefulData<T>>.doOnFailure(
-        noinline collector: suspend (Throwable?) -> Unit
+fun <T> Flow<StatefulData<T>>.onFailure(
+        collector: suspend (Throwable?) -> Unit
 ) = onEach {
     if (it is StatefulData.Failure) {
         collector.invoke(it.throwable)
     }
+}
+
+/**
+ * 订阅
+ */
+fun <T> Flow<T>.launchWhenStartedIn(scope: LifecycleCoroutineScope): Job = scope.launchWhenStarted {
+    collect()
 }

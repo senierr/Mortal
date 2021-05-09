@@ -1,6 +1,8 @@
 package com.senierr.repository.service.api
 
+import com.senierr.repository.entity.DataSource
 import com.senierr.repository.store.remote.progress.OnProgressListener
+import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 /**
@@ -19,10 +21,5 @@ interface ICommonService {
     /**
      * 下载
      */
-    suspend fun downloadFile(
-        url: String,
-        destName: String,
-        md5: String = "",
-        tag: String? = null
-    ): File
+    fun downloadFile(url: String, destName: String, md5: String): Flow<DataSource<File>>
 }

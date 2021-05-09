@@ -7,22 +7,16 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.lifecycleScope
-import com.senierr.base.support.arch.ext.androidViewModel
-import com.senierr.base.support.arch.ext.doOnFailure
-import com.senierr.base.support.arch.ext.doOnSuccess
-import com.senierr.base.support.arch.ext.viewModel
+import com.senierr.base.support.arch.ext.*
 import com.senierr.base.support.ui.BaseActivity
 import com.senierr.mortal.R
 import com.senierr.mortal.databinding.ActivityFeedbackBinding
-import com.senierr.mortal.domain.dialog.createLoadingDialog
 import com.senierr.mortal.domain.setting.vm.SettingViewModel
 import com.senierr.mortal.domain.user.LoginActivity
 import com.senierr.mortal.domain.user.vm.UserInfoViewModel
 import com.senierr.mortal.ext.showToast
 import com.senierr.repository.entity.bmob.UserInfo
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 /**
  * 设置页面
@@ -32,10 +26,8 @@ import kotlinx.coroutines.flow.onEach
  */
 class FeedbackActivity : BaseActivity<ActivityFeedbackBinding>() {
 
-    private val loadingDialog by lazy { createLoadingDialog(this) }
-
-    private val userInfoViewModel: UserInfoViewModel by viewModel()
-    private val settingViewModel: SettingViewModel by androidViewModel()
+    private val userInfoViewModel by viewModel<UserInfoViewModel>()
+    private val settingViewModel by androidViewModel<SettingViewModel>()
 
     private var currentUserInfo: UserInfo? = null
 
@@ -77,7 +69,6 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding>() {
             R.id.tab_done -> {
                 val newValue = binding.etText.text.toString()
                 currentUserInfo?.let {
-                    loadingDialog.show()
                     settingViewModel.feedback(newValue, it.objectId)
                 }
             }
@@ -104,29 +95,23 @@ class FeedbackActivity : BaseActivity<ActivityFeedbackBinding>() {
     }
 
     private fun initViewModel() {
-        lifecycleScope.launchWhenStarted {
-            userInfoViewModel.loggedCacheUserInfo
-                .doOnSuccess {
-                    currentUserInfo = it
-                }
-                .doOnFailure {
-                    // 未登录，跳转至登录页
-                    LoginActivity.start(this@FeedbackActivity)
-                    finish()
-                }
-                .launchIn(this)
+        userInfoViewModel.loggedCacheUserInfo
+            .onSuccess {
+                // 未登录，跳转至登录页
+                LoginActivity.start(this)
+                finish()
+            }
+            .launchWhenStartedIn(lifecycleScope)
 
+        lifecycleScope.launchWhenStarted {
             settingViewModel.feedbackResult
-                .doOnSuccess {
-                    showToast(R.string.feedback_success)
-                }
-                .doOnFailure {
-                    showToast(R.string.network_error)
-                }
-                .onEach {
-                    loadingDialog.dismiss()
-                }
-                .launchIn(this)
+                    .onSuccess {
+                        showToast(R.string.feedback_success)
+                    }
+                    .onFailure {
+                        showToast(R.string.network_error)
+                    }
+                    .collect()
         }
     }
 }

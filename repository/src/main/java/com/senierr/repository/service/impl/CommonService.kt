@@ -2,15 +2,16 @@ package com.senierr.repository.service.impl
 
 import com.senierr.base.support.utils.CloseUtil
 import com.senierr.base.support.utils.EncryptUtil
+import com.senierr.repository.entity.DataSource
 import com.senierr.repository.store.disk.DiskManager
 import com.senierr.repository.store.remote.RemoteManager
 import com.senierr.repository.store.remote.api.CommonApi
 import com.senierr.repository.store.remote.progress.*
 import com.senierr.repository.service.api.ICommonService
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -45,10 +46,33 @@ class CommonService : ICommonService {
         }
     }
 
-    override suspend fun downloadFile(
-        url: String, destName:
-        String, md5: String,
-        tag: String?
+    @ExperimentalCoroutinesApi
+    override fun downloadFile(url: String, destName: String, md5: String): Flow<DataSource<File>> {
+        return callbackFlow {
+            val file: File = downloadFile(url, DiskManager.getDownloadDir(), destName, md5, object : OnProgressListener {
+                override fun onProgress(progress: Progress) {
+                    offer(DataSource.Progress(progress.totalSize, progress.currentSize))
+                }
+            })
+            offer(DataSource.Success(file))
+        }
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param url 文件链接
+     * @param destDir 存储根目录
+     * @param destName 存储名称
+     * @param md5 校验码
+     * @param onProgressListener 进度监听
+     */
+    private suspend fun downloadFile(
+        url: String,
+        destDir: File,
+        destName: String,
+        md5: String,
+        onProgressListener: OnProgressListener? = null
     ): File {
         return withContext(Dispatchers.IO) {
             suspendCancellableCoroutine { continuation ->
@@ -59,18 +83,12 @@ class CommonService : ICommonService {
                     }
 
                     val rawResponseBody = call.execute().body()?: throw IOException("ResponseBody is null.")
-                    val realResponseBody = if (tag != null) {
-                        ProgressResponseBody(rawResponseBody, object : OnProgressListener {
-                            override fun onProgress(progress: Progress) {
-                                // 发送进度通知
-                                ProgressReceiver.sendProgress(tag, progress)
-                            }
-                        })
+                    val realResponseBody = if (onProgressListener != null) {
+                        ProgressResponseBody(rawResponseBody, onProgressListener)
                     } else {
                         rawResponseBody
                     }
 
-                    val destDir = DiskManager.getDownloadDir()
                     // 判断路径是否存在
                     if (!destDir.exists()) {
                         val result = destDir.mkdirs()
